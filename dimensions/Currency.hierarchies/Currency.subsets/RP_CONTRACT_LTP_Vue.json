@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"RP_CONTRACT_LTP_Vue",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Currency')/Hierarchies('Currency')/Elements('eur')"
+		}
+	]
+}

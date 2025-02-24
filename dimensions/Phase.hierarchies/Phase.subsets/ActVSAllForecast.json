@@ -1,0 +1,13 @@
+{
+	"@type":"Subset",
+	"Name":"ActVSAllForecast",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('ACT')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('FORECASTING_rep_prop')"
+		}
+	]
+}

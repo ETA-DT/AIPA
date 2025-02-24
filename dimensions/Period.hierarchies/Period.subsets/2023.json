@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"2023",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Period')/Hierarchies('Period')/Elements('2023')"
+		}
+	]
+}

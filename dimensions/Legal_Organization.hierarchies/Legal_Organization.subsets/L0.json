@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"L0",
+	"Expression":"{TM1SORTBYINDEX( {TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [Legal_Organization] )}, ALL, RECURSIVE )}, 0)}, ASC)}"
+}

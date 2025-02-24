@@ -1,0 +1,56 @@
+skipcheck;
+
+
+[Indicateurs_Activité:'Campagnes Marketing',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Campagnes Marketing') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Campagnes Marketing')/100;
+[Indicateurs_Activité:'Ventes Carburant',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Ventes Carburant') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Ventes Carburant')/100;
+[Indicateurs_Activité:'Ventes de pièces détachées',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Ventes de pièces détachées') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Ventes de pièces détachées')/100;
+[Indicateurs_Activité:'Prestation de services',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Prestation de services') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Prestation de services')/100;
+[Indicateurs_Activité:'Prestations atelier',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Prestations atelier') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Prestations atelier')/100;
+[Indicateurs_Activité:'Recettes commerciales',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Recettes commerciales') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Recettes commerciales')/100;
+[Indicateurs_Activité:'Recettes passager',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Recettes passager') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Recettes passager')/100;
+[Indicateurs_Activité:'Recettes commerciales- engagement contractuel',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Recettes commerciales- engagement contractuel') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Recettes commerciales- engagement contractuel')/100;
+[Indicateurs_Activité:'Revenus des activités de tourisme (occasionnel)',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Revenus des activités de tourisme (occasionnel)') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Revenus des activités de tourisme (occasionnel)')/100;
+[Indicateurs_Activité:'Couts',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Couts') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Couts')/100;
+[Indicateurs_Activité:'Frais de personnel (CD)',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Frais de personnel (CD)') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Frais de personnel (CD)')/100;
+[Indicateurs_Activité:'Coûts des accidents du travail',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Coûts des accidents du travail') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Coûts des accidents du travail')/100;
+[Indicateurs_Activité:'Réparations',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Réparations') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Réparations')/100;
+[Indicateurs_Activité:'Indemnisations tiers',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Indemnisations tiers') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Indemnisations tiers')/100;
+[Indicateurs_Activité:'Frais de voyages (SO)',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Frais de voyages (SO)') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Frais de voyages (SO)')/100;
+[Indicateurs_Activité:'Coûts Bio carburant',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Coûts Bio carburant') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Coûts Bio carburant')/100;
+[Indicateurs_Activité:'Coûts Gaz',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Coûts Gaz') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Coûts Gaz')/100;
+[Indicateurs_Activité:'Pneumatiques',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Pneumatiques') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Pneumatiques')/100;
+[Indicateurs_Activité:'Coûts Commerciaux',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Coûts Commerciaux') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Coûts Commerciaux')/100;
+[Indicateurs_Activité:'Coûts des ventes',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Coûts des ventes') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Coûts des ventes')/100;
+[Indicateurs_Activité:'Coûts généraux',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Coûts généraux') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Coûts généraux')/100;
+[Indicateurs_Activité:'Coûts Stock Biens',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Coûts Stock Biens') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Coûts Stock Biens')/100;
+[Indicateurs_Activité:'Campagnes Marketing',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Campagnes Marketing') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Campagnes Marketing')/100;
+[Indicateurs_Activité:'Programmes Fidélité',Phase:'BUDG_VC_AJUST'] = N: DB( '00.Ventes', 'BUDG_VC', !Period, !Pays,'Programmes Fidélité') *  DB( '00.Ventes', 'BUDG_VC_AJUST%', !Period, !Pays, 'Programmes Fidélité')/100;
+
+
+
+
+
+FEEDERS;
+
+[Indicateurs_Activité:'Campagnes Marketing',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Campagnes Marketing',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Ventes Carburant',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Ventes Carburant',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Ventes de pièces détachées',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Ventes de pièces détachées',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Recettes commerciales',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Recettes commerciales',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Frais de personnel (CD)',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Frais de personnel (CD)',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Coûts des accidents du travail',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Coûts des accidents du travail',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Réparations',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Réparations',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Frais de voyages (SO)',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Frais de voyages (SO)',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Pneumatiques',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Pneumatiques',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Recettes commerciales- engagement contractuel',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Recettes commerciales- engagement contractuel',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Coûts Commerciaux',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Coûts Commerciaux',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Coûts des ventes',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Coûts des ventes',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Coûts généraux',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Coûts généraux',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Coûts Stock Biens',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Coûts Stock Biens',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Campagnes Marketing',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Campagnes Marketing',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Prestations atelier',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Prestations atelier',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Recettes passager',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Recettes passager',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Revenus des activités de tourisme (occasionnel)',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Revenus des activités de tourisme (occasionnel)',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Indemnisations tiers',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Indemnisations tiers',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Coûts Bio carburant',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Coûts Bio carburant',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Coûts Gaz',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Coûts Gaz',Phase:'BUDG_VC_AJUST'];
+[Indicateurs_Activité:'Programmes Fidélité',Phase:'BUDG_VC_AJUST%'] => [Indicateurs_Activité:'Programmes Fidélité',Phase:'BUDG_VC_AJUST'];

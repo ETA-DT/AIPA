@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Phase",
+	"Hierarchies@Code.links":
+	[
+		"Phase.hierarchies/Phase.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Phase')/Hierarchies('Phase')"
+	}
+}

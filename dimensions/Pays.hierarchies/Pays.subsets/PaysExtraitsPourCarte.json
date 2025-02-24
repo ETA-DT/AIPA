@@ -1,0 +1,19 @@
+{
+	"@type":"Subset",
+	"Name":"PaysExtraitsPourCarte",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Pays')/Hierarchies('Pays')/Elements('Suède')"
+		},
+		{
+			"@id":"Dimensions('Pays')/Hierarchies('Pays')/Elements('Belgique')"
+		},
+		{
+			"@id":"Dimensions('Pays')/Hierarchies('Pays')/Elements('Royaume-Uni')"
+		},
+		{
+			"@id":"Dimensions('Pays')/Hierarchies('Pays')/Elements('Finlande')"
+		}
+	]
+}

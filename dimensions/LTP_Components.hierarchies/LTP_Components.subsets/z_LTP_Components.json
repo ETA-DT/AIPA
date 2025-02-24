@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"z_LTP_Components",
+	"Expression":"{TM1FILTERBYLEVEL(TM1SUBSETALL([LTP_Components].[LTP_Components]) , 0)}"
+}

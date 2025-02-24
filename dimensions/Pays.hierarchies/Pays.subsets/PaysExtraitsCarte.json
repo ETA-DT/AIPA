@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"PaysExtraitsCarte",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Pays')/Hierarchies('Pays')/Elements('Espagne')"
+		}
+	]
+}

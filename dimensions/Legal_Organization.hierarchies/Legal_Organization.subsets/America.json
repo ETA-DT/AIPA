@@ -1,0 +1,19 @@
+{
+	"@type":"Subset",
+	"Name":"America",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('USA')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('CAN')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('CHL')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('CO')"
+		}
+	]
+}

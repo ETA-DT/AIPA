@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"L0_Tout_sauf_Saisie",
+	"Expression":"{FILTER( {TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [Indicator_LTP] )}, ALL, RECURSIVE )}, 0)}, [Indicator_LTP].[Flag_saisie] = \"\")}"
+}

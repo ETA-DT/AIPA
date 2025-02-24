@@ -1,0 +1,31 @@
+{
+	"@type":"Subset",
+	"Name":"Check CAPEX",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('CAPEX_TOT')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('DISP_TOT')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('NFI240')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('NFI250')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('NFI230')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('OP_LEASE')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('TXINV_I01')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('TXINV_I02')"
+		}
+	]
+}

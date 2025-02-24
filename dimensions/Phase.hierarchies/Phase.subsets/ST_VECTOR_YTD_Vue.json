@@ -1,0 +1,19 @@
+{
+	"@type":"Subset",
+	"Name":"ST_VECTOR_YTD_Vue",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('BUDG_V1')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('FC_1_VC')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('FC_2_VC')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('BUDG_VC')"
+		}
+	]
+}

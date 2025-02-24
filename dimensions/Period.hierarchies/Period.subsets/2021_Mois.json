@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"2021_Mois",
+	"Expression":"{DISTINCT({[Period].[Period].[2021],DESCENDANTS([Period].[Period].[2021] , 99 , LEAVES)})}"
+}

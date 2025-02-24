@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"IndicatorToModify",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicateurs_Activité')/Hierarchies('Indicateurs_Activité')/Elements('Coûts des accidents du travail')"
+		}
+	]
+}

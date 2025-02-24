@@ -1,0 +1,19 @@
+{
+	"@type":"Subset",
+	"Name":"TOD_FRANCE_HOLDING",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('S7758')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('SI092')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('SI099')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('SI100')"
+		}
+	]
+}

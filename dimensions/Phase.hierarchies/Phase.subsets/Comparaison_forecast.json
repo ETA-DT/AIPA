@@ -1,0 +1,25 @@
+{
+	"@type":"Subset",
+	"Name":"Comparaison_forecast",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('ACT')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('FC_2_VC')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('FORECASTING_uni')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('FORECASTING_uni_low')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('FORECASTING_uni_high')"
+		},
+		{
+			"@id":"Dimensions('Phase')/Hierarchies('Phase')/Elements('FORECASTING_multi')"
+		}
+	]
+}

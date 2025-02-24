@@ -1,0 +1,29 @@
+{
+	"@type":"MDXView",
+	"Name":"viewtoupdate",
+	"MDX@Code.link":"viewtoupdate.mdx",
+	"Meta" : 
+	{
+		"Aliases" : {},
+		"ContextSets" : 
+		{
+			"[Period].[Period]" : 
+			{
+				"IsPublic" : true,
+				"SubsetName" : "Default"
+			},
+			"[Phase].[Phase]" : 
+			{
+				"IsPublic" : true,
+				"SubsetName" : "Default"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Indicateurs_Activité].[Indicateurs_Activité]" : false,
+			"[Pays].[Pays]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

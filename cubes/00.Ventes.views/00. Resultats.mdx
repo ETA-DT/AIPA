@@ -1,0 +1,1 @@
+SELECT {TM1SubsetToSet([Period].[Period],"2024_mois","public")} ON 0, {EXCEPT([Pays].[Pays].MEMBERS , {[Pays].[Pays].[République tchèque],[Pays].[Pays].[Slovaquie]} , ALL)} ON 1 FROM [00.Ventes] WHERE ([Phase].[Phase].[ACT_BUDG_NB^ACT_TOT^ACT], [Indicateurs_Activité].[Indicateurs_Activité].[Résultats])

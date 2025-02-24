@@ -1,0 +1,29 @@
+{
+	"@type":"Cube",
+	"Name":"RP_Comments_Vector",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Activity')"
+		},
+		{
+			"@id":"Dimensions('Audit_ID')"
+		},
+		{
+			"@id":"Dimensions('Integration_Rate')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')"
+		},
+		{
+			"@id":"Dimensions('Period')"
+		},
+		{
+			"@id":"Dimensions('ApplicationSheet')"
+		},
+		{
+			"@id":"Dimensions('Comment')"
+		}
+	],
+	"Views@Code.links":[]
+}

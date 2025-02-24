@@ -1,0 +1,25 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Integration_Rate",
+	"ElementsSortType":"ByHierarchy",
+	"Elements":
+	[
+		{
+			"Name":"NO_APP",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"APP",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"NA",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":
+	[
+		"Integration_Rate.subsets/Default.json",
+		"Integration_Rate.subsets/z_Construct_View_Report_PL.json"
+	]
+}

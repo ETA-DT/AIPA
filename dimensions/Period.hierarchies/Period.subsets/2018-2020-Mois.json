@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"2018-2020-Mois",
+	"Expression":"{EXCEPT(TM1SubsetToSet([Period].[Period] , \"2018-2021-Mois\" , \"public\") , {[Period].[Period].[2021.Q1^2021.01],[Period].[Period].[2021.Q1^2021.02],[Period].[Period].[2021.Q1^2021.03],[Period].[Period].[2021.Q2^2021.04],[Period].[Period].[2021.Q2^2021.05],[Period].[Period].[2021.Q2^2021.06],[Period].[Period].[2021.Q3^2021.07],[Period].[Period].[2021.Q3^2021.08],[Period].[Period].[2021.Q3^2021.09],[Period].[Period].[2021.Q4^2021.10],[Period].[Period].[2021.Q4^2021.11],[Period].[Period].[2021.Q4^2021.12]})}"
+}

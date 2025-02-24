@@ -1,0 +1,19 @@
+{
+	"@type":"Subset",
+	"Name":"5- Net CAPEX",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('Net CAPEX')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('GROSS_IND_CAPEX')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('IND_Disposal')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('CAPEX_IFRS16')"
+		}
+	]
+}

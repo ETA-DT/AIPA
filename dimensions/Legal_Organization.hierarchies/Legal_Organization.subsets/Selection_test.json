@@ -1,0 +1,17 @@
+{
+	"@type":"Subset",
+	"Name":"Selection_test",
+	"Alias":"French",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('FR_IDF_input')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('FR_IDF_CT3_input')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('FR_IDF_CT4_input')"
+		}
+	]
+}

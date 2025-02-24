@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"Indicateurs_Subset",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicateurs_Activité')/Hierarchies('Indicateurs_Activité')/Elements('Coûts généraux')"
+		}
+	]
+}

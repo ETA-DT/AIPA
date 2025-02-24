@@ -1,0 +1,37 @@
+{
+	"@type":"Subset",
+	"Name":"PL-1520",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL10')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('NFIOPE')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL1')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL2')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL3')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL4')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL5')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL6')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL7')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')/Hierarchies('Indicator_Vector')/Elements('TPL9')"
+		}
+	]
+}

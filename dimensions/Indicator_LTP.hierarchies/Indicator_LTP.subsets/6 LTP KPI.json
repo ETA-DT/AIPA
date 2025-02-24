@@ -1,0 +1,37 @@
+{
+	"@type":"Subset",
+	"Name":"6 LTP KPI",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('TPL10')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('RESOP_Bef_MF')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('TPL1')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('TPL3')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('TPL9')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('NFIOPE')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('Net CAPEX')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('NFI550')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('TCI1')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('TCI2')"
+		}
+	]
+}

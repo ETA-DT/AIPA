@@ -1,0 +1,6 @@
+{
+	"@type":"Subset",
+	"Name":"z_Activity",
+	"Alias":"French",
+	"Expression":"{TM1FILTERBYLEVEL(TM1SUBSETALL([Activity].[Activity]) , 0)}"
+}

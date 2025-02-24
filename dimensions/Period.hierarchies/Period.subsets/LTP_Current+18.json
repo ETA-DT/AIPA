@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"LTP_Current+18",
+	"Expression":"{INTERSECT( \r\r{FILTER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [Period] )}, \"F*YEAR*\")}, [Period].[Next Year] >= \"F_year_\" + \rz_Admin_Param.( [z_Admin_Param].[YEAR_LTP], [z_Str_Var].[STR_VAR1]) )}\r,\r{FILTER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [Period] )}, \"F*YEAR*\")}, [Period].[Next Year] <= \"F_year_\" + \rz_Admin_Param.( [z_Admin_Param].[YEAR_LTP], [z_Str_Var].[STR_VAR3]) )}\r )}\r)}\r"
+}
