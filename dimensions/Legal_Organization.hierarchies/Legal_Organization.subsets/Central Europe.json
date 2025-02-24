@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"Central Europe",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('Central Europe Countries')"
+		}
+	]
+}

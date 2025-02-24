@@ -1,0 +1,13 @@
+{
+	"@type":"Process",
+	"Name":"GenAIAnalysisRAG",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"GenAIAnalysisRAG.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

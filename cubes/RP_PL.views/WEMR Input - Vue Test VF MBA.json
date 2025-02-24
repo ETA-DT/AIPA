@@ -1,0 +1,51 @@
+{
+	"@type":"MDXView",
+	"Name":"WEMR Input - Vue Test VF MBA",
+	"MDX@Code.link":"WEMR Input - Vue Test VF MBA.mdx",
+	"Meta" : 
+	{
+		"Aliases" : 
+		{
+			"[Indicator].[Indicator]" : "English"
+		},
+		"ContextSets" : 
+		{
+			"[Activity].[Activity]" : 
+			{
+				"Expression" : "{[Activity].[Activity].[Tot_act]}"
+			},
+			"[Currency].[Currency]" : 
+			{
+				"Expression" : "{[Currency].[Currency].[MEUR], [Currency].[Currency].[KEUR], [Currency].[Currency].[MLCL], [Currency].[Currency].[KLCL]}"
+			},
+			"[Gaap].[Gaap]" : 
+			{
+				"Expression" : "{[Gaap].[Gaap].[Local_Gaap_Mgmt_tool]}"
+			},
+			"[Integration_Rate].[Integration_Rate]" : 
+			{
+				"Expression" : "{[Integration_Rate].[Integration_Rate].[NO_APP], [Integration_Rate].[Integration_Rate].[APP], [Integration_Rate].[Integration_Rate].[NA]}"
+			},
+			"[Legal_Organization].[Legal_Organization]" : 
+			{
+				"Expression" : "{[Legal_Organization].[Legal_Organization].[VTD_corp]}"
+			},
+			"[Management_Organization].[Management_Organization]" : 
+			{
+				"Expression" : "{TM1SubsetAll([Management_Organization])}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Activity].[Activity]" : false,
+			"[Currency].[Currency]" : false,
+			"[Gaap].[Gaap]" : false,
+			"[Indicator].[Indicator]" : false,
+			"[Integration_Rate].[Integration_Rate]" : false,
+			"[Legal_Organization].[Legal_Organization]" : false,
+			"[Management_Organization].[Management_Organization]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

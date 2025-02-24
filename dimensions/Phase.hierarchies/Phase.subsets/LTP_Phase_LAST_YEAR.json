@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"LTP_Phase_LAST_YEAR",
+	"Expression":"{TM1FILTERBYPATTERN( {TM1SUBSETALL( [Phase] )}, [z_Admin_Param].([z_Admin_Param].[PHASE_LTP_LAST_YEAR], [z_str_var].[STR_VAR_1]))}"
+}

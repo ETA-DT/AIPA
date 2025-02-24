@@ -1,0 +1,29 @@
+{
+	"@type":"Subset",
+	"Name":"4- IFRIC12",
+	"Alias":"French",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('RTPL1002S')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('NFI220')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('NFI250')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('NFI220_OL_FL')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('NFI250_OL_FL')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('NFI220_OBS')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')/Hierarchies('Indicator_LTP')/Elements('NFI250_OBS')"
+		}
+	]
+}

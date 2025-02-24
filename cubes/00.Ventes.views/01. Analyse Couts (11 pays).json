@@ -1,0 +1,23 @@
+{
+	"@type":"MDXView",
+	"Name":"01. Analyse Couts (11 pays)",
+	"MDX@Code.link":"01. Analyse Couts (11 pays).mdx",
+	"Meta" : 
+	{
+		"Aliases" : {},
+		"ContextSets" : 
+		{
+			"[Phase].[Phase]" : 
+			{
+				"Expression" : "{[Phase].[Phase].[ACT_BUDG_NB^ACT_TOT^ACT],EXCEPT(DRILLDOWNMEMBER({[Phase].[Phase].[BUDG_VC_TOT]} , {[Phase].[Phase].[BUDG_VC_TOT]} , RECURSIVE) , {[Phase].[Phase].[ACT_BUDG_NB^BUDG_ALL^BUDG_VC_TOT^MAN_BUDG_VC]})}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Indicateurs_Activité].[Indicateurs_Activité]" : false,
+			"[Pays].[Pays]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

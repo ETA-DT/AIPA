@@ -1,0 +1,60 @@
+{
+	"@type":"MDXView",
+	"Name":"zViewSource_Country",
+	"MDX@Code.link":"zViewSource_Country.mdx",
+	"Meta" : 
+	{
+		"Aliases" : 
+		{
+			"[Indicator_Vector].[Indicator_Vector]" : "French",
+			"[Legal_Organization].[Legal_Organization]" : "French"
+		},
+		"CalculatedMembers" : 
+		{
+			"[Period].[Period]" : 
+			[
+				
+				{
+					"Anchor" : "[Period].[Period].[2023.Q4^2023.12]",
+					"Caption" : "Σ(2023.01 , 2023.02 , 2023.03 , 2023.04 , 2023.05 , 2023.06 , 2023.07 , 2023.08 , 2023.09 , 2023.10 , 2023.11 , 2023.12)",
+					"InsertionPosition" : "AFTER",
+					"MemberID" : "[Period].[Period].[Σ(2023.01 , 2023.02 , 2023.03 , 2023.04 , 2023.05 , 2023.06 , 2023.07 , 2023.08 , 2023.09 , 2023.10 , 2023.11 , 2023.12)]",
+					"Parent" : "[Period].[Period].[2023.Q4]"
+				}
+			]
+		},
+		"ContextSets" : 
+		{
+			"[Audit_ID].[Audit_ID]" : 
+			{
+				"Expression" : "{[Audit_ID].[Audit_ID].MEMBERS}"
+			},
+			"[Currency].[Currency]" : 
+			{
+				"Expression" : "{[Currency].[Currency].MEMBERS}"
+			},
+			"[Indicator_Vector].[Indicator_Vector]" : 
+			{
+				"Expression" : "{[Indicator_Vector].[Indicator_Vector].MEMBERS}"
+			},
+			"[Integration_Rate].[Integration_Rate]" : 
+			{
+				"Expression" : "{[Integration_Rate].[Integration_Rate].MEMBERS}"
+			},
+			"[Phase].[Phase]" : 
+			{
+				"Expression" : "{[Phase].[Phase].MEMBERS}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Audit_ID].[Audit_ID]" : false,
+			"[Currency].[Currency]" : false,
+			"[Indicator_Vector].[Indicator_Vector]" : false,
+			"[Integration_Rate].[Integration_Rate]" : false,
+			"[Legal_Organization].[Legal_Organization]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"@type":"MDXView",
+	"Name":"00. Resultats",
+	"MDX@Code.link":"00. Resultats.mdx",
+	"Meta" : 
+	{
+		"Aliases" : {},
+		"ContextSets" : 
+		{
+			"[Indicateurs_Activité].[Indicateurs_Activité]" : 
+			{
+				"Expression" : "{[Indicateurs_Activité].[Indicateurs_Activité].MEMBERS}"
+			},
+			"[Phase].[Phase]" : 
+			{
+				"Expression" : "{[Phase].[Phase].[ACT_BUDG_NB^ACT_TOT^ACT],[Phase].[Phase].[BUDG_VC]}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Indicateurs_Activité].[Indicateurs_Activité]" : false,
+			"[Pays].[Pays]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

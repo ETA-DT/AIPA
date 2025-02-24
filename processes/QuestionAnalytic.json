@@ -1,0 +1,13 @@
+{
+	"@type":"Process",
+	"Name":"QuestionAnalytic",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"QuestionAnalytic.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

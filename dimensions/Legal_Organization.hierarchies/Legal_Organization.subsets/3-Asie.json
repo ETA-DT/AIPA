@@ -1,0 +1,29 @@
+{
+	"@type":"Subset",
+	"Name":"3-Asie",
+	"Alias":"French",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('ASIA')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('ASIA_Corp')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('CHN')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('HK')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('IN')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('KR')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('PH')"
+		}
+	]
+}

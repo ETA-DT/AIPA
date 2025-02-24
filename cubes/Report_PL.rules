@@ -1,0 +1,74 @@
+SKIPCHECK;
+
+
+['PMM_D1'] = IF(ELISANC('Management_Organization','VTD_corp_BM',!Management_Organization)>0
+				#&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PL0000_DO')<>0
+				#&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PMM_D_CWU')<>0
+				, -1 * ['PL0000_DO'] \ ['PMM_D_CWU']
+				, stet);
+
+			
+['PMM_D2'] = IF(ELISANC('Management_Organization','VTD_corp_BM',!Management_Organization)>0
+				&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PMM_D_CWU')<>0
+				&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PMM_D_PWU')<>0
+				, ['PMM_D_CWU'] \ ['PMM_D_PWU']
+				, stet);
+				
+['PMM_D3'] = IF(ELISANC('Management_Organization','VTD_corp_BM',!Management_Organization)>0
+				&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'TPL10_dest_nosub')<>0
+				&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PMM_D_PWU')<>0
+				, ['TPL10_dest_nosub'] \ ['PMM_D_PWU']
+				, stet);
+#2024-04-30 - LMA : Suppression base de calcul sur C: + condition sur indicateurs ayant de la donnée
+['PMM_D'] = IF(ELISANC('Management_Organization','VTD_corp_BM',!Management_Organization)>0
+				#&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PL0000_DO')<>0
+				#&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'TPL10_dest_nosub')<>0
+				, DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PL0000_DO')
+                \ DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'TPL10_dest_nosub')
+				, CONTINUE);
+
+# ['PMM_D'] = C: IF(ELISANC('Management_Organization','VTD_corp_BM',!Management_Organization)>0
+# 				&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PL0000_DO')<>0
+# 				#&DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'TPL10_dest_nosub')<>0
+# 				, -1 * ['PL0000_DO'] \ ['TPL10_dest_nosub']
+# 				, Stet);
+
+
+
+####################################
+FEEDERS;
+####################################
+
+
+# PMM_D1
+#['PL0000_DO'] => ['PMM_D1'];
+#['PMM_D_CWU'] => ['PMM_D1'];
+
+#------------------
+# PMM_D
+#------------------
+
+
+# PMM_D1
+['PL0000_DO'] => ['PMM_D1'];
+#['PMM_D_CWU'] => ['PMM_D1'];
+
+# PMM_D2
+['PMM_D_CWU'] => ['PMM_D2'];
+#['PMM_D_PWU'] => ['PMM_D2'];
+
+# PMM_D3
+['TPL10_dest_nosub'] => ['PMM_D3'];
+#['PMM_D_PWU'] => ['PMM_D3'];
+
+['PL0000_DO'] => ['PMM_D'];
+#['TPL10_dest_nosub'] => ['PMM_D'];
+
+#------------------
+# PMM_D
+#------------------
+#['PL0000_DO','VTD_corp_BM'] => DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,!Management_Organization,!Period,!Phase,'PMM_D') ;
+#['PL0000_DO','VTD_corp_BM'] => DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,'VTD_corp_BM',!Period,!Phase,'PMM_D') ;
+#['PL0000_DO','VTD_corp_BM'] => DB(IF(ELISANC('Management_Organization','VTD_corp_BM',!Management_Organization)=0,' ','Report_PL')
+ #                                                         ,!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,'VTD_corp_BM',!Period,!Phase,'PMM_D') ;
+#['TPL10_dest_nosub','VTD_corp_BM'] => DB('Report_PL',!Activity,!Currency,!Gaap,!Integration_Rate,!Legal_Organization,'VTD_corp_BM',!Period,!Phase,'PMM_D') ;

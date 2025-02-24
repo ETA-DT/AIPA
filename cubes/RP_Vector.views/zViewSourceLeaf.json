@@ -1,0 +1,44 @@
+{
+	"@type":"MDXView",
+	"Name":"zViewSourceLeaf",
+	"MDX@Code.link":"zViewSourceLeaf.mdx",
+	"Meta" : 
+	{
+		"Aliases" : 
+		{
+			"[Indicator_Vector].[Indicator_Vector]" : "French"
+		},
+		"ContextSets" : 
+		{
+			"[Audit_ID].[Audit_ID]" : 
+			{
+				"IsPublic" : true,
+				"SubsetName" : "Default"
+			},
+			"[Currency].[Currency]" : 
+			{
+				"IsPublic" : true,
+				"SubsetName" : "Default"
+			},
+			"[Integration_Rate].[Integration_Rate]" : 
+			{
+				"IsPublic" : true,
+				"SubsetName" : "Default"
+			},
+			"[Phase].[Phase]" : 
+			{
+				"Expression" : "{[Phase].[Phase].[ACT_BUDG_NB^ACT_TOT^ACT],[Phase].[Phase].[BUDG_VC]}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Audit_ID].[Audit_ID]" : false,
+			"[Currency].[Currency]" : false,
+			"[Indicator_Vector].[Indicator_Vector]" : false,
+			"[Integration_Rate].[Integration_Rate]" : false,
+			"[Legal_Organization].[Legal_Organization]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

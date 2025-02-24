@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"TOUT",
+	"Expression":"TM1SubsetAll([Management_Organization])"
+}

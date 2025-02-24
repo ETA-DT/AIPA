@@ -1,0 +1,58 @@
+{
+	"@type":"MDXView",
+	"Name":"Actual_control_indicator",
+	"MDX@Code.link":"Actual_control_indicator.mdx",
+	"Meta" : 
+	{
+		"Aliases" : 
+		{
+			"[Currency].[Currency]" : "French",
+			"[Indicator].[Indicator]" : "English",
+			"[Legal_Organization].[Legal_Organization]" : "MEMBER_NAME",
+			"[Management_Organization].[Management_Organization]" : "MEMBER_NAME"
+		},
+		"ContextSets" : 
+		{
+			"[Activity].[Activity]" : 
+			{
+				"Expression" : "{[Activity].[Activity].[FE]}"
+			},
+			"[Currency].[Currency]" : 
+			{
+				"Expression" : "{[Currency].[Currency].[LCL]}"
+			},
+			"[Gaap].[Gaap]" : 
+			{
+				"Expression" : "{[Gaap].[Gaap].[Local_Gaap_Mgmt_tool]}"
+			},
+			"[Integration_Rate].[Integration_Rate]" : 
+			{
+				"Expression" : "{[Integration_Rate].[Integration_Rate].[NO_APP], [Integration_Rate].[Integration_Rate].[APP], [Integration_Rate].[Integration_Rate].[NA]}"
+			},
+			"[Legal_Organization].[Legal_Organization]" : 
+			{
+				"Expression" : "{[Legal_Organization].[Legal_Organization].[SI038]}"
+			},
+			"[Management_Organization].[Management_Organization]" : 
+			{
+				"Expression" : "{[Management_Organization].[Management_Organization].[FR_038]}"
+			},
+			"[Phase].[Phase]" : 
+			{
+				"Expression" : "{[Phase].[Phase].[ACT_BUDG_NB^ACT_TOT^ACT],[Phase].[Phase].[FORECASTING]}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Activity].[Activity]" : false,
+			"[Currency].[Currency]" : false,
+			"[Gaap].[Gaap]" : false,
+			"[Indicator].[Indicator]" : false,
+			"[Integration_Rate].[Integration_Rate]" : false,
+			"[Legal_Organization].[Legal_Organization]" : false,
+			"[Management_Organization].[Management_Organization]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

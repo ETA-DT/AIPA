@@ -1,0 +1,47 @@
+{
+	"@type":"Cube",
+	"Name":"RP_LTP",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Activity')"
+		},
+		{
+			"@id":"Dimensions('Currency')"
+		},
+		{
+			"@id":"Dimensions('LTP_Components')"
+		},
+		{
+			"@id":"Dimensions('Weighting')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')"
+		},
+		{
+			"@id":"Dimensions('Period')"
+		},
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('Indicator_LTP')"
+		}
+	],
+	"ViewStorageMaxMemory":1000000,
+	"ViewStorageMinTime":1,
+	"Views@Code.links":
+	[
+		"RP_LTP.views/1- Plan Output.json",
+		"RP_LTP.views/2- Master File.json",
+		"RP_LTP.views/3- Plan Output W_APP vs W_NO_APP.json",
+		"RP_LTP.views/4- Plan Output vs LY Plan.json",
+		"RP_LTP.views/5- Balance Sheet.json",
+		"RP_LTP.views/6- Check LTP Level 0.json",
+		"RP_LTP.views/Bruno - Pb Julien LTP.json",
+		"RP_LTP.views/14_Plan Input ZGP - Vue de Test Saisie.json",
+		"RP_LTP.views/checkDataPafeTest.json",
+		"RP_LTP.views/Plan Input ZGP - Vue Test.json",
+		"RP_LTP.views/Plan Input ZGP - Vue Test mbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json"
+	]
+}

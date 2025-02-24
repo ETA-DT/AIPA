@@ -1,0 +1,13 @@
+{
+	"@type":"Subset",
+	"Name":"Pays_Subset",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Pays')/Hierarchies('Pays')/Elements('Espagne')"
+		},
+		{
+			"@id":"Dimensions('Pays')/Hierarchies('Pays')/Elements('Portugal')"
+		}
+	]
+}

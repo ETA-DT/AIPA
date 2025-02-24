@@ -1,0 +1,28 @@
+{
+	"@type":"Subset",
+	"Name":"Default",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Period')/Hierarchies('Period')/Elements('2018')"
+		},
+		{
+			"@id":"Dimensions('Period')/Hierarchies('Period')/Elements('2019')"
+		},
+		{
+			"@id":"Dimensions('Period')/Hierarchies('Period')/Elements('2020')"
+		},
+		{
+			"@id":"Dimensions('Period')/Hierarchies('Period')/Elements('2021')"
+		},
+		{
+			"@id":"Dimensions('Period')/Hierarchies('Period')/Elements('2022')"
+		},
+		{
+			"@id":"Dimensions('Period')/Hierarchies('Period')/Elements('2023')"
+		},
+		{
+			"@id":"Dimensions('Period')/Hierarchies('Period')/Elements('2024')"
+		}
+	]
+}

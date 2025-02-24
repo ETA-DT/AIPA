@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"DL_Copy_RP_PL_LTP_Indicators",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Currency')/Hierarchies('Currency')/Elements('eur')"
+		}
+	]
+}

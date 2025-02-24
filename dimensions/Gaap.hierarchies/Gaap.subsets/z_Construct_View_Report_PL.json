@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"z_Construct_View_Report_PL",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('Total_conso_wo_opt_dis')"
+		}
+	]
+}

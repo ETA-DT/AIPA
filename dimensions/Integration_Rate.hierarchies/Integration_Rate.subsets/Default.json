@@ -1,0 +1,16 @@
+{
+	"@type":"Subset",
+	"Name":"Default",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Integration_Rate')/Hierarchies('Integration_Rate')/Elements('APP')"
+		},
+		{
+			"@id":"Dimensions('Integration_Rate')/Hierarchies('Integration_Rate')/Elements('NA')"
+		},
+		{
+			"@id":"Dimensions('Integration_Rate')/Hierarchies('Integration_Rate')/Elements('NO_APP')"
+		}
+	]
+}

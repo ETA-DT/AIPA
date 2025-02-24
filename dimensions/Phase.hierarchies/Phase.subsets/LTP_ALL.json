@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"LTP_ALL",
+	"Expression":"{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SubsetBasis()}, \"LTP_ALL\")}, ALL, RECURSIVE )} "
+}

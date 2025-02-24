@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Gaap",
+	"Hierarchies@Code.links":
+	[
+		"Gaap.hierarchies/Gaap.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Gaap')/Hierarchies('Gaap')"
+	}
+}

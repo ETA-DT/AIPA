@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"PLNature",
+	"Expression":"{TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1SubsetBasis()}, { [Indicator].[TPL16_nat] }, RECURSIVE ) }, { [Indicator].[TPL15_nat] }, RECURSIVE ) }, { [Indicator].[TPL12_nat], [Indicator].[TPL13_nat], [Indicator].[TPL14_nat] }, RECURSIVE ) }, { [Indicator].[TPL10_nat], [Indicator].[TPL11_nat] }, RECURSIVE ) }"
+}

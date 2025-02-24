@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Weighting",
+	"Hierarchies@Code.links":
+	[
+		"Weighting.hierarchies/Weighting.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Weighting')/Hierarchies('Weighting')"
+	}
+}

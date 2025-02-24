@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"Parent_level_1",
+	"Expression":"{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [Management_Organization] )}, \"VTD_Corp\")}, ALL, RECURSIVE )}, 1,2,3,4,5,6,7)}"
+}
