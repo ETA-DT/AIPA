@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"UM_IDF",
-	"Expression":"{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1SubsetBasis()}, { [Management_Organization].[FR_Z_IDF] }, RECURSIVE ) }, 0)}"
-}

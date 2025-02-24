@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"All_BM",
-	"Expression":"{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( { DRILLUPMEMBER( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [Management_Organization] )}, ALL, RECURSIVE )}, {[Management_Organization].[VTD_corp]} ) }, \"vtd_CORP_BM\")}, ALL, RECURSIVE )}"
-}

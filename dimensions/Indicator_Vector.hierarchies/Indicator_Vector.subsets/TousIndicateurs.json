@@ -1,6 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"TousIndicateurs",
-	"Alias":"French",
-	"Expression":"{[Indicator_Vector].[Indicator_Vector].MEMBERS}"
-}

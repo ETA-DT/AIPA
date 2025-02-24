@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"COMPTE_VECTOR",
-	"Expression":"{TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [Indicator] )}, ALL, RECURSIVE )}"
-}

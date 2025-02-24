@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"All Mgt elements by code",
-	"Expression":"{ EXCEPT( { EXCEPT( { EXCEPT( { EXCEPT( { EXCEPT( { EXCEPT( {TM1FILTERBYLEVEL( {TM1SUBSETALL( [Management_Organization] )}, 0)}, { [Management_Organization].[VTD_VECTORENHANCED_Reject] }) }, { [Management_Organization].[VTD_Reject] }) }, { [Management_Organization].[US_Reject] }) }, { [Management_Organization].[NL_Reject] }) }, { [Management_Organization].[GE_Reject] }) }, { [Management_Organization].[FR_Reject] }) }"
-}

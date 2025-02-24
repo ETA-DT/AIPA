@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"BM_Countries",
-	"Expression":"{ DRILLDOWNMEMBER( { DRILLDOWNMEMBER( { DRILLDOWNMEMBER( {TM1SubsetBasis()}, {[Management_Organization].[VTD_corp_BM]} ) }, {[Management_Organization].[BM01]} ) }, {[Management_Organization].[BM02]} ) }"
-}

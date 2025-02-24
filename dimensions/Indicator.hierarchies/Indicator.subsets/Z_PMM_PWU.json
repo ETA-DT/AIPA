@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Z_PMM_PWU",
-	"Expression":"{FILTER( {TM1SUBSETALL( [INDICATOR] )}, [INDICATOR].[PMM_PWU] = \"PMM_PWU\")}"
-}

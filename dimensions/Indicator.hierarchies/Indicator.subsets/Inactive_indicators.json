@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Inactive_indicators",
-	"Expression":"{FILTER( {TM1SUBSETALL( [Indicator] )}, [Indicator].[INACTIF] = \"OUI\")}"
-}
