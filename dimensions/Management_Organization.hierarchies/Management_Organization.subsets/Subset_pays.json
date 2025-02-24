@@ -1,0 +1,35 @@
+{
+	"@type":"Subset",
+	"Name":"Subset_pays",
+	"Alias":"French",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('FIN')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('SW')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('ESP')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('POR')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('BEL')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('NETH')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('UK')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('IR')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')/Hierarchies('Management_Organization')/Elements('GER')"
+		}
+	]
+}

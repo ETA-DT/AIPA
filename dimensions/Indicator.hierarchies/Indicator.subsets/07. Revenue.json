@@ -1,0 +1,19 @@
+{
+	"@type":"Subset",
+	"Name":"07. Revenue",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('PL1003_RC_10')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('PL1003_RC_15')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('PL1003_RC_20')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('PL1003_RC_25')"
+		}
+	]
+}

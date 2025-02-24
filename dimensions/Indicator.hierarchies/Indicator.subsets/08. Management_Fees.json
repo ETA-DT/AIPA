@@ -1,0 +1,13 @@
+{
+	"@type":"Subset",
+	"Name":"08. Management_Fees",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('CAFOP_bef_mgmt_fees')"
+		},
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('RESOP_bef_mgmt_fees')"
+		}
+	]
+}

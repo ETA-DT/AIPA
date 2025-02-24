@@ -1,0 +1,27 @@
+{
+	"@type":"Process",
+	"Name":"GenAIAnalysisWithParams",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"GenAIAnalysisWithParams.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"cubeName",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"viewName",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

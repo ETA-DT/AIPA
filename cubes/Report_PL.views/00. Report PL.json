@@ -1,0 +1,49 @@
+{
+	"@type":"MDXView",
+	"Name":"00. Report PL",
+	"MDX@Code.link":"00. Report PL.mdx",
+	"Meta" : 
+	{
+		"Aliases" : 
+		{
+			"[Indicator].[Indicator]" : "English",
+			"[Legal_Organization].[Legal_Organization]" : "French",
+			"[Management_Organization].[Management_Organization]" : "Dutch"
+		},
+		"ContextSets" : 
+		{
+			"[Activity].[Activity]" : 
+			{
+				"Expression" : "{[Activity].[Activity].[Tot_act], [Activity].[Activity].[UR], [Activity].[Activity].[SU], [Activity].[Activity].[SO], [Activity].[Activity].[RC], [Activity].[Activity].[HRAIL], [Activity].[Activity].[NIC], [Activity].[Activity].[FE], [Activity].[Activity].[CO], [Activity].[Activity].[AT], [Activity].[Activity].[OS], [Activity].[Activity].[HO], [Activity].[Activity].[NA], [Activity].[Activity].[Reject_Data]}"
+			},
+			"[Currency].[Currency]" : 
+			{
+				"Expression" : "{[Currency].[Currency].[LCL]}"
+			},
+			"[Gaap].[Gaap]" : 
+			{
+				"Expression" : "{[Gaap].[Gaap].[Total_conso], [Gaap].[Gaap].[Total_conso_wo_opt_dis], [Gaap].[Gaap].[Delta_opt_for], [Gaap].[Gaap].[Delta_discontinued_act]}"
+			},
+			"[Integration_Rate].[Integration_Rate]" : 
+			{
+				"Expression" : "{[Integration_Rate].[Integration_Rate].[NO_APP], [Integration_Rate].[Integration_Rate].[APP], [Integration_Rate].[Integration_Rate].[NA]}"
+			},
+			"[Management_Organization].[Management_Organization]" : 
+			{
+				"Expression" : "{TM1SubsetAll([Management_Organization])}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Activity].[Activity]" : false,
+			"[Currency].[Currency]" : false,
+			"[Gaap].[Gaap]" : false,
+			"[Indicator].[Indicator]" : false,
+			"[Integration_Rate].[Integration_Rate]" : false,
+			"[Legal_Organization].[Legal_Organization]" : false,
+			"[Management_Organization].[Management_Organization]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

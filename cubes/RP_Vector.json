@@ -1,0 +1,45 @@
+{
+	"@type":"Cube",
+	"Name":"RP_Vector",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Audit_ID')"
+		},
+		{
+			"@id":"Dimensions('Currency')"
+		},
+		{
+			"@id":"Dimensions('Integration_Rate')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')"
+		},
+		{
+			"@id":"Dimensions('Period')"
+		},
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')"
+		}
+	],
+	"ViewStorageMaxMemory":100000,
+	"ViewStorageMinTime":1,
+	"Views@Code.links":
+	[
+		"RP_Vector.views/Check BS.json",
+		"RP_Vector.views/DL_RP_PL_VECTOR_PL2225_FCF.json",
+		"RP_Vector.views/Fiabilisation_Donnees_Vector.json",
+		"RP_Vector.views/Matrice Contrôle VECTOR.json",
+		"RP_Vector.views/portugalverif.json",
+		"RP_Vector.views/Indicator_2023_months.json",
+		"RP_Vector.views/Resultat_Net_2023_Pays.json",
+		"RP_Vector.views/Resultat_Net_2023_Pays_Produit.json",
+		"RP_Vector.views/zViewSource.json",
+		"RP_Vector.views/zViewSource_Country.json",
+		"RP_Vector.views/zViewSource_VentesPrediction.json",
+		"RP_Vector.views/zViewSourceLeaf.json"
+	]
+}

@@ -1,0 +1,16 @@
+{
+	"@type":"Subset",
+	"Name":"UGT_Sud_Europe",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('POR')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('ESP')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('Inter_Coaches_internorte')"
+		}
+	]
+}

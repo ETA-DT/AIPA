@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"LTP_Components",
+	"Hierarchies@Code.links":
+	[
+		"LTP_Components.hierarchies/LTP_Components.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('LTP_Components')/Hierarchies('LTP_Components')"
+	}
+}

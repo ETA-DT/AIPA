@@ -1,0 +1,105 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Project",
+	"Elements":
+	[
+		{
+			"Name":"All Projects",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Non-NPP Projects",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"T2001",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"T2001-001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"F5324",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"F5324-001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"BAU",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"New Policy Proposals",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"NPP003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"NPP002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"NPP001",
+			"Type":"Numeric"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"All Projects",
+			"ComponentName":"Non-NPP Projects",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Projects",
+			"ComponentName":"BAU",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Projects",
+			"ComponentName":"New Policy Proposals",
+			"Weight":1
+		},
+		{
+			"ParentName":"Non-NPP Projects",
+			"ComponentName":"T2001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Non-NPP Projects",
+			"ComponentName":"F5324",
+			"Weight":1
+		},
+		{
+			"ParentName":"T2001",
+			"ComponentName":"T2001-001",
+			"Weight":1
+		},
+		{
+			"ParentName":"F5324",
+			"ComponentName":"F5324-001",
+			"Weight":1
+		},
+		{
+			"ParentName":"New Policy Proposals",
+			"ComponentName":"NPP003",
+			"Weight":1
+		},
+		{
+			"ParentName":"New Policy Proposals",
+			"ComponentName":"NPP002",
+			"Weight":1
+		},
+		{
+			"ParentName":"New Policy Proposals",
+			"ComponentName":"NPP001",
+			"Weight":1
+		}
+	],
+	"Subsets@Code.links":[]
+}

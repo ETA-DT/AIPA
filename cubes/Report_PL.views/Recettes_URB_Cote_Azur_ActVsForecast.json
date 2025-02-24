@@ -1,0 +1,60 @@
+{
+	"@type":"MDXView",
+	"Name":"Recettes_URB_Cote_Azur_ActVsForecast",
+	"MDX@Code.link":"Recettes_URB_Cote_Azur_ActVsForecast.mdx",
+	"Meta" : 
+	{
+		"Aliases" : 
+		{
+			"[Activity].[Activity]" : "Code_French",
+			"[Currency].[Currency]" : "French",
+			"[Indicator].[Indicator]" : "French",
+			"[Legal_Organization].[Legal_Organization]" : "English",
+			"[Management_Organization].[Management_Organization]" : "MEMBER_NAME",
+			"[Phase].[Phase]" : "MEMBER_NAME"
+		},
+		"ContextSets" : 
+		{
+			"[Activity].[Activity]" : 
+			{
+				"Expression" : "{[Activity].[Activity].[UR]}"
+			},
+			"[Currency].[Currency]" : 
+			{
+				"Expression" : "{[Currency].[Currency].[EUR]}"
+			},
+			"[Gaap].[Gaap]" : 
+			{
+				"Expression" : "{TM1FILTERBYLEVEL(TM1SUBSETALL([Gaap].[Gaap]) , 0)}"
+			},
+			"[Indicator].[Indicator]" : 
+			{
+				"Expression" : "{[Indicator].[Indicator].[Ind_fi_pl_nat^TPL7_nat^TPL3_nat^TPL1_nat^GROSS_MARGIN_nat^TPL10_nat^PL1003^PL1003_RC_10]}"
+			},
+			"[Integration_Rate].[Integration_Rate]" : 
+			{
+				"Expression" : "{[Integration_Rate].[Integration_Rate].[NO_APP], [Integration_Rate].[Integration_Rate].[APP], [Integration_Rate].[Integration_Rate].[NA]}"
+			},
+			"[Legal_Organization].[Legal_Organization]" : 
+			{
+				"Expression" : "{[Legal_Organization].[Legal_Organization].[SU510]}"
+			},
+			"[Management_Organization].[Management_Organization]" : 
+			{
+				"Expression" : "{[Management_Organization].[Management_Organization].[Zone France]}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Activity].[Activity]" : false,
+			"[Currency].[Currency]" : false,
+			"[Gaap].[Gaap]" : false,
+			"[Indicator].[Indicator]" : false,
+			"[Integration_Rate].[Integration_Rate]" : false,
+			"[Legal_Organization].[Legal_Organization]" : false,
+			"[Management_Organization].[Management_Organization]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

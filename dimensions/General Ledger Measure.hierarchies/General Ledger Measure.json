@@ -1,0 +1,32 @@
+{
+	"@type":"Hierarchy",
+	"Name":"General Ledger Measure",
+	"Elements":
+	[
+		{
+			"Name":"Movement",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Amount",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Commentary",
+			"Type":"String"
+		},
+		{
+			"Name":"Watsonx Commentary",
+			"Type":"String"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"Movement",
+			"ComponentName":"Amount",
+			"Weight":1
+		}
+	],
+	"Subsets@Code.links":[]
+}

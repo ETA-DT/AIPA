@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"ApplicationSheet",
+	"Hierarchies@Code.links":
+	[
+		"ApplicationSheet.hierarchies/ApplicationSheet.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('ApplicationSheet')/Hierarchies('ApplicationSheet')"
+	}
+}

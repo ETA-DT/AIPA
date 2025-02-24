@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"PLDest",
+	"Expression":"{TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1SubsetBasis()}, { [Indicator].[TPL16_dest] }, RECURSIVE ) }, { [Indicator].[TPL15_dest] }, RECURSIVE ) }, { [Indicator].[TPL14_dest] }, RECURSIVE ) }, { [Indicator].[TPL13_dest] }, RECURSIVE ) }, { [Indicator].[TPL12_dest] }, RECURSIVE ) }, { [Indicator].[TPL11_dest^PL0000_TPL11] }, RECURSIVE ) }, { [Indicator].[TPL11_dest^PL0000_Other^PL0000_AC], [Indicator].[TPL11_dest^PL0000_Other^PL0000_CD], [Indicator].[TPL11_dest^PL0000_Other^PL0000_CS], [Indicator].[TPL11_dest^PL0000_Other^PL0000_DS], [Indicator].[TPL11_dest^PL0000_Other^PL0000_IN], [Indicator].[TPL11_dest^PL0000_Other^PL0000_MI] }, RECURSIVE ) }, { [Indicator].[TPL11_dest^PL0000_ST], [Indicator].[TPL11_dest^PL0000_DO], [Indicator].[TPL11_dest^PL0000_MF], [Indicator].[TPL11_dest^PL0000_ET], [Indicator].[TPL11_dest^PL0000_FL] }, RECURSIVE ) }, { [Indicator].[TPL10_dest] }, RECURSIVE ) }"
+}

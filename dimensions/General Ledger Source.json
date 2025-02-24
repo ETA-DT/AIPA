@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"General Ledger Source",
+	"Hierarchies@Code.links":
+	[
+		"General Ledger Source.hierarchies/General Ledger Source.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('General Ledger Source')/Hierarchies('General Ledger Source')"
+	}
+}

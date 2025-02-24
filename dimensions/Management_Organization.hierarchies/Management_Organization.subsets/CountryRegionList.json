@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"CountryRegionList",
+	"Expression":"{ EXCEPT( {TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {[Management_Organization].[VTD_corp]}, ALL, RECURSIVE )}, 1,2,3,4)}, { [Management_Organization].[*_ARCH] }) }"
+}

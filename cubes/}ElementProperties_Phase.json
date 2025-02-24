@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"}ElementProperties_Phase",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('}ElementProperties')"
+		}
+	],
+	"Views@Code.links":[]
+}

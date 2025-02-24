@@ -1,0 +1,16 @@
+{
+	"@type":"Subset",
+	"Name":"Split_Ajelo_1070_Digital_Services",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('SI120')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('SI121')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')/Hierarchies('Legal_Organization')/Elements('SU1070')"
+		}
+	]
+}

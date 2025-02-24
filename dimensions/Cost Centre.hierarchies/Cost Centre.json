@@ -1,0 +1,123 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Cost Centre",
+	"Elements":
+	[
+		{
+			"Name":"All Cost Centres",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Division 1",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"C100001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"C100002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"C100003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Division 2",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"C200001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"C200002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"C200003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Division 3",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"C300001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"C300002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"C300003",
+			"Type":"Numeric"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"All Cost Centres",
+			"ComponentName":"Division 1",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Cost Centres",
+			"ComponentName":"Division 2",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Cost Centres",
+			"ComponentName":"Division 3",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 1",
+			"ComponentName":"C100001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 1",
+			"ComponentName":"C100002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 1",
+			"ComponentName":"C100003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 2",
+			"ComponentName":"C200001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 2",
+			"ComponentName":"C200002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 2",
+			"ComponentName":"C200003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 3",
+			"ComponentName":"C300001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 3",
+			"ComponentName":"C300002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Division 3",
+			"ComponentName":"C300003",
+			"Weight":1
+		}
+	],
+	"Subsets@Code.links":[]
+}

@@ -1,0 +1,14 @@
+{
+	"@type":"Dimension",
+	"Name":"General Ledger Measure",
+	"AllLeavesHierarchyName":"Leaves",
+	"Hierarchies@Code.links":
+	[
+		"General Ledger Measure.hierarchies/General Ledger Measure.json",
+		"General Ledger Measure.hierarchies/Commentary.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('General Ledger Measure')/Hierarchies('General Ledger Measure')"
+	}
+}

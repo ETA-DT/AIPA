@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"06. CAFOP",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Indicator')/Hierarchies('Indicator')/Elements('NFIFIN')"
+		}
+	]
+}

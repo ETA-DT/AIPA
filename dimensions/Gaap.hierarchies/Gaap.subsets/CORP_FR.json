@@ -1,0 +1,32 @@
+{
+	"@type":"Subset",
+	"Name":"CORP_FR",
+	"Alias":"French",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('Total_conso')"
+		},
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('Total_conso_wo_opt_dis')"
+		},
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('IFRS_restated')"
+		},
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('Local_Gaap')"
+		},
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('Local_Gaap_Mgmt_tool')"
+		},
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('IFRS_restatements')"
+		},
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('Eliminations')"
+		},
+		{
+			"@id":"Dimensions('Gaap')/Hierarchies('Gaap')/Elements('NA')"
+		}
+	]
+}

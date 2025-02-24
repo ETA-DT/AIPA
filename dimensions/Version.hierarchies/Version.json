@@ -1,0 +1,151 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Version",
+	"Elements":
+	[
+		{
+			"Name":"All Versions",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"LSTM Forecast",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Variance Versions",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Actual vs Forecast",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Actual vs Budget",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Forecast vs Budget",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Snapshots",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Actual",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Budget",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Forecast",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"AutoAI Forecast",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"WML Forecast",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Optimized Actual",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Baseline",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Forecast - New Snapshot Test",
+			"Type":"Numeric"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"All Versions",
+			"ComponentName":"Baseline",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Versions",
+			"ComponentName":"Optimized Actual",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Versions",
+			"ComponentName":"Actual",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Versions",
+			"ComponentName":"Budget",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Versions",
+			"ComponentName":"Forecast",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Versions",
+			"ComponentName":"AutoAI Forecast",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Versions",
+			"ComponentName":"WML Forecast",
+			"Weight":1
+		},
+		{
+			"ParentName":"Variance Versions",
+			"ComponentName":"Actual vs Forecast",
+			"Weight":1
+		},
+		{
+			"ParentName":"Variance Versions",
+			"ComponentName":"Actual vs Budget",
+			"Weight":1
+		},
+		{
+			"ParentName":"Variance Versions",
+			"ComponentName":"Forecast vs Budget",
+			"Weight":1
+		},
+		{
+			"ParentName":"Actual vs Forecast",
+			"ComponentName":"Actual",
+			"Weight":1
+		},
+		{
+			"ParentName":"Actual vs Forecast",
+			"ComponentName":"Forecast",
+			"Weight":-1
+		},
+		{
+			"ParentName":"Actual vs Budget",
+			"ComponentName":"Actual",
+			"Weight":1
+		},
+		{
+			"ParentName":"Actual vs Budget",
+			"ComponentName":"Budget",
+			"Weight":-1
+		},
+		{
+			"ParentName":"Forecast vs Budget",
+			"ComponentName":"Forecast",
+			"Weight":1
+		},
+		{
+			"ParentName":"Forecast vs Budget",
+			"ComponentName":"Budget",
+			"Weight":-1
+		}
+	],
+	"Subsets@Code.links":[]
+}

@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"ST_Partner_YTD_Vue",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Currency')/Hierarchies('Currency')/Elements('eur')"
+		}
+	]
+}

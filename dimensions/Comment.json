@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Comment",
+	"Hierarchies@Code.links":
+	[
+		"Comment.hierarchies/Comment.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Comment')/Hierarchies('Comment')"
+	}
+}

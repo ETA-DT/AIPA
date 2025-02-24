@@ -1,0 +1,58 @@
+{
+	"@type":"MDXView",
+	"Name":"Forecast FR_Z_NORD_BPL_Target",
+	"MDX@Code.link":"Forecast FR_Z_NORD_BPL_Target.mdx",
+	"Meta" : 
+	{
+		"Aliases" : 
+		{
+			"[Currency].[Currency]" : "French",
+			"[Indicator].[Indicator]" : "English",
+			"[Legal_Organization].[Legal_Organization]" : "MEMBER_NAME",
+			"[Management_Organization].[Management_Organization]" : "MEMBER_NAME"
+		},
+		"ContextSets" : 
+		{
+			"[Activity].[Activity]" : 
+			{
+				"Expression" : "{[Activity].[Activity].[FE]}"
+			},
+			"[Currency].[Currency]" : 
+			{
+				"Expression" : "{[Currency].[Currency].[LCL]}"
+			},
+			"[Gaap].[Gaap]" : 
+			{
+				"Expression" : "{[Gaap].[Gaap].[Local_Gaap_Mgmt_tool]}"
+			},
+			"[Indicator].[Indicator]" : 
+			{
+				"Expression" : "{[Indicator].[Indicator].[TPL10_nat], [Indicator].[Indicator].[TPL11_nat], [Indicator].[Indicator].[GROSS_MARGIN_nat], [Indicator].[Indicator].[TPL12_nat], [Indicator].[Indicator].[TPL13_nat], [Indicator].[Indicator].[TPL14_nat], [Indicator].[Indicator].[Reject_Data], [Indicator].[Indicator].[TPL1_nat], [Indicator].[Indicator].[TPL2], [Indicator].[Indicator].[TPL3_nat], [Indicator].[Indicator].[TPL4], [Indicator].[Indicator].[TPL6], [Indicator].[Indicator].[TPL7_nat], [Indicator].[Indicator].[TPL9]}"
+			},
+			"[Integration_Rate].[Integration_Rate]" : 
+			{
+				"Expression" : "{[Integration_Rate].[Integration_Rate].[NO_APP], [Integration_Rate].[Integration_Rate].[APP], [Integration_Rate].[Integration_Rate].[NA]}"
+			},
+			"[Legal_Organization].[Legal_Organization]" : 
+			{
+				"Expression" : "{[Legal_Organization].[Legal_Organization].[FR_Z_NORD_BPL]}"
+			},
+			"[Management_Organization].[Management_Organization]" : 
+			{
+				"Expression" : "{[Management_Organization].[Management_Organization].[FR_038]}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Activity].[Activity]" : false,
+			"[Currency].[Currency]" : false,
+			"[Gaap].[Gaap]" : false,
+			"[Indicator].[Indicator]" : false,
+			"[Integration_Rate].[Integration_Rate]" : false,
+			"[Legal_Organization].[Legal_Organization]" : false,
+			"[Management_Organization].[Management_Organization]" : false,
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"z_mdx_management_organization_R",
+	"Expression":"{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [Management_Organization] )}, \"ASIA\")}, ALL, RECURSIVE )}"
+}

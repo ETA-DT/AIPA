@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"}ElementProperties_Period",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Period')"
+		},
+		{
+			"@id":"Dimensions('}ElementProperties')"
+		}
+	],
+	"Views@Code.links":[]
+}

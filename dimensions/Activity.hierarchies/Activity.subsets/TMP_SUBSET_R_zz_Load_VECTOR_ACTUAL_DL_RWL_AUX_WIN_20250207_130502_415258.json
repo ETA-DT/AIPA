@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"TMP_SUBSET_R_zz_Load_VECTOR_ACTUAL_DL_RWL_AUX_WIN_20250207_130502_415258",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Activity')/Hierarchies('Activity')/Elements('Tot_act')"
+		}
+	]
+}

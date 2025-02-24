@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"TMP_SUBSET_R_zz_Load_VECTOR_FORECAST_F_Year_DL_RWL_AUX_WIN_20241124_011502_873318",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Activity')/Hierarchies('Activity')/Elements('Tot_act')"
+		}
+	]
+}

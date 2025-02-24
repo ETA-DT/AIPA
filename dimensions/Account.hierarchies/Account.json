@@ -1,0 +1,1149 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Account",
+	"Elements":
+	[
+		{
+			"Name":"All Accounts",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Income Statement",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Expenses",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Staff Costs",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Labour Costs",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Other Labour Costs",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000006",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000007",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000020",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000021",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000022",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Property Expenses",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000010",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000013",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000014",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Other Expense Categories",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Travel Expenses",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000008",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Information Technology Expenses",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000009",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Miscellaneous Expenses",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000011",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"20000015",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Corporate Charges",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000012",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Depreciation Expenses",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000016",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Dividends",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"20000017",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Gross Profit",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Revenue",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"10000004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"10000005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"10000006",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"10000007",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"10000008",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"10000009",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Core Revenue",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"10000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"10000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"10000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Cost of Goods and Services",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"110000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"110000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"110000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Balance Sheet",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Assets",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Current Assets",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"30000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"30000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"30000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"30000007",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Non-Current Assets",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"30000004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"30000005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"30000006",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Owners Equity",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"50000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"50000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"50000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"50000004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"50000005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"50000006",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Liabilities",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Current Liabilities",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"40000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"40000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"40000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Non-Current Liabilities",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"40000004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"40000005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"40000006",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Cash Flow",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Cash Flow From Operating Activities",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"60000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000006",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000007",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000008",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000009",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000010",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000011",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000012",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"60000013",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Cash Flow From Investing Activities",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"70000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"70000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"70000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"70000004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"70000005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"70000006",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"70000007",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"70000008",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Cash Flow From Financing Activities",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"80000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"80000002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"80000003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"80000004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"80000005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"80000006",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"80000007",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"80000008",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"90000001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Statistical Accounts",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"STAT0001",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"STAT0002",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"STAT0003",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"STAT0004",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Sales Drivers",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Total Sales",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"4999",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"4995",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"4998",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"4997",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"4996",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"4994",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"4993",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"STAT0005",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"STAT0006",
+			"Type":"Numeric"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"All Accounts",
+			"ComponentName":"Income Statement",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Accounts",
+			"ComponentName":"Balance Sheet",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Accounts",
+			"ComponentName":"Cash Flow",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Accounts",
+			"ComponentName":"Statistical Accounts",
+			"Weight":1
+		},
+		{
+			"ParentName":"Income Statement",
+			"ComponentName":"Expenses",
+			"Weight":1
+		},
+		{
+			"ParentName":"Income Statement",
+			"ComponentName":"Gross Profit",
+			"Weight":1
+		},
+		{
+			"ParentName":"Expenses",
+			"ComponentName":"Staff Costs",
+			"Weight":1
+		},
+		{
+			"ParentName":"Expenses",
+			"ComponentName":"Property Expenses",
+			"Weight":1
+		},
+		{
+			"ParentName":"Expenses",
+			"ComponentName":"Other Expense Categories",
+			"Weight":1
+		},
+		{
+			"ParentName":"Expenses",
+			"ComponentName":"Dividends",
+			"Weight":1
+		},
+		{
+			"ParentName":"Staff Costs",
+			"ComponentName":"Labour Costs",
+			"Weight":1
+		},
+		{
+			"ParentName":"Staff Costs",
+			"ComponentName":"Other Labour Costs",
+			"Weight":1
+		},
+		{
+			"ParentName":"Labour Costs",
+			"ComponentName":"20000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000007",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000020",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000021",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Labour Costs",
+			"ComponentName":"20000022",
+			"Weight":1
+		},
+		{
+			"ParentName":"Property Expenses",
+			"ComponentName":"20000010",
+			"Weight":1
+		},
+		{
+			"ParentName":"Property Expenses",
+			"ComponentName":"20000013",
+			"Weight":1
+		},
+		{
+			"ParentName":"Property Expenses",
+			"ComponentName":"20000014",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Expense Categories",
+			"ComponentName":"Travel Expenses",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Expense Categories",
+			"ComponentName":"Information Technology Expenses",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Expense Categories",
+			"ComponentName":"Miscellaneous Expenses",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Expense Categories",
+			"ComponentName":"Corporate Charges",
+			"Weight":1
+		},
+		{
+			"ParentName":"Other Expense Categories",
+			"ComponentName":"Depreciation Expenses",
+			"Weight":1
+		},
+		{
+			"ParentName":"Travel Expenses",
+			"ComponentName":"20000008",
+			"Weight":1
+		},
+		{
+			"ParentName":"Information Technology Expenses",
+			"ComponentName":"20000009",
+			"Weight":1
+		},
+		{
+			"ParentName":"Miscellaneous Expenses",
+			"ComponentName":"20000011",
+			"Weight":1
+		},
+		{
+			"ParentName":"Miscellaneous Expenses",
+			"ComponentName":"20000015",
+			"Weight":1
+		},
+		{
+			"ParentName":"Corporate Charges",
+			"ComponentName":"20000012",
+			"Weight":1
+		},
+		{
+			"ParentName":"Depreciation Expenses",
+			"ComponentName":"20000016",
+			"Weight":1
+		},
+		{
+			"ParentName":"Dividends",
+			"ComponentName":"20000017",
+			"Weight":1
+		},
+		{
+			"ParentName":"Gross Profit",
+			"ComponentName":"Revenue",
+			"Weight":1
+		},
+		{
+			"ParentName":"Gross Profit",
+			"ComponentName":"Cost of Goods and Services",
+			"Weight":1
+		},
+		{
+			"ParentName":"Revenue",
+			"ComponentName":"10000004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Revenue",
+			"ComponentName":"10000005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Revenue",
+			"ComponentName":"10000006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Revenue",
+			"ComponentName":"10000007",
+			"Weight":1
+		},
+		{
+			"ParentName":"Revenue",
+			"ComponentName":"10000008",
+			"Weight":1
+		},
+		{
+			"ParentName":"Revenue",
+			"ComponentName":"10000009",
+			"Weight":1
+		},
+		{
+			"ParentName":"Revenue",
+			"ComponentName":"Core Revenue",
+			"Weight":1
+		},
+		{
+			"ParentName":"Core Revenue",
+			"ComponentName":"10000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Core Revenue",
+			"ComponentName":"10000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Core Revenue",
+			"ComponentName":"10000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cost of Goods and Services",
+			"ComponentName":"110000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cost of Goods and Services",
+			"ComponentName":"110000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cost of Goods and Services",
+			"ComponentName":"110000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Balance Sheet",
+			"ComponentName":"Assets",
+			"Weight":1
+		},
+		{
+			"ParentName":"Balance Sheet",
+			"ComponentName":"Owners Equity",
+			"Weight":1
+		},
+		{
+			"ParentName":"Balance Sheet",
+			"ComponentName":"Liabilities",
+			"Weight":1
+		},
+		{
+			"ParentName":"Assets",
+			"ComponentName":"Current Assets",
+			"Weight":1
+		},
+		{
+			"ParentName":"Assets",
+			"ComponentName":"Non-Current Assets",
+			"Weight":1
+		},
+		{
+			"ParentName":"Current Assets",
+			"ComponentName":"30000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Current Assets",
+			"ComponentName":"30000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Current Assets",
+			"ComponentName":"30000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Current Assets",
+			"ComponentName":"30000007",
+			"Weight":1
+		},
+		{
+			"ParentName":"Non-Current Assets",
+			"ComponentName":"30000004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Non-Current Assets",
+			"ComponentName":"30000005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Non-Current Assets",
+			"ComponentName":"30000006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Owners Equity",
+			"ComponentName":"50000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Owners Equity",
+			"ComponentName":"50000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Owners Equity",
+			"ComponentName":"50000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Owners Equity",
+			"ComponentName":"50000004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Owners Equity",
+			"ComponentName":"50000005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Owners Equity",
+			"ComponentName":"50000006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Liabilities",
+			"ComponentName":"Current Liabilities",
+			"Weight":1
+		},
+		{
+			"ParentName":"Liabilities",
+			"ComponentName":"Non-Current Liabilities",
+			"Weight":1
+		},
+		{
+			"ParentName":"Current Liabilities",
+			"ComponentName":"40000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Current Liabilities",
+			"ComponentName":"40000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Current Liabilities",
+			"ComponentName":"40000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Non-Current Liabilities",
+			"ComponentName":"40000004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Non-Current Liabilities",
+			"ComponentName":"40000005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Non-Current Liabilities",
+			"ComponentName":"40000006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow",
+			"ComponentName":"Cash Flow From Operating Activities",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow",
+			"ComponentName":"Cash Flow From Investing Activities",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow",
+			"ComponentName":"Cash Flow From Financing Activities",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow",
+			"ComponentName":"90000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000007",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000008",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000009",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000010",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000011",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000012",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Operating Activities",
+			"ComponentName":"60000013",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Investing Activities",
+			"ComponentName":"70000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Investing Activities",
+			"ComponentName":"70000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Investing Activities",
+			"ComponentName":"70000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Investing Activities",
+			"ComponentName":"70000004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Investing Activities",
+			"ComponentName":"70000005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Investing Activities",
+			"ComponentName":"70000006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Investing Activities",
+			"ComponentName":"70000007",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Investing Activities",
+			"ComponentName":"70000008",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Financing Activities",
+			"ComponentName":"80000001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Financing Activities",
+			"ComponentName":"80000002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Financing Activities",
+			"ComponentName":"80000003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Financing Activities",
+			"ComponentName":"80000004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Financing Activities",
+			"ComponentName":"80000005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Financing Activities",
+			"ComponentName":"80000006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Financing Activities",
+			"ComponentName":"80000007",
+			"Weight":1
+		},
+		{
+			"ParentName":"Cash Flow From Financing Activities",
+			"ComponentName":"80000008",
+			"Weight":1
+		},
+		{
+			"ParentName":"Statistical Accounts",
+			"ComponentName":"STAT0001",
+			"Weight":1
+		},
+		{
+			"ParentName":"Statistical Accounts",
+			"ComponentName":"STAT0002",
+			"Weight":1
+		},
+		{
+			"ParentName":"Statistical Accounts",
+			"ComponentName":"STAT0003",
+			"Weight":1
+		},
+		{
+			"ParentName":"Statistical Accounts",
+			"ComponentName":"STAT0004",
+			"Weight":1
+		},
+		{
+			"ParentName":"Statistical Accounts",
+			"ComponentName":"Sales Drivers",
+			"Weight":1
+		},
+		{
+			"ParentName":"Statistical Accounts",
+			"ComponentName":"STAT0005",
+			"Weight":1
+		},
+		{
+			"ParentName":"Statistical Accounts",
+			"ComponentName":"STAT0006",
+			"Weight":1
+		},
+		{
+			"ParentName":"Sales Drivers",
+			"ComponentName":"Total Sales",
+			"Weight":1
+		},
+		{
+			"ParentName":"Sales Drivers",
+			"ComponentName":"4998",
+			"Weight":1
+		},
+		{
+			"ParentName":"Sales Drivers",
+			"ComponentName":"4997",
+			"Weight":1
+		},
+		{
+			"ParentName":"Sales Drivers",
+			"ComponentName":"4996",
+			"Weight":1
+		},
+		{
+			"ParentName":"Sales Drivers",
+			"ComponentName":"4994",
+			"Weight":1
+		},
+		{
+			"ParentName":"Sales Drivers",
+			"ComponentName":"4993",
+			"Weight":1
+		},
+		{
+			"ParentName":"Total Sales",
+			"ComponentName":"4999",
+			"Weight":1
+		},
+		{
+			"ParentName":"Total Sales",
+			"ComponentName":"4995",
+			"Weight":1
+		}
+	],
+	"Subsets@Code.links":[]
+}
