@@ -1,0 +1,5 @@
+﻿FILE_FORMAT=100
+ENTRYNAME=Ajustement dividendes.xlsm
+ENTRYTYPE=blob
+ENTRYREFERENCE=TM1:///blob/PUBLIC/.\}externals\Ajustement dividendes_20240820141154.xlsm
+REMOVEBLOBONDELETE=Yes

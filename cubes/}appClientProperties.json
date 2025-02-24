@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"}appClientProperties",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('}Clients')"
+		},
+		{
+			"@id":"Dimensions('}appClientProperties')"
+		}
+	],
+	"Views@Code.links":[]
+}

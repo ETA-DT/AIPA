@@ -1,0 +1,140 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - Save Source & Compress
+# Created by : ANONE
+# Created at : 08/10/2013
+# Modified by : YAD /10/02/2014
+# Modified at :
+# Modify reason : Path error + delete extrafiles
+#########################################
+
+
+#-- Création des variables nécessaires à la consignation des informations
+pSource = 'CORE_MODEL';
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+pChore='z_Sauvegarde_a_chaud';
+zProcess = GetProcessName();
+pPeriod = CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+pCountry =  CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+zCube_Process='ZZ_PROCESS_DETAIL';
+
+#-- Mise à jour de la dimension zz_Date_Time_Loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+
+#-- Data Input pour le cube ZZ_PROCESS_Detail_Instance
+CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'Start_date');
+CellPutS('KO' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,  'Status');
+
+#-- Data Input pour le cube ZZ_PROCESS_Detail
+CellPutS(zDateTimeLoadingStart, zCube_Process, zProcess, zDateLoadingStart, 'Start_date');
+CellPutS('KO' , zCube_Process, zProcess ,zDateLoadingStart , 'Status');
+
+
+#-- Création des variables nécessaires
+sTimeStamp = TIMST( NOW(), '\Y\m\d_\h\i\s');
+sServerName = '\\' | CellGetS('z_Admin_Param', 'SERVER_NAME', 'STR_VAR1') | '\';
+sDirectoryTarget = CellGetS('z_Admin_Param', 'REP_SAUVEGARDE', 'STR_VAR1') | '\';
+sDirectoryTemp = CellGetS('z_Admin_Param', 'REP_TEMP', 'STR_VAR1') | '\';
+sDirectoryZip = '"C:\Program Files\7-Zip\7z.exe"';
+sArchiveName = sDirectoryTarget | 'Sauvegarde_Source_' | sTimeStamp | '.zip';
+sListFileType = sDirectoryTemp | 'SauvegardeSourceList.txt';
+sCountry = CellGetS('z_Admin_Param', 'Country', 'STR_VAR2') | '\';
+sDirectoryToSave = sServerName | 'D$\Applis\' | sCountry | '' ;
+
+
+#-- Permet de supprimer le délimiteur du champ dans le batch
+DatasourceASCIIQuoteCharacter='';
+
+#-- Création d'un fichier list.txt contenant l'ensemble des éléments à inclure dans l'archive
+#-- Déclaration d'une liste des types d'éléments à sauvegarder
+ASCIIOUTPUT( sListFileType, sDirectoryToSave | 'Input\Data');
+ASCIIOUTPUT( sListFileType, sDirectoryToSave | 'Input\Data_Core_Model');
+ASCIIOUTPUT( sListFileType, sDirectoryToSave | 'Input\Data_Country');
+ASCIIOUTPUT( sListFileType, sDirectoryToSave | 'Input\Data_Tango_France');
+ASCIIOUTPUT( sListFileType, sDirectoryToSave | 'Input\Structure');
+ASCIIOUTPUT( sListFileType, sDirectoryToSave | 'Input\Structure_Core_Model');
+ASCIIOUTPUT( sListFileType, sDirectoryToSave | 'Input\Structure_Country');
+
+#-- Création d'un fichier .cmd contenant la requête pour sauvegarder l'application
+# -- Methode de compression MX1 correspondant au mode Le plus Rapide sur 7zip
+# -- Compression du fichier en .zip
+
+# -- On se place sur le disque C:
+ASCIIOUTPUT( sDirectoryTemp | 'SauvegardeSource.cmd', 'C:');
+
+# -- On mappe le lecteur de disque afin de ne pas rencontrer l'erreur UNC Path is not supported
+#ASCIIOUTPUT( sDirectoryTemp | 'SauvegardeSource.cmd', 'pushd  ' | sServerName | 'Tango');
+ASCIIOUTPUT( sDirectoryTemp | 'SauvegardeSource.cmd', 'pushd  ' | sServerName | 'Applis\' | sCountry );
+
+
+# -- Parcours du répertoire SAVE afin de supprimer toutes les archives .zip antérieures à pNbJourHisto
+#ASCIIOUTPUT( sDirectoryTemp | 'SauvegardeSource.cmd', 'forfiles -p \Applis\' | sCountry | 'Save -s -m *Source*.zip* /D -' | NumberToString(pNbJourHisto) | ' /C "cmd /c del @PATH"');
+#ASCIIOUTPUT( sDirectoryTemp | 'SauvegardeSource.cmd', 'forfiles -p Save -s -m *Source*.zip* /D -' | NumberToString(pNbJourHisto) | ' /C "cmd /c del @PATH"');
+ASCIIOUTPUT( sDirectoryTemp | 'SauvegardeSource.cmd', 'forfiles -p D:\Applis\Tango_Core_Model\Save -s -m *Source*.zip* /D -' | NumberToString(pNbJourHisto) | ' /C "cmd /c del @PATH"');
+
+
+# -- Unmap le lecteur de disque temporaire
+ASCIIOUTPUT( sDirectoryTemp | 'SauvegardeSource.cmd', 'popd');
+
+# -- Compression Method
+#Différents paramètres:
+# -mx0: Don't compress at all. This is called "copy mode."
+# -mx1: Low compression.   This is called "fastest" mode.
+# -mx3: Fast compression mode.   Will automatically set various parameters.
+# -mx5: Same as above, but "normal."
+# -mx7: This means "maximum" compression.
+# -mx9: This means "ultra" compression.
+ASCIIOUTPUT( sDirectoryTemp | 'SauvegardeSource.cmd', sDirectoryZip | ' a -tzip ' | sArchiveName | ' @' | sListFileType  | ' -r -mx1 -xr!*\*\*');
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#-- Exécution de la commande Sauvegarde de l'application
+ExecuteCommand(sDirectoryTemp | 'SauvegardeSource.cmd',1);
+
+#-- Suppression du fichier Liste des éléments
+ASCIIDELETE( sDirectoryTemp | 'SauvegardeSourceList.txt');
+
+#-- Suppression du fichier .cmd contenant la requête pour sauvegarder l'application
+ASCIIDELETE( sDirectoryTemp | '\SauvegardeSource.cmd');
+
+
+########################## CONSIGNATION DES INFORMATIONS ######################
+
+#-- Consignation des informations dans les cubes 
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+#-- Data Input pour le cube ZZ_PROCESS_Detail_Instance
+CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'Start_date');
+CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'End_date');
+CellPutS('1', zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'Nb_Input_records');
+CellPutS('1', zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,psource, 'Nb_load_records');
+CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,  'Status');
+
+#-- Data Input pour le cube ZZ_PROCESS_Detail
+CellPutS(zDateTimeLoadingStart, zCube_Process, zProcess, zDateLoadingStart, 'Start_date');
+CellPutS(zDateTimeLoadingEnd, zCube_Process, zProcess, zDateLoadingStart, 'End_date');
+CellPutS('1', zCube_Process, zProcess, zDateLoadingStart, 'Nb_Input_records');
+CellPutS('1', zCube_Process, zProcess, zDateLoadingStart, 'Nb_load_records');
+CellPutS('OK' , zCube_Process, zProcess ,zDateLoadingStart , 'Status');
+
+#endregion

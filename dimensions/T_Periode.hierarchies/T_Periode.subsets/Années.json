@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"Années",
+	"Expression":"FILTER({TM1SUBSETALL( [T_Periode] )}, LEN([T_Periode].CurrentMember.Name) = 4)"
+}

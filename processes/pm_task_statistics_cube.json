@@ -1,0 +1,13 @@
+{
+	"@type":"Process",
+	"Name":"pm_task_statistics_cube",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"pm_task_statistics_cube.ti",
+	"UIData":"CubeAction=1511\tDataAction=1503\tCubeLogChanges=0\t",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

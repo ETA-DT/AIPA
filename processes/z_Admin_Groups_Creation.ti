@@ -1,0 +1,58 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - Update technical dimension }Groups
+# Created by : AEV
+# Created at : 03/08/2011
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+
+zDim = '}Groups';
+
+zFile = 'Tango_Groups_Securities';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\' | zFile | '.csv';
+DataSourceNameForServer = Source_File;
+
+#DIMENSIONDELETEALLELEMENTS('}Groups');
+
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByName','ASCENDING');
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+AddGroup('ADMIN');
+AddGroup('DataAdmin');
+AddGroup('SecurityAdmin');
+
+IF( vGroup@<>'');
+	AddGroup(vGroup);
+ENDIF;
+
+
+
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

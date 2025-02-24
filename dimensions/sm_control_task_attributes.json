@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"sm_control_task_attributes",
+	"Hierarchies@Code.links":
+	[
+		"sm_control_task_attributes.hierarchies/sm_control_task_attributes.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('sm_control_task_attributes')/Hierarchies('sm_control_task_attributes')"
+	}
+}

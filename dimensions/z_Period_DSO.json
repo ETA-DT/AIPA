@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Period_DSO",
+	"Hierarchies@Code.links":
+	[
+		"z_Period_DSO.hierarchies/z_Period_DSO.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Period_DSO')/Hierarchies('z_Period_DSO')"
+	}
+}

@@ -1,0 +1,741 @@
+{
+	"@type":"Hierarchy",
+	"Name":"sm_control_task_attributes",
+	"Elements":
+	[
+		{
+			"Name":"Source Element",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Source AliasName",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Source Dimension",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Owner",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"source_type",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pre_ti",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pre_ti_return",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"post_ti",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"post_ti_return",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Template Attributes",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Due Date",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Delegate Comment",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Start Comment",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Revoke Comment",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Version Attributes",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Delegate Subject",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"workbook",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"workbook path",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"worksheet",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Text",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"owner group",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Name",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Alias",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Task",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Status",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"delegated datetime",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"submitted datetime",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"approved datetime",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"rejected datetime",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"completed datetime",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"started datetime",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"type",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Delegate Message",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Submit Subject",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Submit Message",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Delegated By",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Submitted By",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Approved By",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Rejected By",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Started By",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Completed By",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Reject Message",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Reject Subject",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Approve Message",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Approve Subject",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Complete Message",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Complete Subject",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Revoke Message",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Revoke Subject",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Start Message",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Start Subject",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Complete Comment",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Submit Comment",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Reject Comment",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Approve Comment",
+			"Type":"Numeric"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"type",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Name",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"owner group",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Task",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Delegate Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Delegate Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Submit Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Submit Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Reject Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Reject Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Approve Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Approve Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Complete Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Complete Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Revoke Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Revoke Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Start Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Start Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Source Element",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Source AliasName",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Source Dimension",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"workbook",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"workbook path",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"worksheet",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"Owner",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"source_type",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"pre_ti",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"pre_ti_return",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"post_ti",
+			"Weight":1
+		},
+		{
+			"ParentName":"Template Attributes",
+			"ComponentName":"post_ti_return",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Status",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"delegated datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"submitted datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"approved datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"rejected datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"completed datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"started datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Delegated By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Submitted By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Approved By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Rejected By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Started By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Completed By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Due Date",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Complete Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Submit Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Reject Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Approve Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Delegate Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Start Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Version Attributes",
+			"ComponentName":"Revoke Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Status",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"delegated datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"submitted datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"approved datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"rejected datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"completed datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"started datetime",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"type",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Name",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"owner group",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Delegate Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Delegate Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Submit Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Submit Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Delegated By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Submitted By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Approved By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Rejected By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Started By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Completed By",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Reject Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Reject Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Approve Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Approve Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Complete Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Complete Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Revoke Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Revoke Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Start Message",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Start Subject",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"workbook",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"workbook path",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"worksheet",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Due Date",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Source Element",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Source AliasName",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Source Dimension",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Owner",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Complete Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Submit Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Reject Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Approve Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"source_type",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"pre_ti",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"pre_ti_return",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"post_ti",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"post_ti_return",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Delegate Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Start Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Text",
+			"ComponentName":"Revoke Comment",
+			"Weight":1
+		},
+		{
+			"ParentName":"Alias",
+			"ComponentName":"Task",
+			"Weight":1
+		}
+	],
+	"Subsets@Code.links":[]
+}

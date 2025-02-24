@@ -1,0 +1,43 @@
+{
+	"@type":"Process",
+	"Name":"z_Clients2Suppress_Deletion",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"z_Clients2Suppress_Deletion.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"TM1DimensionSubset",
+		"dataSourceNameForClient":"}Clients",
+		"dataSourceNameForServer":"}Clients",
+		"subset":"Client2Suppress"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"P_Valid",
+			"Prompt":"Etes vous sur de vouloir supprimer ces users ?",
+			"Value":"NON",
+			"Type":"String"
+		},
+		{
+			"Name":"P_Subset",
+			"Prompt":"Nom du sous-ensemble des users à supprimer.",
+			"Value":"Client2Suppress",
+			"Type":"String"
+		}
+	],
+	"Variables":
+	[
+		{
+			"Name":"Client",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

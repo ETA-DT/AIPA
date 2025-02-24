@@ -1,0 +1,45 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Rate_Type",
+	"Elements":
+	[
+		{
+			"Name":"All Rate Types",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Theoretical_tax_rate",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Interest_placement_rate",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Interest_borrowing_rate",
+			"Type":"Numeric"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"All Rate Types",
+			"ComponentName":"Theoretical_tax_rate",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Rate Types",
+			"ComponentName":"Interest_placement_rate",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Rate Types",
+			"ComponentName":"Interest_borrowing_rate",
+			"Weight":1
+		}
+	],
+	"Subsets@Code.links":
+	[
+		"Rate_Type.subsets/All Rate Types.json"
+	]
+}

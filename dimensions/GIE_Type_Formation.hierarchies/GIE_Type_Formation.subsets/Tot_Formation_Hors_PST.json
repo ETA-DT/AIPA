@@ -1,0 +1,22 @@
+{
+	"@type":"Subset",
+	"Name":"Tot_Formation_Hors_PST",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('GIE_Type_Formation')/Hierarchies('GIE_Type_Formation')/Elements('All_PFC')"
+		},
+		{
+			"@id":"Dimensions('GIE_Type_Formation')/Hierarchies('GIE_Type_Formation')/Elements('All_PFS')"
+		},
+		{
+			"@id":"Dimensions('GIE_Type_Formation')/Hierarchies('GIE_Type_Formation')/Elements('All_PFI')"
+		},
+		{
+			"@id":"Dimensions('GIE_Type_Formation')/Hierarchies('GIE_Type_Formation')/Elements('Reject_data')"
+		},
+		{
+			"@id":"Dimensions('GIE_Type_Formation')/Hierarchies('GIE_Type_Formation')/Elements('NA')"
+		}
+	]
+}

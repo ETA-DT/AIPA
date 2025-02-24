@@ -1,0 +1,5 @@
+﻿FILE_FORMAT=100
+ENTRYNAME=11_1. P&L aggregated.xlsm
+ENTRYTYPE=blob
+ENTRYREFERENCE=TM1:///blob/PUBLIC/.\}externals\11_1. P&L aggregated_20240912071409.xlsm
+REMOVEBLOBONDELETE=Yes

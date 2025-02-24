@@ -1,0 +1,236 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#--AUTHOR= MFS 
+#--CREATE_DATE= 2015/06/15
+#--MODIF_DATE= 
+#--PRO_DESC= POPULATING RWL attribute ( RUN / WIN /LOSS)
+#--NATURE= TRN
+#--COMPLEX= 1
+#--MODULE= PMM
+#--VERSION=1.0.0
+
+#--REM= ########################################################
+#--REM= # V1.0 initial version
+#--REM= ########################################################
+#--TAB= PROLOG
+#--DESC=  varaible decalration and creation of temporary objects
+
+#--REM=Force the process to work on the data from the active SANDBOX
+SETUSEACTIVESANDBOXPROPERTY(1);
+
+#--REM=Variables declaration
+
+V_S_CUBE='REPORT_PL';
+V_S_INDICATOR='TPL10_dest';
+
+#V_S_CURRENT_MONTH=CELLGETS('Z_ADMIN_PARAM','MONTH_ACTUAL','STR_VAR1');
+V_S_CURRENT_MONTH_YTD=P_S_CURRENT_MONTH|'_YTD';
+
+V_S_PREV_MONTH=ATTRS('PERIOD',P_S_CURRENT_MONTH,'M-1');
+V_S_PREV_MONTH_YTD=V_S_PREV_MONTH|'_YTD';
+
+
+
+
+V_S_ATTR_RWL='Run_Win_Loss';
+
+
+
+### BEGIN CONTROL BLOCKS ###
+###########################################################################
+#	BEGIN: BLOCK TO GET CLEAN USER NAME
+###########################################################################
+#--REM= Getting the name of the user that launch the process.
+V_S_USER_LONG=TM1USER();
+
+
+#--REM= Test if CAM ID is using by retrieving the User Name.
+V_S_USER=TM1USER();
+IF( SUBST( V_S_USER, 1, 7) @= 'CAMID("') ;
+	V_S_CAM_USER=TM1USER();
+	V_S_USER_LONG = ATTRS('}CLIENTS', V_S_CAM_USER, '}TM1_DEFAULTDISPLAYVALUE');
+	V_N_SIZ_STR_MAX = LONG(V_S_USER_LONG);
+	V_N_PREFIX = LONG('L_Oréal AD\');
+	V_S_USER = SUBST(V_S_USER_LONG, V_N_PREFIX+1 , V_N_SIZ_STR_MAX);
+ENDIF;
+
+#--REM= Replacement of special characters by'_'.
+V_S_RESERVED_CHARS = '/\:*?"<>|''; ,';
+V_N_ITERATE = 1;
+V_N_USER_NAME_SIZ = LONG(V_S_USER);
+V_S_NAME_TMP = '';
+WHILE( V_N_ITERATE <= V_N_USER_NAME_SIZ) ;
+	V_S_CHAR = SUBST( V_S_USER, V_N_ITERATE, 1);
+	IF( SCAN( V_S_CHAR, V_S_RESERVED_CHARS) <> 0) ;
+		V_S_CHAR = '_';
+	ENDIF;
+	V_S_NAME_TMP = V_S_NAME_TMP | V_S_CHAR;
+	V_N_ITERATE = V_N_ITERATE + 1;
+END;
+V_S_USER = V_S_NAME_TMP;
+###########################################################################
+#	END: BLOCK TO GET CLEAN USER NAME
+###########################################################################
+###########################################################################
+#	BEGIN: DEBUG FILES 
+###########################################################################
+IF(P_N_DEBUG<>0);
+	V_S_TIMESTAMP=TIMST(NOW, '\Y\m\d_\h\i\s');
+	V_S_PROCESS_NAME = GETPROCESSNAME();
+
+	V_S_DBG_FOLDER=CELLGETS('Z_ADMIN_PARAM','REP_TEMP','STR_VAR1');
+	#--REM= Definition of the names of the files of LOG for the DEBUG mode ( one file per process tab).
+	V_S_DBG_FILE_PROLOG=V_S_DBG_FOLDER|'\DBG_'|V_S_USER|'_'|V_S_PROCESS_NAME|'_'|V_S_TIMESTAMP|'_PROLOG.txt';
+	V_S_DBG_FILE_METADATA=V_S_DBG_FOLDER|'\DBG_'|V_S_USER|'_'|V_S_PROCESS_NAME|'_'|V_S_TIMESTAMP|'_METADATA.txt';
+	V_S_DBG_FILE_DATA=V_S_DBG_FOLDER|'\DBG_'|V_S_USER|'_'|V_S_PROCESS_NAME|'_'|V_S_TIMESTAMP|'_DATA.txt';
+	V_S_DBG_FILE_EPILOG=V_S_DBG_FOLDER|'\DBG_'|V_S_USER|'_'|V_S_PROCESS_NAME|'_'|V_S_TIMESTAMP|'_EPILOG.txt';
+
+ENDIF;
+###########################################################################
+#	END: DEBUG FILES 
+###########################################################################
+
+
+### TEMPORARY OBJECT NAMES CREATION
+V_S_PROCESS_NAME = GETPROCESSNAME();
+V_S_TIMESTAMP=TIMST(NOW, '\Y\m\d_\h\i\s');
+V_S_RAND=NUMBERTOSTRING(INT(RAND()*1000000));
+
+V_S_VIEW = 'TMP_VIEW_'|V_S_USER|'_'|V_S_PROCESS_NAME|'_'| V_S_TIMESTAMP|'_'| V_S_RAND;
+V_S_SUBSET = 'TMP_SUBSET_'|V_S_USER|'_'|V_S_PROCESS_NAME|'_'| V_S_TIMESTAMP|'_'| V_S_RAND;
+
+###   CREATION  OF THE VIEW V_S_VIEW OF THE CUBE Report_PL
+IF(VIEWEXISTS('Report_PL',V_S_VIEW)=1);VIEWDESTROY('Report_PL',V_S_VIEW);ENDIF;
+VIEWCREATE('Report_PL',V_S_VIEW);
+
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Activity
+IF(SUBSETEXISTS('Activity',V_S_SUBSET)=1);SUBSETDESTROY('Activity',V_S_SUBSET);ENDIF;
+
+SUBSETCREATE('Activity',V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Activity',V_S_SUBSET,'TOT_ACT', 1);
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Currency
+IF(SUBSETEXISTS('Currency',V_S_SUBSET)=1);SUBSETDESTROY('Currency',V_S_SUBSET);ENDIF;
+SUBSETCREATE('Currency',V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Currency',V_S_SUBSET,'LCL', 1);
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Gaap
+IF(SUBSETEXISTS('Gaap',V_S_SUBSET)=1);SUBSETDESTROY('Gaap',V_S_SUBSET);ENDIF;
+SUBSETCREATE('Gaap',V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Gaap',V_S_SUBSET,'TOTAL_CONSO', 1);
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Integration_Rate
+IF(SUBSETEXISTS('Integration_Rate',V_S_SUBSET)=1);SUBSETDESTROY('Integration_Rate',V_S_SUBSET);ENDIF;
+SUBSETCREATE('Integration_Rate',V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Integration_Rate',V_S_SUBSET,'NO_APP', 1);
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Legal_Organization
+IF(SUBSETEXISTS('Legal_Organization',V_S_SUBSET)=1);SUBSETDESTROY('Legal_Organization',V_S_SUBSET);ENDIF;
+SUBSETCREATE('Legal_Organization',V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Legal_Organization',V_S_SUBSET,'VTD_CORP', 1);
+
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Management_Organization
+IF(SUBSETEXISTS('Management_Organization',V_S_SUBSET)=1);SUBSETDESTROY('Management_Organization',V_S_SUBSET);ENDIF;
+SUBSETCREATEBYMDX(V_S_SUBSET,'{FILTER( {TM1FILTERBYLEVEL( {TM1SUBSETALL( [Management_Organization] )}, 0)}, [Management_Organization].[Business_Model]
+ <> "")}');
+### TURNING DYNAMIC SUBSET INTO A STATIC ONE.
+V_N_SUBSET_SIZE = SUBSETGETSIZE( 'Management_Organization', V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Management_Organization', V_S_SUBSET, DIMNM( 'Management_Organization', 1), V_N_SUBSET_SIZE + 1);
+SUBSETELEMENTDELETE( 'Management_Organization', V_S_SUBSET, V_N_SUBSET_SIZE + 1);
+
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Period
+IF(SUBSETEXISTS('Period',V_S_SUBSET)=1);SUBSETDESTROY('Period',V_S_SUBSET);ENDIF;
+SUBSETCREATE('Period',V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Period',V_S_SUBSET,V_S_PREV_MONTH_YTD, 1);
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Phase
+IF(SUBSETEXISTS('Phase',V_S_SUBSET)=1);SUBSETDESTROY('Phase',V_S_SUBSET);ENDIF;
+SUBSETCREATE('Phase',V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Phase',V_S_SUBSET,'ACT_TOT', 1);
+
+
+###   CREATION OF THE SUBSET V_S_SUBSET OF THE DIMENSION Indicator
+IF(SUBSETEXISTS('Indicator',V_S_SUBSET)=1);SUBSETDESTROY('Indicator',V_S_SUBSET);ENDIF;
+SUBSETCREATE('Indicator',V_S_SUBSET);
+SUBSETELEMENTINSERT( 'Indicator',V_S_SUBSET,V_S_INDICATOR, 1);
+
+
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Activity',V_S_SUBSET);
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Currency',V_S_SUBSET);
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Gaap',V_S_SUBSET);
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Integration_Rate',V_S_SUBSET);
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Legal_Organization',V_S_SUBSET);
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Management_Organization',V_S_SUBSET);
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Period',V_S_SUBSET);
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Phase',V_S_SUBSET);
+VIEWSUBSETASSIGN('Report_PL',V_S_VIEW,'Indicator',V_S_SUBSET);
+
+
+
+DATASOURCENAMEFORSERVER='Report_PL';
+DATASOURCECUBEVIEW=V_S_VIEW;
+
+VIEWSETSKIPCALCS('Report_PL',V_S_VIEW,0);
+VIEWSETSKIPZEROES('Report_PL',V_S_VIEW,1);
+VIEWSETSKIPRULEVALUES('Report_PL',V_S_VIEW,0);
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#--TAB= DATA
+#--DESC= checks and writing RWL attribute
+
+
+V_N_CURRENT_MONTH_VALUE=CELLGETN(V_S_CUBE,V_S_ACTIVITY, V_S_CURRENCY, V_S_GAAP, V_S_INTEGRATION_RATE, V_S_LEGAL_ORGANIZATION, V_S_MANAGEMENT_ORGANIZATION, P_S_CURRENT_MONTH, V_S_PHASE, V_S_INDICATOR);
+
+V_S_RWL_VALUE='R';
+IF(V_N_CURRENT_MONTH_VALUE = 0);
+	IF(SUBST(P_S_CURRENT_MONTH,1,4)@=SUBST(V_S_PREV_MONTH,1,4));
+		V_S_RWL_VALUE='L';
+	ELSE;
+		V_S_RWL_VALUE='';
+	ENDIF;
+	
+ENDIF;
+
+ATTRPUTS(V_S_RWL_VALUE,'MANAGEMENT_ORGANIZATION',V_S_MANAGEMENT_ORGANIZATION,V_S_ATTR_RWL);
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#--TAB= EPILOG
+#--DESC= Cleaning of temporary objects
+
+#--REM= Log management
+
+IF(P_N_DEBUG=0);
+	IF(VIEWEXISTS('Report_PL',V_S_VIEW)=1);VIEWDESTROY('Report_PL',V_S_VIEW);ENDIF;
+
+	IF(SUBSETEXISTS('Activity',V_S_SUBSET)=1);SUBSETDESTROY('Activity',V_S_SUBSET);ENDIF;
+	IF(SUBSETEXISTS('Currency',V_S_SUBSET)=1);SUBSETDESTROY('Currency',V_S_SUBSET);ENDIF;
+	IF(SUBSETEXISTS('Gaap',V_S_SUBSET)=1);SUBSETDESTROY('Gaap',V_S_SUBSET);ENDIF;
+	IF(SUBSETEXISTS('Integration_Rate',V_S_SUBSET)=1);SUBSETDESTROY('Integration_Rate',V_S_SUBSET);ENDIF;
+	IF(SUBSETEXISTS('Legal_Organization',V_S_SUBSET)=1);SUBSETDESTROY('Legal_Organization',V_S_SUBSET);ENDIF;
+	IF(SUBSETEXISTS('Management_Organization',V_S_SUBSET)=1);SUBSETDESTROY('Management_Organization',V_S_SUBSET);ENDIF;
+	IF(SUBSETEXISTS('Period',V_S_SUBSET)=1);SUBSETDESTROY('Period',V_S_SUBSET);ENDIF;
+	IF(SUBSETEXISTS('Phase',V_S_SUBSET)=1);SUBSETDESTROY('Phase',V_S_SUBSET);ENDIF;
+	IF(SUBSETEXISTS('Indicator',V_S_SUBSET)=1);SUBSETDESTROY('Indicator',V_S_SUBSET);ENDIF;
+ENDIF;
+#endregion

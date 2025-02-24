@@ -1,0 +1,20 @@
+{
+	"@type":"Hierarchy",
+	"Name":"TM1py_Scripts",
+	"Elements":
+	[
+		{
+			"Name":"GenAIAnalysis",
+			"Type":"String"
+		},
+		{
+			"Name":"QuestionLLM",
+			"Type":"String"
+		},
+		{
+			"Name":"CompareViews",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":[]
+}

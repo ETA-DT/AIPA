@@ -1,0 +1,101 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - build dimension z_indicator_PL_NL_EXACT
+# Created by : NEK
+# Created at : 15/07/2011
+# Modified by :NEK
+# Modified at :12/08/2011
+# Modify reason :name of flat file
+#########################################
+
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+ExecuteProcess('DB_zz_Date_Time_loading');
+pCountry=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+
+zDim ='z_indicator_PL_NL_EXACT';
+zsource='NL_EXACT';
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\P&L_Mapping_' |  zsource  | '.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByName','ASCENDING');
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+if(account_number @<> '');
+	if(cost_center @<> '');
+		if(destination_code @<>'');
+			if(contract_type@<>'');
+				vindicator=account_number |'_' |    cost_center  | '_' |   destination_code  | '_' |   contract_type;
+			else;
+				vindicator=account_number | '_' |   cost_center  |'_' |    destination_code;
+			endif;
+		else;
+			if(contract_type@<>'');
+				vindicator=account_number | '_' |   cost_center  |'_' |    contract_type;
+			else;
+				vindicator=account_number | '_' |   cost_center  ;
+			endif;
+		endif;
+	else;
+		if(destination_code @<>'');
+			if(contract_type@<>'');
+				vindicator=account_number |'_' |    destination_code  | '_' |   contract_type;
+			else;
+				vindicator=account_number | '_' |   destination_code;
+			endif;
+		else;
+			if(contract_type@<>'');
+				vindicator=account_number |'_' |    contract_type;
+			else;
+				vindicator=account_number ;
+			endif;
+		endif;
+	endif;
+endif;
+
+DIMENSIONELEMENTINSERT( zDim ,'',vindicator,'n');
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'P&L_Mapping_' | zsource );
+
+if (pCountry @<>'CM');
+  zProcess = 'DB_' | zDim;
+  zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+  zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+  pChore='Task2_CO_Load_Common_Dimension_' | pCountry;
+  pProcess_source=zsource;
+  pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+  CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pperiod,zDateLoadingStart, pCountry,pProcess_source ,  'Start_date');
+  CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pperiod,zDateLoadingStart, pCountry ,pProcess_source, 'End_date');
+  CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pperiod,zDateLoadingStart, pCountry ,pProcess_source,   'Status');
+endif;
+#endregion

@@ -1,0 +1,29 @@
+{
+	"@type":"Process",
+	"Name":"DB_Indicator_Attribut_Vector",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"DB_Indicator_Attribut_Vector.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"TM1DimensionSubset",
+		"dataSourceNameForClient":"Indicator",
+		"dataSourceNameForServer":"Indicator",
+		"subset":"All"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"Indicator",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

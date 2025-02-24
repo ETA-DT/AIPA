@@ -1,0 +1,87 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#########################################
+# Project : Tango - build dimension z_Translate_Report
+# Created by : LTH
+# Created at : 11/07/2011
+# Modified by : BTA
+# Modified at : 21/11/2016
+# Modify reason : Suppression des langues German, Dutch et Portuguese
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+zDim = 'z_Translate_Report';
+
+#Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\INPUT\STRUCTURE\' | zDim | '.csv';
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+ATTRDELETE( zDim , 'German' );
+# ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+ATTRDELETE( zDim , 'Dutch' );
+# ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+ATTRDELETE( zDim , 'Portuguese' );
+# ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+
+
+ATTRDELETE( zDim , 'Object_Type' );
+ATTRINSERT( zDim , '' , 'Object_Type' , 'S' );
+
+
+ATTRDELETE( zDim , 'Report_Name' );
+ATTRINSERT( zDim , '' , 'Report_Name' , 'S' );
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+DIMENSIONELEMENTINSERT( zDim ,'', Level_0 , 'n' );
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+
+ATTRPUTS( Object_Type , zDim , Level_0 , 'Object_Type' );
+ATTRPUTS(Report_Name , zDim , Level_0 , 'Report_Name' );
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zDim );
+#endregion

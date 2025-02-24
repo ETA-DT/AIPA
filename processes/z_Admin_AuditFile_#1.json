@@ -1,0 +1,27 @@
+{
+	"@type":"Process",
+	"Name":"z_Admin_AuditFile_#1",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"z_Admin_AuditFile_#1.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pAnnee",
+			"Prompt":"Saisissez l'année que vous souhaitez analyser.",
+			"Value":"*",
+			"Type":"String"
+		},
+		{
+			"Name":"pRDH",
+			"Prompt":"Reprise d'Histo (Y ou N)",
+			"Value":"N",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

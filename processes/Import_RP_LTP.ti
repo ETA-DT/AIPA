@@ -1,0 +1,117 @@
+#region Prolog
+#########################################
+# Project : Tango - Multi-instance
+# Created by : MAN
+# Created at : 23/03/2012
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+zCube = 'RP_LTP';
+zCube_Reject = 'ZZ_PROCESS_REJECT';
+
+CubeSetLogChanges(zCube, 0);
+
+Nb_Lign = 0;
+Nb_Reject = 0;
+Nb_Load = 0;
+
+zProcess = 'Import_RP_LTP';
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_DATA' , 'STR_VAR1') |'\'| pFichier;
+
+#vDim2='Legal_Organization';
+
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     CubeSetLogChanges(zCube, 1);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+pSource ='CORE_MODEL';
+
+zRecord =Activity | ';' | Currency | ';' |LTP_Components| ';' |Weighting| ';' | Legal_Organization | ';' | Period | ';' | Phase | ';' | Indicator_LTP 
+| ';' | NumberToString( Value ) ;
+
+#################################################################################
+#                                                                             REJECT SECTION
+#################################################################################
+
+
+################################################################################
+#                                                               INPUT SECTION : Cube => RP_LTP
+################################################################################
+
+#-- => RP_LTP
+
+Value_init = CellGetN(zCube , Activity , Currency ,LTP_Components,Weighting, Legal_Organization, Period , Phase , Indicator_LTP );
+
+IF( CellIsUpdateable( zCube , Activity , Currency ,LTP_Components,Weighting, Legal_Organization, Period , Phase , Indicator_LTP  ) = 1 );
+    CellPutN( (Value + Value_init) , zCube , Activity , Currency ,LTP_Components,Weighting, Legal_Organization, Period , Phase , Indicator_LTP );
+
+    Nb_Load = Nb_Load + 1;
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+ExecuteProcess( 'DL_Report_LTP_RP_LTP_by_Phase_Period' , 'pPhase' , pPhase,'pPeriod',pPeriod);
+
+
+CubeSetLogChanges(zCube, 1);
+
+#endregion

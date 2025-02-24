@@ -1,0 +1,108 @@
+{
+	"@type":"Hierarchy",
+	"Name":"}Attachments",
+	"Elements":
+	[
+		{
+			"Name":"All Attachments",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"Attachment1",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment2",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment3",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment4",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment5",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment6",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment7",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment8",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment9",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Attachment10",
+			"Type":"Numeric"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment1",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment2",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment3",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment4",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment5",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment6",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment7",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment8",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment9",
+			"Weight":1
+		},
+		{
+			"ParentName":"All Attachments",
+			"ComponentName":"Attachment10",
+			"Weight":1
+		}
+	],
+	"Subsets@Code.links":
+	[
+		"}Attachments.subsets/Sorted Attachments.json"
+	]
+}

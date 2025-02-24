@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Default_Management_Organization",
+	"Hierarchies@Code.links":
+	[
+		"z_Default_Management_Organization.hierarchies/z_Default_Management_Organization.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Default_Management_Organization')/Hierarchies('z_Default_Management_Organization')"
+	}
+}

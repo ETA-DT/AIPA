@@ -1,0 +1,18 @@
+{
+	"@type":"Cube",
+	"Name":"REF_MANAGEMENT",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('}Dimensions')"
+		},
+		{
+			"@id":"Dimensions('Ref_Management_Info')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"REF_MANAGEMENT.views/Afficher1.json",
+		"REF_MANAGEMENT.views/Par défaut.json"
+	]
+}

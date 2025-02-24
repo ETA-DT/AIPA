@@ -1,0 +1,20 @@
+{
+	"@type":"Cube",
+	"Name":"z_Admin_Param_Instance",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_Admin_Param')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Instance')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"z_Admin_Param_Instance.views/Default.json"
+	]
+}

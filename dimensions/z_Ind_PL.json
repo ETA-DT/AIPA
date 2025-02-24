@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Ind_PL",
+	"Hierarchies@Code.links":
+	[
+		"z_Ind_PL.hierarchies/z_Ind_PL.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Ind_PL')/Hierarchies('z_Ind_PL')"
+	}
+}

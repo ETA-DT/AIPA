@@ -1,0 +1,33 @@
+{
+	"@type":"Process",
+	"Name":"}QUBEdocs Generate",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"}QUBEdocs Generate.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pServer",
+			"Prompt":"QUBEdocs Server Name (and  port)",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pConnection",
+			"Prompt":"Connection Name?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pCompareVersion",
+			"Prompt":"Generate Compare Hash Codes?",
+			"Value":"TRUE",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

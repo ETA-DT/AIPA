@@ -1,0 +1,81 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Refonte LTP
+# Created by : N. AZRI - Datatilt
+# Created at : 18/06/2021
+#
+#########################################
+
+#################################################################################
+#                                                               Déclaration des variables
+#################################################################################
+
+zCube = '}ElementSecurity_Weighting';
+zSubset = GetProcessName() ; 
+zDim = '}Groups' ;
+
+
+
+#################################################################################
+#                                                               Clear Cube
+#################################################################################
+
+CubeClearData( zCube ) ;
+
+
+
+#################################################################################
+#                                                               Subset Source 
+#################################################################################
+
+# -- Sous ensemble Source Groups
+zDim = '}Groups' ;
+SubsetDestroy( zDim , zSubset );
+SubsetCreate( zDim , zSubset );
+SubsetElementInsert( zDim , zSubset , 'Corporate_Plus' , 1 );
+SubsetElementInsert( zDim , zSubset , 'Financial_Controller' , 1 );
+SubsetElementInsert( zDim , zSubset , 'User_Strategy' , 1 );
+SubsetElementInsert( zDim , zSubset , 'Data_LTP_Reader' , 1 );
+SubsetElementInsert( zDim , zSubset , 'Data_LTP_Writer' , 1 );
+
+
+
+DatasourceDimensionSubset = zSubset ;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- READ sur W_APP pour tous les groupes
+CellPutS( 'READ' , zCube , 'W_APP', Groups ); 
+
+# -- Si Groupe = Data_LTP_Reader : READ sur W_NO_APP  Sinon WRITE
+IF( Groups @= 'Data_LTP_Reader');
+    CellPutS( 'READ' , zCube , 'W_NO_APP', Groups ); 
+ELSE;
+    CellPutS( 'WRITE' , zCube , 'W_NO_APP', Groups ); 
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+# -- Sous ensemble Source Groups
+SubsetDestroy( zDim , zSubset );
+#endregion

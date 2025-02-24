@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Management_Organization_LTP",
+	"Hierarchies@Code.links":
+	[
+		"Management_Organization_LTP.hierarchies/Management_Organization_LTP.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Management_Organization_LTP')/Hierarchies('Management_Organization_LTP')"
+	}
+}

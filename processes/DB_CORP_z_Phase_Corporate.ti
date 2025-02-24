@@ -1,0 +1,53 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango Corporate - build dimension z_Phase_Corporate
+# Created by : MBO
+# Created at : 18/01/20112
+# Modified by : 
+# Modified at : 
+# Modify reason :
+#########################################
+
+zDim = 'z_Phase_Corporate';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+
+DataSourceNameForServer = Source_File;
+
+#DIMENSIONCREATE( zDim );
+DIMENSIONDELETEALLELEMENTS( zDim );
+
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+DIMENSIONELEMENTINSERT( zDim ,'',Niveau_1,'n');
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Copy the file structure in historical directory
+
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zDim );
+
+SecurityRefresh;
+#endregion

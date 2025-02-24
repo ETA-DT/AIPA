@@ -1,0 +1,26 @@
+{
+	"@type":"Cube",
+	"Name":"ST_Completion",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')"
+		},
+		{
+			"@id":"Dimensions('Period')"
+		},
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('Indicator')"
+		},
+		{
+			"@id":"Dimensions('Completion')"
+		}
+	],
+	"Views@Code.links":[]
+}

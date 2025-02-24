@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Contract_Pending_Approval",
+	"Hierarchies@Code.links":
+	[
+		"z_Contract_Pending_Approval.hierarchies/z_Contract_Pending_Approval.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Contract_Pending_Approval')/Hierarchies('z_Contract_Pending_Approval')"
+	}
+}

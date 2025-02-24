@@ -1,0 +1,62 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+####################################################################
+# -- Dimension Country
+# -- 
+# -- Processus de création de la dimension 'Country' à partir de l'attribut 'Country_entity' de la dimension 'Legal_Organization'
+# -- N. AZRI - Datatilt
+# -- 20/05/2021
+# --
+####################################################################
+
+# -- Déclaration des variables 
+vDim = 'Country';
+vDimLegalOrganisation = 'Legal_Organization';
+vTotal = 'All Countries';
+
+# -- Création de la dimension
+IF (DimensionExists ( vDim ) <> 1) ;
+   	DimensionCreate ( vDim );
+ELSE;
+	DimensionDeleteAllElements( vDim );
+ENDIF;	
+
+
+# -- Insertion de l'élément Parent
+DimensionElementInsertDirect( vDim, '', vTotal, 'C' );
+
+
+DimensionSortOrder( vDim, 'ByName', 'Ascending' , 'ByName' , 'Ascending' );
+
+### Définition de la Data Source ###
+DatasourceNameForServer   = 'Legal_Organization:Legal_Organization';
+DatasourceNameForClient   = 'Legal_Organization:Legal_Organization';
+DataSourceType            = 'SUBSET';
+DatasourceDimensionSubset = 'All';
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vCountryEntity = ATTRS( vDimLegalOrganisation , Legal_Organization, 'Country_entity' );
+
+# -- Insertion des éléments
+IF(vCountryEntity  @<> 'Inactive' & vCountryEntity  @<> '');
+	DimensionElementInsertDirect( vDim, '' , vCountryEntity  , 'N' );
+	DimensionElementComponentAddDirect( vDim, vTotal, vCountryEntity , 1 ); 
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

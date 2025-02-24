@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"zAIPrompt",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('zAIPrompt')"
+		},
+		{
+			"@id":"Dimensions('zAIPromptMesure')"
+		}
+	],
+	"Views@Code.links":[]
+}

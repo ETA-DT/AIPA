@@ -1,0 +1,27 @@
+{
+	"@type":"Cube",
+	"Name":"zz_Process_Reject_By_Source",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('zz_Process_Source')"
+		},
+		{
+			"@id":"Dimensions('}Processes')"
+		},
+		{
+			"@id":"Dimensions('zz_Date_Time_loading')"
+		},
+		{
+			"@id":"Dimensions('zz_Num_Lign')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Rejects')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"zz_Process_Reject_By_Source.views/Default.json",
+		"zz_Process_Reject_By_Source.views/Par défaut.json"
+	]
+}

@@ -1,0 +1,25 @@
+{
+	"@type":"Subset",
+	"Name":"Corp_Par_type_de_tiers",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Tiers')/Hierarchies('Tiers')/Elements('Tot_tiers')"
+		},
+		{
+			"@id":"Dimensions('Tiers')/Hierarchies('Tiers')/Elements('Tiers_conso')"
+		},
+		{
+			"@id":"Dimensions('Tiers')/Hierarchies('Tiers')/Elements('Fil_conso')"
+		},
+		{
+			"@id":"Dimensions('Tiers')/Hierarchies('Tiers')/Elements('Tiers_non_conso')"
+		},
+		{
+			"@id":"Dimensions('Tiers')/Hierarchies('Tiers')/Elements('SU9999_conso')"
+		},
+		{
+			"@id":"Dimensions('Tiers')/Hierarchies('Tiers')/Elements('Other_VE_entities')"
+		}
+	]
+}

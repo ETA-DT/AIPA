@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Management_Organization_TEMP",
+	"Hierarchies@Code.links":
+	[
+		"Management_Organization_TEMP.hierarchies/Management_Organization_TEMP.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Management_Organization_TEMP')/Hierarchies('Management_Organization_TEMP')"
+	}
+}

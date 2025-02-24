@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Client_Properties",
+	"Hierarchies@Code.links":
+	[
+		"z_Client_Properties.hierarchies/z_Client_Properties.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Client_Properties')/Hierarchies('z_Client_Properties')"
+	}
+}

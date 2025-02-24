@@ -1,0 +1,36 @@
+{
+	"@type":"Process",
+	"Name":"z_Admin_Groups_Creation",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"z_Admin_Groups_Creation.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f",
+		"IgnoredInputVarName=V2\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=Commentaire\fVarType=32\fColType=1165\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":",",
+		"asciiDelimiterChar":";",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":3,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":" ",
+		"dataSourceNameForClient":"\\\\FRSAPP021269\\TM1Data\\Input\\Structure\\Tango_Groups_Securities.csv",
+		"dataSourceNameForServer":"Defined into prolog tab"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"vGroup",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

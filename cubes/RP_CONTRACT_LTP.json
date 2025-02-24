@@ -1,0 +1,31 @@
+{
+	"@type":"Cube",
+	"Name":"RP_CONTRACT_LTP",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Activity')"
+		},
+		{
+			"@id":"Dimensions('Currency')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization_LTP')"
+		},
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Contract_LTP')"
+		}
+	],
+	"ViewStorageMaxMemory":100000,
+	"ViewStorageMinTime":1,
+	"Views@Code.links":
+	[
+		"RP_CONTRACT_LTP.views/CONTRACTS_DUPL_LTP.json"
+	]
+}

@@ -1,0 +1,21 @@
+{
+	"@type":"Cube",
+	"Name":"z_Admin_Audit_Analyse",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_Stat_Date')"
+		},
+		{
+			"@id":"Dimensions('z_Stat_Utilisateur')"
+		},
+		{
+			"@id":"Dimensions('z_Stat_Indicateur')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"z_Admin_Audit_Analyse.views/Default.json",
+		"z_Admin_Audit_Analyse.views/Par défaut.json"
+	]
+}

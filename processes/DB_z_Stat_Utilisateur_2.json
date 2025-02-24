@@ -1,0 +1,29 @@
+{
+	"@type":"Process",
+	"Name":"DB_z_Stat_Utilisateur_2",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"DB_z_Stat_Utilisateur_2.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"TM1DimensionSubset",
+		"dataSourceNameForClient":"z_Stat_Utilisateur",
+		"dataSourceNameForServer":"z_Stat_Utilisateur",
+		"subset":"All"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"z_Stat_Utilisateur",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

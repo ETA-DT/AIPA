@@ -1,0 +1,186 @@
+#region Prolog
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - Core Model
+# Created by : ASZ - Anone
+# Created at : 02/05/2016
+# Modified by : BTA 
+# Reason : Refonte de la sécurité + revue de la vue source qui était statique + ajout des commentaires
+# Date : 12/01/2017
+# Modified by : RSJC
+# Reason : Ajout droits groupe User_Strategy
+# Date : 10/06/2021
+#########################################
+
+#################################################################################
+#                                                               Déclaration des variables
+#################################################################################
+
+zCube = '}ElementSecurity_Gaap';
+zView = GetProcessName() ; 
+zSubset = GetProcessName() ; 
+ 
+
+#################################################################################
+#                                                               Source CUBE
+#################################################################################
+
+# -- Destruction et Construction de la vue
+ViewDestroy( zCube , zView );
+ViewCreate( zCube, zView );
+
+# -- Propriétés de la vue 
+ViewExtractSkipZeroesSet ( zCube , zView  , 0 );
+ViewExtractSkipRuleValuesSet ( zCube , zView  , 1 );
+ViewExtractSkipCalcsSet ( zCube , zView  , 0 );
+
+# -- Source du processus dynamique
+DatasourceNameForServer = zCube ;
+DatasourceCubeview = zView;
+
+
+#################################################################################
+#                                                               Clear Cube
+#################################################################################
+
+CubeClearData( zCube ) ;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+# -- Ajout des modifications liées à la refonte de la sécurité
+
+IF( Groups @= 'Admin' % Groups @= 'DataAdmin' % Groups @= 'SecurityAdmin' % Groups @= 'OperationsAdmin' ); 
+	ItemSkip;
+ENDIF;
+
+# -- Les éléments Local Gaap Tech IFRS Restatements Tech et Eliminations Mgmt Tech ne sont pas visibles 
+IF( Gaap @= 'Local_Gaap_Tech' % Gaap @= 'IFRS_restatements_Tech' % Gaap @= 'Eliminations_Mgmt_Tech' ); 
+
+	ItemSkip;
+
+ENDIF;
+
+# -- Le gaap NA est visible en lecture pour tous les groupes
+IF( Gaap @= 'NA' ); 
+
+	CellPutS( 'READ' , zCube , Gaap , Groups ); 
+	ItemSkip;
+
+ENDIF;
+
+
+# -- Pour tous les gaap mettre WRITE sur le groupe Corporate Plus
+IF( Groups @= 'Corporate_Plus'  ); 
+
+	CellPutS( 'WRITE' , zCube , Gaap , Groups ); 
+
+ENDIF;
+
+# -- Pour tous les gaap mettre READ sur les 3 groupes Financial Controller, Performance Corporate et R_VTD_Corp
+## 22/06/2021 RSJC  'Performance_Corporate'  et 'R_VTD_Corp' pas accès à tous les Gaap
+# IF( Groups @= 'Financial_Controller'  % Groups @= 'Performance_Corporate'  % Groups @= 'R_VTD_Corp'  ); 
+IF( Groups @= 'Financial_Controller'); 
+
+	CellPutS( 'READ' , zCube , Gaap , Groups ); 
+
+ENDIF;
+
+
+# -- Pour les groupes suivants, accès en read pour tous les gaap sauf les éléments Total Conso, Delta opt for et Delta discontinued act 
+## 10/06/2021 RSJC Ajout droits User_STrategy
+## 22/06/2021 RSJC  'Performance_Corporate'  et 'R_VTD_Corp' pas accès à tous les Gaap
+##IF( Groups @=  'Country_Project_Mgr' % Groups @= 'Data_Reporting_Reader' % Groups @=  'Data_LTP_Writer' % Groups @= 'Data_LTP_Reader' % Groups @= 'User_GIE'  ) ;
+IF( Groups @=  'Country_Project_Mgr' % Groups @= 'Data_Reporting_Reader' % Groups @=  'Data_LTP_Writer' % Groups @= 'Data_LTP_Reader' % Groups @= 'User_GIE'  % Groups @= 'User_Strategy' % Groups @= 'Performance_Corporate'  % Groups @= 'R_VTD_Corp'  ) ;
+	IF( Gaap @=  'Total_conso' % Gaap @= 'Delta_opt_for' % Gaap @= 'Delta_discontinued_act' ) ; 
+
+		ItemSkip;
+
+	ELSE; 
+
+		CellPutS( 'READ' , zCube , Gaap , Groups ); 	
+
+	ENDIF;
+
+ENDIF;
+
+
+
+# -- Pour le groupe User Holding accès en write pour tous les gaap sauf les éléments Total Conso, Delta opt for et Delta discontinued act 
+
+IF( Groups @= 'User_Holding' ) ;
+
+	IF( Gaap @=  'Total_conso' % Gaap @= 'Delta_opt_for' % Gaap @= 'Delta_discontinued_act' ) ; 
+
+		ItemSkip;
+
+	ELSE; 
+
+		CellPutS( 'WRITE' , zCube , Gaap , Groups ); 	
+
+	ENDIF;
+
+ENDIF;
+
+# --  Fin Ajout des modifications liées à la refonte de la sécurité
+
+
+IF(SUBST(Groups,1,2)@<>'R_' & SUBST(Groups,1,2)@<>'W_');
+	ItemSkip;
+ENDIF;
+
+
+
+IF(Groups@='R_Corporate');
+	CellPutS('READ', zCube , Gaap , Groups );
+	ItemSkip;
+ELSEIF(Groups@='W_Corporate');
+	CellPutS('WRITE', zCube , Gaap , Groups );
+	ItemSkip;
+ENDIF;
+
+IF(SCAN( '_Tech' , Gaap ) > 0 % Gaap@='Total_conso'  % Gaap@='Delta_opt_for' % Gaap@='Delta_discontinued_act');
+	ItemSkip;
+ENDIF;
+
+IF(ELISPAR('Gaap', 'Total_conso', Gaap)=1 & ELLEV('Gaap', Gaap)=0);
+	ItemSkip;
+ENDIF;
+
+vVal='';
+
+IF(SUBST(Groups,1,2)@='R_');
+	vVal='READ';
+ENDIF;
+
+IF(SUBST(Groups,1,2)@='W_');
+	vVal='WRITE';
+ENDIF;
+
+CellPutS(vVal, zCube , Gaap , Groups );
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+# -- Delete de la vue
+ViewDestroy( zCube , zView );
+#endregion

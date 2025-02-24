@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"L0",
+	"Expression":"{ HIERARCHIZE( {TM1SORTBYINDEX( {TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [Period_BI] )}, ALL, RECURSIVE )}, 0)}, ASC)} ) }"
+}

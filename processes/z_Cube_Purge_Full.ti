@@ -1,0 +1,42 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+############################################
+# Project : Tango - Cube purge with Period dimension parameter
+# Created by : AEV
+# Created at : 15/09/2011
+# Modified by : 
+# Modified at : 
+# Modify reason :
+############################################
+
+CubeClearData(pCube);
+
+
+#P_NAME_RAZ = pCube | '_RAZ';
+#ViewDestroy( pCube , P_NAME_RAZ );
+#ViewCreate( pCube , P_NAME_RAZ );
+
+
+#   ViewZeroOut( pCube , P_NAME_RAZ );
+
+
+#ViewDestroy( pCube , P_NAME_RAZ );
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

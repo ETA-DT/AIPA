@@ -1,0 +1,20 @@
+{
+	"@type":"Cube",
+	"Name":"z_Client_Properties",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_Client_Properties')"
+		},
+		{
+			"@id":"Dimensions('}Clients')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"z_Client_Properties.views/Afficher1.json",
+		"z_Client_Properties.views/Par défaut.json",
+		"z_Client_Properties.views/zRAZ.json",
+		"z_Client_Properties.views/Orga Users Poc Tcm.json"
+	]
+}

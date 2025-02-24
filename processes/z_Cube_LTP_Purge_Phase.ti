@@ -1,0 +1,66 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+############################################
+# Project : Tango - Cube purge with Period dimension parameter
+# Created by : BTA
+# Created at : 22/06/2021
+# Modified by : 
+# Modified at : 
+# Modify reason :
+############################################
+
+P_NAME_RAZ = pCube | '_RAZ';
+ViewDestroy( pCube , P_NAME_RAZ );
+ViewCreate( pCube , P_NAME_RAZ );
+
+
+#--Create subset in Phase
+IF( pPhase@= '' );
+    ProcessQuit;
+ELSE;
+   #-- Create subset in Phase dimension
+   IF( SubsetExists( 'Phase', P_NAME_RAZ ) = 1 );
+      SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ);
+   ELSE;
+      SubsetCreate( 'Phase', P_NAME_RAZ );
+   ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Phase' ) + 1 );
+    ElemP = DIMNM( 'Phase' , i );
+    IF( ELLEV( 'Phase' , ElemP) = 0  % ELISANC( 'Phase' , pPhase , ElemP ) > 0 );
+        SubsetElementInsert( 'Phase' , P_NAME_RAZ , ElemP , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( pCube , P_NAME_RAZ , 'Phase', P_NAME_RAZ );  
+ENDIF;
+
+
+
+#-- Clear cube if Legal or Phase exist.
+IF( pPhase @<> '' );
+   ViewZeroOut( pCube , P_NAME_RAZ );
+ENDIF;
+
+ViewDestroy( pCube , P_NAME_RAZ );
+SubsetDestroy( 'Phase', P_NAME_RAZ );
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

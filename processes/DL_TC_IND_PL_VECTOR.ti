@@ -1,0 +1,234 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - load cube TC_IND_PL_VECTOR
+# Created by : FBU
+# Created at : 23/01/2012
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+zSource = 'VECTOR';
+zCube = 'TC_IND_PL_' | zSource;
+CubeSetLogChanges(zCube, 0);
+zCube_Reject = 'ZZ_PROCESS_REJECT';
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+Nb_Lign = 0;
+Nb_Reject = 0;
+Nb_Load = 0;
+zProcess = 'DL_TC_IND_PL_'  | zSource;
+zDateLoadingStart = TIMST( NOW , '\Y-\M-\D' );
+zDateTimeLoadingStart = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+
+
+zDim = 'z_indicator_PL_' | zSource;
+zFile = 'P&L_Mapping_' | zSource;
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1' ) | '\' | zFile | '.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     CubeSetLogChanges(zCube, 1);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+
+
+#################################################################################
+#                                                               Clear CUBE
+#################################################################################
+P_NAME_RAZ = zCube | '_RAZ';
+ViewDestroy( zCube , P_NAME_RAZ );
+ViewCreate( zCube , P_NAME_RAZ );
+
+ViewZeroOut( zCube , P_NAME_RAZ );
+
+ViewDestroy( zCube , P_NAME_RAZ );
+
+
+#################################################################################
+#                                                               Clear Reject Cube
+#################################################################################
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess( 'DB_zz_Date_Time_loading' );
+######
+
+P_NAME_RAZ = zCube_Reject | '_RAZ';
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+ViewCreate( zCube_Reject , P_NAME_RAZ );
+
+#-- Create subset in zz_Date_Time_loading and }Processes
+IF( SubsetExists( 'zz_Date_Time_loading' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( 'zz_Date_Time_loading' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ENDIF;
+
+IF( SubsetExists( '}Processes' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( '}Processes' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( '}Processes' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'zz_Date_Time_loading' , P_NAME_RAZ , zDateLoadingStart , 1 );
+SubsetElementInsert( '}Processes' , P_NAME_RAZ , zProcess , 1 );
+
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Date_Time_loading' , P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , '}Processes' , P_NAME_RAZ);
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipCalcsSet ( zCube_Reject , P_NAME_RAZ , 1 );
+
+#-- Clear cube
+ViewZeroOut( zCube_Reject , P_NAME_RAZ );
+
+#-- Delete subset
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+SubsetDestroy( 'zz_Date_Time_loading' , P_NAME_RAZ );
+SubsetDestroy( '}Processes' , P_NAME_RAZ );
+
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+
+
+
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+Nb_Lign = Nb_Lign + 1;
+
+zRecord = Flow | ';' |  Account  | ';' | Destination  | ';' | Tango_Account | ';' | Lib_Tango;
+
+#################################################################################
+#                                                                             REJECT SECTION
+#################################################################################
+#-- If the tango account is empty, this record is reject
+IF( Tango_Account @='' );
+   zError_Message = 'The Tango_Account is empty in the file at line ' |  NumberToString(Nb_Lign);
+   Nb_Reject = Nb_Reject + 1;
+   CellPutS( zRecord , zCube_Reject , zProcess , zDateLoadingStart , 'l' | NumberToString(Nb_Reject) , 'Record' );
+   CellPutS( zError_Message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | NumberToString(Nb_Reject), 'Error_Message' );
+   ItemSkip;
+ENDIF;
+
+
+#-- If the Tango_account  is not exists in Indicator dimension, this record is reject
+IF( DIMIX( 'Indicator_Vector' , Tango_Account ) = 0 );
+   zError_Message = 'The Tango_Account ' | Tango_Account  | ' does not exist in dimension Indicator at line ' |  NumberToString(Nb_Lign) ;
+   Nb_Reject = Nb_Reject + 1;
+   CellPutS( zRecord ,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | NumberToString(Nb_Reject) , 'Record' );
+   CellPutS( zError_Message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | NumberToString(Nb_Reject), 'Error_Message' );
+   ItemSkip;
+ENDIF;
+
+#-- If the Flow  is not exists in Flow dimension, this record is reject
+IF( DIMIX( 'Flow_Vector' , Flow ) = 0 );
+   zError_Message = 'The Flow ' | Flow | ' does not exist in dimension Flow_Vector at line ' |  NumberToString(Nb_Lign) ;
+   Nb_Reject = Nb_Reject + 1;
+   CellPutS( zRecord ,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | NumberToString(Nb_Reject) , 'Record' );
+   CellPutS( zError_Message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | NumberToString(Nb_Reject), 'Error_Message' );
+   ItemSkip;
+ENDIF;
+
+
+#####################################################################################"
+#                                                                             INPUT SECTION
+#################################################################################
+#-- Input dans le cube TC_IND_PL_VECTOR
+CellPutS( Tango_Account , zCube , Flow , Account , 'STR_VAR1' );
+Nb_Load = Nb_Load + 1;
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+CubeSetLogChanges(zCube, 1);
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'P&L_Mapping_' | zSource );
+
+
+zDateTimeLoadingEnd = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+pCountry = CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+IF( pCountry @<> 'CM' );
+    zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+    pChore = 'Task2_CO_Load_Common_Dimension_' | pCountry;
+    pProcess_Source = zSource;
+    pPeriod = CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+
+    CellPutS( zDateTimeLoadingStart , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry , 
+    pProcess_Source , 'Start_Date' );
+    CellPutS( zDateTimeLoadingEnd , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry ,
+    pProcess_Source , 'End_Date');
+    CellPutS( NumberToString(Nb_Lign) , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry ,
+    pProcess_Source , 'Nb_Input_Records');
+    CellPutS( NumberToString(Nb_Reject) , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry ,
+    pProcess_Source , 'Nb_Reject_Records');
+    CellPutS( NumberToString(Nb_Load) , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry ,
+    pProcess_Source , 'Nb_Load_Records');
+    IF( Nb_Lign = Nb_Load);
+        CellPutS( 'OK' , zCube_Process_PP , pChore, zProcess , pPeriod , zDateLoadingStart , pCountry , pProcess_Source , 'Status' );
+    ELSE;
+        CellPutS( 'KO' , zCube_Process_PP , pChore, zProcess , pPeriod , zDateLoadingStart , pCountry , pProcess_Source , 'Status' );
+    ENDIF;
+ENDIF;
+
+
+#################################################################################
+#                                                                             DETAIL PROCESS SECTION
+#################################################################################
+
+CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_Date' );
+CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_Date' );
+CellPutS( NumberToString(Nb_Lign) , zCube_Process , zProcess , zDateLoadingStart , 'Nb_Input_Records' );
+CellPutS( NumberToString(Nb_Reject) , zCube_Process , zProcess , zDateLoadingStart , 'Nb_Reject_Records' );
+CellPutS( NumberToString(Nb_Load) , zCube_Process , zProcess , zDateLoadingStart , 'Nb_Load_Records' );
+
+IF( Nb_Lign = Nb_Load );
+    CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+ELSE;
+    CellPutS( 'KO' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+    ItemReject( 'Process exited with errors at ' | TIME |  ' on ' | TODAY | '=> Check cubes : zz_Process_Detail and  zz_Process_Reject' );
+ENDIF;
+
+#################################################################################
+#                                                                             END PROCESS
+#################################################################################
+
+#endregion

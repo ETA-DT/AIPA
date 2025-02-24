@@ -1,0 +1,67 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - build dimension zz_Process_Detail
+# Created by : LTH
+# Created at : 11/07/2011
+# Modified by : BTA
+# Modified at : 21/11/2016
+# Modify reason : Suppression des langues German, Dutch et Portuguese
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+zDim = 'zz_Process_Detail';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+DataSourceNameForServer = Source_File;
+
+
+DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+ATTRDELETE( zDim , 'German' );
+#ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+ATTRDELETE( zDim , 'Dutch' );
+#ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+ATTRDELETE( zDim , 'Portuguese' );
+#ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+DIMENSIONELEMENTINSERT( zDim ,'', Level_0 , 's' );
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

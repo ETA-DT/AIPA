@@ -1,0 +1,26 @@
+{
+	"@type":"Chore",
+	"Name":"zSaveDirectory",
+	"StartTime":"2011-07-11T21:50Z",
+	"DSTSensitive":false,
+	"Active":false,
+	"ExecutionMode":"SingleCommit",
+	"Frequency":"P1DT00H00M00S",
+	"Tasks":
+	[
+		{
+			"Step":0,
+			"Parameters":
+			[
+				{
+					"Name":"Name",
+					"Value":""
+				}
+			],
+			"Process":
+			{
+				"@id":"Processes('z_Tools_Save_Directory')"
+			}
+		}
+	]
+}

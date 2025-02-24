@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Stat_NumEvent",
+	"Hierarchies@Code.links":
+	[
+		"z_Stat_NumEvent.hierarchies/z_Stat_NumEvent.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Stat_NumEvent')/Hierarchies('z_Stat_NumEvent')"
+	}
+}

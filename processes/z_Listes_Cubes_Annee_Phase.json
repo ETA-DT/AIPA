@@ -1,0 +1,29 @@
+{
+	"@type":"Process",
+	"Name":"z_Listes_Cubes_Annee_Phase",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"z_Listes_Cubes_Annee_Phase.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"TM1DimensionSubset",
+		"dataSourceNameForClient":"}Cubes",
+		"dataSourceNameForServer":"}Cubes",
+		"subset":"All"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"Cube",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

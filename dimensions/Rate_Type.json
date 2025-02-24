@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Rate_Type",
+	"Hierarchies@Code.links":
+	[
+		"Rate_Type.hierarchies/Rate_Type.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Rate_Type')/Hierarchies('Rate_Type')"
+	}
+}

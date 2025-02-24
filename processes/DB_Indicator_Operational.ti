@@ -1,0 +1,115 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - build dimension Indicator
+# Created by : FBU
+# Created at : 11/07/2011
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+zDim = '}Indicator';
+
+zFile = 'Indic_Ope';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zFile | '.csv';
+DataSourceNameForServer = Source_File;
+
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'Comment_English' );
+ATTRINSERT( zDim , '' , 'Comment_English' , 'S' );
+
+ATTRDELETE( zDim , 'Comment_French' );
+ATTRINSERT( zDim , '' , 'Comment_French' , 'S' );
+
+ATTRDELETE( zDim , 'Comment_US' );
+ATTRINSERT( zDim , '' , 'Comment_US' , 'S' );
+
+# Other translation for each language
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+IF( DIMIX( zDim , Level_0 ) = 0 );
+
+        IF( SUBST( Level_0 , LONG( Level_0 ) - 4 , 5 ) @= '_comp ' );
+             TYPE = 's';
+             DIMENSIONELEMENTINSERT( zDim , '' , Level_0 , TYPE );
+        ELSE;
+
+
+
+             TYPE = 'n';
+             DIMENSIONELEMENTINSERT( zDim , '' , Level_0 , TYPE );
+             DIMENSIONELEMENTINSERT( zDim , '' , Level_1 , 'c' );
+             DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'c' );
+             DIMENSIONELEMENTCOMPONENTADD( zDim , Level_1 , Level_0 , 1 );
+             DIMENSIONELEMENTCOMPONENTADD( zDim , Level_2 , Level_1 , 1 );
+        ENDIF;
+
+ENDIF;
+
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+#ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'German' );
+#ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'Dutch' );
+#ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'Portuguese' );
+
+ATTRPUTS( Source_indicator , zDim , Level_0 , 'Source_Indicator' );
+
+ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+#ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'German' );
+#ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'Dutch' );
+#ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'Portuguese' );
+
+ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+#ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'German' );
+#ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Dutch' );
+#ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Portuguese' );
+
+ATTRPUTS( Comment_0 , zDim , Level_0 , 'Comment_English' );
+ATTRPUTS( Comment_US_0 , zDim , Level_0 , 'Comment_French' );
+ATTRPUTS( Comment_01 , zDim , Level_0 , 'Comment_US' );
+
+
+ATTRPUTS( Attribut_English, zDim , Level_0 , 'Attribut English');
+ATTRPUTS( Attribut_French , zDim , Level_0 , 'Attribut French' );
+#ATTRPUTS( Attribut_English, zDim , Level_0 , 'Attribut German' );
+#ATTRPUTS( Attribut_English, zDim , Level_0 , 'Attribut Dutch' );
+#ATTRPUTS( Attribut_English, zDim , Level_0 , 'Attribut Portuguese' );
+
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Economic_Model",
+	"Hierarchies@Code.links":
+	[
+		"Economic_Model.hierarchies/Economic_Model.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Economic_Model')/Hierarchies('Economic_Model')"
+	}
+}

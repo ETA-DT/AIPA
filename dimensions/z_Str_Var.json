@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Str_Var",
+	"Hierarchies@Code.links":
+	[
+		"z_Str_Var.hierarchies/z_Str_Var.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Str_Var')/Hierarchies('z_Str_Var')"
+	}
+}

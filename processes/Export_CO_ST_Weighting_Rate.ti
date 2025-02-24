@@ -1,0 +1,184 @@
+#region Prolog
+#########################################
+# Project : Tango - Multi-instance LTP
+# Created by : VDE
+# Created at : 24/04/2012
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+DatasourceASCIIDelimiter =';';
+
+nb_lign = 0;
+nb_reject = 0;
+nb_load = 0;
+
+zCube = 'ST_Weighting_Rate';
+
+zProcess = 'Export_CO_ST_Weighting_Rate';
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+vDim = 'Period';
+vDim2 = 'Legal_Organization';
+
+pPeriod = CellGetS( 'z_Admin_Param' , 'PERIOD_LTP' , 'STR_VAR1');
+
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+#################################################################################
+#                                                               Source CUBE ST_Weighting_Rate
+#################################################################################
+P_NAME_SOURCE = zCube | '_Vue';
+ViewDestroy( zCube , P_NAME_SOURCE );
+ViewCreate( zCube , P_NAME_SOURCE );
+
+#-- Create subset in Legal_Organization
+SubsetDestroy( vDim2 , P_NAME_SOURCE );
+SubsetCreate( vDim2 , P_NAME_SOURCE );
+i=1;
+WHILE( i < DIMSIZ ( vDim2 )+1 );
+   ElemE = DIMNM( vDim2 , i );
+      IF ( ATTRS ( vDim2 , ElemE,'Country_entity' ) @<>'' ) ;
+           SubsetElementInsert( vDim2 , P_NAME_SOURCE , ElemE , 1 );
+      ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , P_NAME_SOURCE , vDim2 , P_NAME_SOURCE );
+
+
+#-- Create subset in Period
+IF( SubsetExists( vDim, P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( vDim , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( vDim , P_NAME_SOURCE );
+ENDIF;
+
+j=NUMBR('-1');
+YEAR_TMP = NUMBR(pPeriod) -1 ;
+
+WHILE( j <17);
+    
+     ElemPeriod = 'F_year_' | STR(YEAR_TMP , 4, 0);
+     SubsetElementInsert( vDim , P_NAME_SOURCE , ElemPeriod , 1 );
+     YEAR_TMP = YEAR_TMP+1;
+     j=j+1;
+
+END;
+
+ViewSubsetAssign( zCube, P_NAME_SOURCE , vDim , P_NAME_SOURCE );
+
+#-- Create subset in Phase
+IF( SubsetExists( 'Phase' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_SOURCE );
+ENDIF;
+i=1;
+WHILE( i < DIMSIZ ( 'Phase' )+1 );
+    ElemP = DIMNM( 'Phase' , i );
+    IF( ELLEV( 'Phase' , ElemP ) = 0 & ELISANC( 'Phase' , 'LTP_' | pPeriod | '_ALL'  , ElemP) > 0 );
+        SubsetElementInsert( 'Phase' , P_NAME_SOURCE , ElemP , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Phase' , P_NAME_SOURCE );
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube , P_NAME_SOURCE , 1 );
+ViewExtractSkipRuleValuesSet ( zCube , P_NAME_SOURCE , 1 );
+ViewExtractSkipCalcsSet ( zCube , P_NAME_SOURCE , 1 );
+
+
+DatasourceNameForServer = zCube ;
+DatasourceCubeview = P_NAME_SOURCE ;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+Nb_Lign = Nb_Lign + 1;
+
+Country = SUBST( ATTRS( 'Legal_Organization' , Legal_Organization , 'Country_Entity' ) , 1 , 2 );
+
+zPrefixe = Country | '_Data_';
+
+Export_File = '\\'| CellGetS( 'z_Admin_Param_Instance' , 'SERVER_NAME' , Country ,'STR_VAR1') 
+| CellGetS( 'z_Admin_Param_Instance' , 'REP_CM_DATA_EXPORT' , Country , 'STR_VAR1' ) 
+| Country | CellGetS( 'z_Admin_Param_Instance' , 'REP_DATA_EXPORT' , Country , 'STR_VAR1' ) |'\' |  zPrefixe | zCube | '.csv';
+
+
+ASCIIOUTPUT( Export_File , Activity, Legal_Organization , Phase, Period , LTP_Components, z_Str_Var,Value );
+
+Nb_Load = Nb_Load + 1;
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#-- Suppress view
+ViewDestroy( zCube , P_NAME_SOURCE );
+SubsetDestroy( vDim , P_NAME_SOURCE );
+SubsetDestroy( vDim2 , P_NAME_SOURCE );
+SubsetDestroy( 'Phase' , P_NAME_SOURCE );
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+
+pChore = 'LTP_Task3_CM_Export_Vector_&_LTP_Parameter';
+
+pCountry = CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+pSource = 'CORE_MODEL';
+pPeriod = CellGetS( 'z_Admin_Param' , 'PERIOD_LTP' , 'STR_VAR1');
+
+CellPutS( zDateTimeLoadingStart , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry , pSource , 'Start_date' );
+CellPutS( zDateTimeLoadingEnd , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry , pSource , 'End_date' );
+CellPutS( NumberToString(Nb_Lign) , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry , pSource , 'Nb_Input_records' );
+CellPutS( NumberToString(Nb_Load) , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry , pSource , 'Nb_load_records' );
+CellPutS( 'OK' , zCube_Process_PP , pChore, zProcess , pPeriod , zDateLoadingStart , pCountry , pSource , 'Status' );
+
+
+#################################################################################
+#                                                                             DETAIL PROCESS SECTION
+#################################################################################
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+
+CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+CellPutS( zDateTimeLoadingEnd , zCube_Process,  zProcess , zDateLoadingStart , 'End_date' );
+CellPutS( NumberToString(Nb_Lign) , zCube_Process , zProcess , zDateLoadingStart , 'Nb_Input_records' );
+CellPutS( NumberToString(Nb_Load) , zCube_Process , zProcess , zDateLoadingStart , 'Nb_load_records' );
+CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+
+#################################################################################
+#                                                                             END PROCESS
+#################################################################################
+
+#endregion

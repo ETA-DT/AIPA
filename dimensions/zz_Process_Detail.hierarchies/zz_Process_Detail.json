@@ -1,0 +1,37 @@
+{
+	"@type":"Hierarchy",
+	"Name":"zz_Process_Detail",
+	"ElementsSortType":"ByHierarchy",
+	"Elements":
+	[
+		{
+			"Name":"Start_date",
+			"Type":"String"
+		},
+		{
+			"Name":"End_date",
+			"Type":"String"
+		},
+		{
+			"Name":"Nb_input_records",
+			"Type":"String"
+		},
+		{
+			"Name":"Nb_reject_records",
+			"Type":"String"
+		},
+		{
+			"Name":"Nb_load_records",
+			"Type":"String"
+		},
+		{
+			"Name":"Status",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":
+	[
+		"zz_Process_Detail.subsets/Default.json",
+		"zz_Process_Detail.subsets/L0.json"
+	]
+}

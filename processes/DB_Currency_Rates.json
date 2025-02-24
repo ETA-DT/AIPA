@@ -1,0 +1,50 @@
+{
+	"@type":"Process",
+	"Name":"DB_Currency_Rates",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"DB_Currency_Rates.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":",",
+		"asciiDelimiterChar":";",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":1,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":" ",
+		"dataSourceNameForClient":"\\\\tfr-ap019292\\tango\\ITF\\INPUT\\Structure\\Currency_Rates.csv",
+		"dataSourceNameForServer":"Defined in Prolog"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"Level_0",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Desc_English_0",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Desc_French_0",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

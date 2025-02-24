@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"TOUT",
+	"Expression":"{TM1DRILLDOWNMEMBER( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [T_Periode] )}, ALL, RECURSIVE )}, ALL, RECURSIVE )}"
+}

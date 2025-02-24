@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"L0",
+	"Expression":"{TM1SORT( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [z_management_organization] )}, ALL, RECURSIVE )}, ASC)}"
+}

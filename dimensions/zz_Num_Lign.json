@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"zz_Num_Lign",
+	"Hierarchies@Code.links":
+	[
+		"zz_Num_Lign.hierarchies/zz_Num_Lign.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('zz_Num_Lign')/Hierarchies('zz_Num_Lign')"
+	}
+}

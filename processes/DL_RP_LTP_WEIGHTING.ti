@@ -1,0 +1,334 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+##################################################################################
+# -- Cube RP_LTP
+# -- 
+# -- Processus de calcul dans le cube RP_LTP pour application du taux de pondération
+# -- N. AZRI - Datatilt
+# -- 01/06/2021
+# --
+# -- MTA - Datatilt 
+# -- Modified at :  21/07/2022
+# -- Modify reason : opening year EUR have to input data
+##################################################################################
+
+# -- Déclaration des variables 
+
+sProcessName = GetProcessName();
+sDate = TimSt( Now, '\Y\m\d\h\i' );
+
+sView = 'sView_'|sProcessName | '_' | sDate ;
+sSub = 'sSub_'|sProcessName | '_' | sDate ;
+
+cView = 'cView_'|sProcessName | '_' | sDate ;
+cSub = 'cSub_'|sProcessName | '_' | sDate ;
+
+
+sCube = 'RP_LTP';
+cCube = 'RP_LTP';
+
+vSub_LTP_Current = 'LTP_Current';
+
+# Cubes : NB Dimensions
+nsNbCubeDim = CubeDimensionCountGet( sCube );
+sDimIndicator = TABDIM(sCube,nsNbCubeDim);
+nsNbDim = nsNbCubeDim +1;
+
+ncNbCubeDim = CubeDimensionCountGet(cCube);
+cDimIndicator = TABDIM(cCube,ncNbCubeDim);
+ncNbDim = ncNbCubeDim +1;
+
+
+# -------------------------------------------------------------------------------------
+# Création  d'une vue Source & Cible
+# -------------------------------------------------------------------------------------
+
+# ----------- Source -------------
+IF (ViewExists(sCube, sView) = 1);
+   ViewDestroy(sCube, sView);
+   ViewCreate(sCube, sView, 1);
+ELSE;
+   ViewCreate(sCube, sView, 1);
+ENDIF;
+
+# ----------- Cible -------------
+IF (ViewExists(cCube, cView) = 1);
+   ViewDestroy(cCube, cView);
+   ViewCreate(cCube, cView, 1);
+ELSE;
+   ViewCreate(cCube, cView, 1);
+ENDIF;
+
+# -------------------------------------------------------------------------------------
+#  Controle de coherence
+# -------------------------------------------------------------------------------------
+
+IF(DIMIX('Phase', pPhase) = 0 & pPhase @<> '');
+  ItemReject( 'The phase ' | pPhase | ' does not exist in the dimension'  );
+  processbreak;
+ENDIF;
+
+IF(pPhase @= '');
+	pPhase = CellGets('z_Admin_Param', 'PHASE_LTP', 'STR_VAR1');
+ENDIF;
+
+# -------------------------------------------------------------------------------------
+# Subset : Ajout des éléments pour nettoyage du perimetre source
+# -------------------------------------------------------------------------------------
+
+nDim = 1;
+WHILE ( TabDim( sCube, nDim ) @<> '' );
+  vDim = TabDim( sCube, nDim );
+  IF( SubsetExists( vDim,sSub) = 1 );
+		SubsetDestroy(vDim, sSub);
+  ELSE;
+   		SubsetCreate(vDim,sSub, 1); 
+  ENDIF;
+  nDim = nDim + 1;
+END;
+
+nDim = 1;
+WHILE ( nDim <= nsNbCubeDim );
+    vDim = TABDIM(sCube, nDim);
+
+    IF(vDim @= 'Activity' );
+	    SubsetDestroy(vDim, sSub);
+		SubsetCreatebyMDX(sSub, '{TM1FILTERBYLEVEL( {TM1SUBSETALL( [Activity] )}, 0)}', 1 );
+  	ELSEIF(vDim @= 'Currency');
+	    SubsetDestroy(vDim, sSub);
+		SubsetCreatebyMDX(sSub, '{[Currency].[Currency].[LCL],
+				              [Currency].[Currency].[EUR]}', 1 );
+  	ELSEIF(vDim @= 'LTP_Components');
+	    SubsetDestroy(vDim, sSub);
+		SubsetCreatebyMDX(sSub, '{TM1FILTERBYLEVEL( {TM1SUBSETALL( [LTP_Components] )}, 0)}', 1 );
+    ELSEIF(vDim @= 'Weighting');
+	    SubsetDestroy(vDim, sSub);
+		SubsetCreatebyMDX(sSub, '{[' | vDim |'].[' | vDim |'].[W_NO_APP]}', 1 );
+    ELSEIF(vDim @= 'Legal_Organization');
+	    SubsetDestroy(vDim, sSub);
+		SubsetCreatebyMDX(sSub, '{TM1FILTERBYLEVEL(TM1SUBSETALL([' | vDim |'].[' | vDim |']) , 0)}', 1 );
+	ELSEIF(vDim @= 'Period');
+	    # -- On exploite le subset LTP_Current
+		
+	ELSEIF(vDim @= 'Phase');
+	    SubsetDestroy(vDim, sSub);
+		SubsetCreatebyMDX(sSub, '{[' | vDim |'].[' | vDim |'].[' | pPhase |']}', 1 );
+	ELSEIF(vDim @= 'Indicator_LTP');
+		SubsetDestroy(vDim, sSub);
+		SubsetCreatebyMDX(sSub,'{TM1FILTERBYLEVEL(
+			{DISTINCT(DESCENDANTS([Indicator_LTP].[Indicator_LTP].[P&L_IND])),
+			 DISTINCT(DESCENDANTS([Indicator_LTP].[Indicator_LTP].[BS_IND])),
+			 DISTINCT(DESCENDANTS([Indicator_LTP].[Indicator_LTP].[CF_IND])),
+                                                 DISTINCT(DESCENDANTS([Indicator_LTP].[Indicator_LTP].[IFRIC12]))} 
+				           , 0)}', 1);
+    ENDIF;
+    nDim = nDim + 1;
+END;
+
+# -------------------------------------------------------------------------------------
+# Subset : Ajout des éléments pour nettoyage du perimetre cible
+# -------------------------------------------------------------------------------------
+
+vCube = cCube;
+vSub = cSub;
+
+nDim = 1;
+WHILE ( TabDim( cCube, nDim ) @<> '' );
+  vDim = TabDim( cCube, nDim );
+  IF( SubsetExists( vDim,cSub) = 1 );
+		SubsetDestroy(vDim, cSub);
+  ELSE;
+   		SubsetCreate(vDim,cSub, 1);
+  ENDIF;
+  nDim = nDim + 1;
+END;
+
+nDim = 1;
+WHILE ( nDim <= nsNbCubeDim );
+    vDim = TABDIM(cCube, nDim);
+
+    IF(vDim @= 'Activity' );
+	    SubsetDestroy(vDim, cSub);
+		SubsetCreatebyMDX(cSub, '{TM1FILTERBYLEVEL( {TM1SUBSETALL( [Activity] )}, 0)}', 1 );
+  	ELSEIF(vDim @= 'Currency');
+	    SubsetDestroy(vDim, cSub);
+		SubsetCreatebyMDX(cSub, '{[Currency].[Currency].[LCL]}', 1 );
+  	ELSEIF(vDim @= 'LTP_Components');
+	    SubsetDestroy(vDim, cSub);
+		SubsetCreatebyMDX(cSub, '{TM1FILTERBYLEVEL( {TM1SUBSETALL( [LTP_Components] )}, 0)}', 1 );
+    ELSEIF(vDim @= 'Weighting');
+	    SubsetDestroy(vDim, cSub);
+		SubsetCreatebyMDX(cSub, '{[' | vDim |'].[' | vDim |'].[W_APP]}', 1 );
+    ELSEIF(vDim @= 'Legal_Organization');
+	    SubsetDestroy(vDim, cSub);
+		SubsetCreatebyMDX(cSub, '{TM1FILTERBYLEVEL(TM1SUBSETALL([' | vDim |'].[' | vDim |']) , 0)}', 1 );
+	ELSEIF(vDim @= 'Period');
+	    # -- On exploite le subset LTP_Current
+		
+	ELSEIF(vDim @= 'Phase');
+	    SubsetDestroy(vDim, cSub);
+		SubsetCreatebyMDX(cSub, '{[' | vDim |'].[' | vDim |'].[' | pPhase |']}', 1 );
+	ELSEIF(vDim @= 'Indicator_LTP');
+		SubsetDestroy(vDim, cSub);
+		SubsetCreatebyMDX(cSub,'{TM1FILTERBYLEVEL(
+			{DISTINCT(DESCENDANTS([Indicator_LTP].[Indicator_LTP].[P&L_IND])),
+			 DISTINCT(DESCENDANTS([Indicator_LTP].[Indicator_LTP].[BS_IND])),
+			 DISTINCT(DESCENDANTS([Indicator_LTP].[Indicator_LTP].[CF_IND])),
+                                                 DISTINCT(DESCENDANTS([Indicator_LTP].[Indicator_LTP].[IFRIC12]))} 
+								, 0)}', 1);
+    ENDIF;
+    nDim = nDim + 1;
+END;
+
+# -------------------------------------------------------------------------------------
+# Subsets : Affectation des subsets à la vue source
+# -------------------------------------------------------------------------------------
+nDim = 1;
+While( nDim <= nsNbCubeDim );
+  sDim = TABDIM(sCube, nDim);
+		IF(sDim @= 'Period');
+			ViewSubsetAssign(sCube, sView,sDim, vSub_LTP_Current);
+			
+		ELSE;
+			ViewSubsetAssign(sCube, sView,sDim, sSub);
+		ENDIF;
+  nDim = nDim + 1;
+End;
+
+# -------------------------------------------------------------------------------------
+# Subsets : Affectation des subsets à la vue cible
+# -------------------------------------------------------------------------------------
+nDim = 1;
+While( nDim <= ncNbCubeDim );
+  cDim = TABDIM(cCube, nDim);
+		IF(cDim @= 'Period');
+			ViewSubsetAssign(cCube, cView,cDim, vSub_LTP_Current);
+		ELSE;
+			ViewSubsetAssign(cCube, cView,cDim, cSub);
+		ENDIF;
+  nDim = nDim + 1;
+End;
+
+# -------------------------------------------------------------------------------------
+# Définition de la Datasource
+# -------------------------------------------------------------------------------------
+DataSourceType = 'VIEW';
+DatasourceNameForServer = sCube;
+DatasourceCubeview = SView;
+
+#--------------------------------------------------------------------------------------
+# ========== Vue Cible : Selction des données et nettoyage avant chargement
+# -------------------------------------------------------------------------------------
+
+ViewExtractSkipZeroesSet (sCube,sView, 1);
+ViewExtractSkipCalcsSet(sCube, sView, 1);
+ViewExtractSkipRuleValuesSet(sCube, sView, 0);
+
+
+ViewZeroOut(cCube, cView);
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+IF(CellIsUpdateable( cCube, Activity, Currency, LTP_Components, 'W_APP', Legal_Organization, Period, Phase, Indicator_LTP) <> 0);
+
+# -- Traitement de la Currency 'EUR' pour les années d'ouverture
+	IF(Currency @= 'EUR');
+
+		IF(CellGetN('TC_LTP_Version_Annee_Ouverture', Phase, Period, 'NUM_VAR1') = 0);
+
+            			#CellPutN(Valeur, cCube, Activity, Currency, LTP_Components, 'W_APP', Legal_Organization, Period, Phase, Indicator_LTP);
+			vs_Taux = CellGetS('ST_Weighting_Rate', Activity, Legal_Organization, pPhase, Period, LTP_Components, 'STR_VAR1');
+        
+        			IF(vs_Taux @= '');
+
+           				CellPutN(Valeur, cCube, Activity, Currency, LTP_Components, 'W_APP', Legal_Organization, Period, Phase, Indicator_LTP);
+        			ELSE;
+            		
+				# -- Supprimer le signe '%'
+            				vnPosition =SCAN('%', vs_Taux);
+
+           				IF(vnPosition <> 0);
+                				vs_Taux = DELET(vs_Taux, vnPosition, 1);
+            				ENDIF;
+            
+            				# -- Remplacer le '.' par une ','          		
+				vnPosition = SCAN('.', vs_Taux);
+           		
+				IF(vnPosition <> 0);
+                				vs_Taux = DELET(vs_Taux, vnPosition, 1);
+               					vs_Taux = INSRT(',', vs_Taux, vnPosition);
+				ENDIF;
+            
+            				# -- Convertir le taux en nombre
+            				vn_Taux = StringToNumberEx(vs_Taux, ',', '.');
+            				Valeur = Valeur * vn_Taux / 100;
+            				
+				CellPutN(Valeur, cCube, Activity, Currency, LTP_Components, 'W_APP', Legal_Organization, Period, Phase, Indicator_LTP);
+        
+        			ENDIF;
+
+		
+        		ENDIF;
+    	ELSE;
+
+    		# -- Cas Currency = 'LCL' >> Calcul selon les taux de pondération
+
+        		vs_Taux = CellGetS('ST_Weighting_Rate', Activity, Legal_Organization, pPhase, Period, LTP_Components, 'STR_VAR1');
+        
+        		IF(vs_Taux @= '');
+           			CellPutN(Valeur, cCube, Activity, Currency, LTP_Components, 'W_APP', Legal_Organization, Period, Phase, Indicator_LTP);
+        		ELSE;
+            		
+			# -- Supprimer le signe '%'
+
+            			vnPosition =SCAN('%', vs_Taux);
+
+           			IF(vnPosition <> 0);
+
+                			vs_Taux = DELET(vs_Taux, vnPosition, 1);
+
+            			ENDIF;
+            
+            			# -- Remplacer le '.' par une ','
+            		
+			vnPosition = SCAN('.', vs_Taux);
+           		
+			IF(vnPosition <> 0);
+                			vs_Taux = DELET(vs_Taux, vnPosition, 1);
+               				vs_Taux = INSRT(',', vs_Taux, vnPosition);
+           			
+			ENDIF;
+            
+            			# -- Convertir le taux en nombre
+            			
+			vn_Taux = StringToNumberEx(vs_Taux, ',', '.');
+            			
+			Valeur = Valeur * vn_Taux / 100;
+            				
+			CellPutN(Valeur, cCube, Activity, Currency, LTP_Components, 'W_APP', Legal_Organization, Period, Phase, Indicator_LTP);
+        
+        		ENDIF;
+    	ENDIF;
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- Lancer le process de copie dans le cube de Reporting
+#ExecuteProcess('DL_Report_LTP_RP_LTP_by_Phase', 'pPhaseVersion', pPhase);
+#endregion

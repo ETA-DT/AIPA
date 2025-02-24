@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"ApplicationSheet_LTP_Input_Control",
+	"Hierarchies@Code.links":
+	[
+		"ApplicationSheet_LTP_Input_Control.hierarchies/ApplicationSheet_LTP_Input_Control.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('ApplicationSheet_LTP_Input_Control')/Hierarchies('ApplicationSheet_LTP_Input_Control')"
+	}
+}

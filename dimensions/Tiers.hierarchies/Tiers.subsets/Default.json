@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"Default",
+	"Expression":"{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [Tiers] )}, ALL, RECURSIVE )}, 1,2,3,4)}"
+}

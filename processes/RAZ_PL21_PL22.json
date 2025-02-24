@@ -1,0 +1,21 @@
+{
+	"@type":"Process",
+	"Name":"RAZ_PL21_PL22",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"RAZ_PL21_PL22.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pPhase",
+			"Prompt":"Phase to update : (ACT)",
+			"Value":"ACT",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

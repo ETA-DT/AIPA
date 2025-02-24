@@ -1,0 +1,117 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - build dimension z_indicator_PL_US_ORACLE
+# Created by : FBU
+# Created at : 19/07/2011
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+ExecuteProcess('DB_zz_Date_Time_loading');
+pCountry=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+
+zDim = 'z_indicator_PL_US_ORACLE';
+zsource='US_ORACLE';
+zFile = 'P&L_Mapping_US_ORACLE';
+
+zCityCode = 'z_management_unit_us_oracle';
+
+#Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\INPUT\DATA\' | zFile | '.csv';
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\' | zFile | '.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByName','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+IF( Destination @= 'ALL' % Destination @= 'ALL OTHER' );
+
+         i = 1 ;
+        WHILE( i < DIMSIZ ( zCityCode ) + 1 ) ;
+             ElemC = DIMNM( zCityCode , i );
+             IF( ElemC @<> 'NA' & ElemC @<> 'STEST_US_ORACLE' );
+                  DIMENSIONELEMENTINSERT( zDim , '' , Account | '_' | ElemC , 'n' );
+             ENDIF;
+             i=i+1;
+         END;
+
+ELSE;
+
+         DIMENSIONELEMENTINSERT( zDim , '' , Account | '_' | Destination , 'n' );
+
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+
+
+
+#-- Not necessary
+IF( Destination @= 'ALL' % Destination @= 'ALL OTHER' );
+
+#         ATTRPUTS( Lib_Account | '_1' , zDim , Account | '_1' , 'English' );
+#         ATTRPUTS( Lib_Account | '_2' , zDim , Account | '_2' , 'English' );
+#         ATTRPUTS( Lib_Account | '_3' , zDim , Account | '_3' , 'English' );
+#         ATTRPUTS( Lib_Account | '_301' , zDim , Account | '_301' , 'English' );
+#         ATTRPUTS( Lib_Account | '_431' , zDim , Account | '_431' , 'English' );
+#         ATTRPUTS( Lib_Account | '_999' , zDim , Account | '_999' , 'English' );
+
+ELSE;
+
+#         ATTRPUTS( Lib_Account | '_' | Destination , zDim , Account | '_' | Destination , 'English' );
+
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'P&L_Mapping_' | zsource );
+
+if (pCountry @<>'CM');
+  zProcess = 'DB_' | zDim;
+  zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+  zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+  pChore='Task2_CO_Load_Common_Dimension_' | pCountry;
+  pProcess_source=zsource;
+  pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+  CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry,pProcess_source ,  'Start_date');
+  CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,pProcess_source, 'End_date');
+  CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,pProcess_source,   'Status');
+endif;
+#endregion

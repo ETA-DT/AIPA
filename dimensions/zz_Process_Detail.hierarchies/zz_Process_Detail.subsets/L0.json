@@ -1,0 +1,25 @@
+{
+	"@type":"Subset",
+	"Name":"L0",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('zz_Process_Detail')/Hierarchies('zz_Process_Detail')/Elements('Status')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Detail')/Hierarchies('zz_Process_Detail')/Elements('Start_date')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Detail')/Hierarchies('zz_Process_Detail')/Elements('End_date')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Detail')/Hierarchies('zz_Process_Detail')/Elements('Nb_input_records')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Detail')/Hierarchies('zz_Process_Detail')/Elements('Nb_load_records')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Detail')/Hierarchies('zz_Process_Detail')/Elements('Nb_reject_records')"
+		}
+	]
+}

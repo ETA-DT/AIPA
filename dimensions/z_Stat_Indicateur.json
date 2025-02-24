@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Stat_Indicateur",
+	"Hierarchies@Code.links":
+	[
+		"z_Stat_Indicateur.hierarchies/z_Stat_Indicateur.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Stat_Indicateur')/Hierarchies('z_Stat_Indicateur')"
+	}
+}

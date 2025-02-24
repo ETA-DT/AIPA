@@ -1,0 +1,264 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+##################################################################################
+# -- Export au format CSV toutes les valeurs (numerique et chaine) level 0 des éléments définis (aggrégés ou niveau fin) en parametre
+# -- Valable pour tout cube ayant au max 20 dimensions
+# -- /!\ Attention le process n'extrait pas les valeurs consolidées
+# -- MTA - Datatilt
+# -- 11/04/2022
+# --
+##################################################################################
+
+#####################################
+# -- Variables numériques
+nBoolTitle = 0;
+nAnnee = 0;
+nMois = 0;
+nNumberofRecords = 0;
+
+######################################
+# -- Variables string
+
+sPRO_NAME = GetProcessName();
+
+sCubeSource = pCube;
+sViewSource ='z_View_' |pCube | '_' | sPRO_NAME;
+sSubSource ='z_Sub_' |pCube | '_' | sPRO_NAME;
+
+######################################
+# -- DatasourceASCII
+DatasourceASCIIQuoteCharacter='';
+DatasourceASCIIDelimiter=Char(59);
+DatasourceASCIIThousandSeparator = ' ';
+DatasourceASCIIDecimalSeparator =',';
+
+######################################
+# -- Calcul du nombre de dimensions dans le cube                      
+nNbDim = 1;
+While( TABDIM(pCube, nNbDim) @<>' ' );
+	nNbDim = nNbDim + 1;   
+End;
+
+nNbDim = nNbDim - 1;   
+sDimLast = TabDim ( pCube , nNbDim );
+nDimLast =  nNbDim;
+
+######################################
+# Identification des dimensions utilisées dans les paramétres                   
+nIndex = 1;
+While (nIndex <= nNbDim);
+ 	sDim = TabDim ( pCube, nIndex);
+  	if(SCAN( pDimensionTemps,sDim) <> 0);
+    		sDimAnnee = TabDim ( pCube, nIndex);
+  	endif;
+ 	nIndex = nIndex + 1;
+End;
+
+######################################
+# -- Controle de coherence
+
+sErrorMessage = '';
+
+if(cubeExists(sCubeSource) = 0);
+  	sErrorMessage = 'cube inexistant' ;
+  	processbreak;
+endif;
+
+# -- Condition pour les dimensions Period et Period_YTD
+IF (sDimAnnee @= 'Period'); 
+	pAnnee = pAnnee;
+Else; 
+	pAnnee = 'Total_' | pAnnee; 
+Endif; 
+
+if(DIMIX(sDimAnnee, pAnnee) = 0 & pAnnee @<> ' ');
+	sErrorMessage = 'Annee inexistante' ;
+	processbreak;
+endif;
+
+
+######################################
+# -- Fichiers d'export csv
+OUTPUT_DIR = CellGetS( 'Z_ADMIN_PARAM', 'REP_OUTPUT', 'STR_VAR1' );
+pExportFile = pCube | '_' | pAnnee |'.csv';
+
+Export_File = OUTPUT_DIR | '\Backup\' | pDimensionTemps| '\' | pAnnee | '\' |pExportFile;
+
+
+
+######################################
+# -- Création  d'une vue Source
+
+if (ViewExists(sCubeSource, sViewSource) = 1);
+   	ViewDestroy(sCubeSource, sViewSource);
+   	ViewCreate(sCubeSource, sViewSource);
+else;
+  	ViewCreate(sCubeSource, sViewSource);
+endif;
+
+######################################
+# -- Subset : Ajout des éléments
+
+nDim = 1;
+While ( nDim <= nNbDim );
+	sDim = TABDIM(pCube, nDim);
+
+	if(sDim @= sDimAnnee & pAnnee @<> ' ');
+       		SubsetDestroy(sDim, sSubSource);
+		SubsetCreate ( sDim, sSubSource); 
+ 
+		i=1; 
+		imax = Dimsiz (sDim); 
+		while (i<=imax); 
+			vCurrentElement = DimNm (sDim, i); 
+
+			IF (sDimAnnee @= 'Period'); 
+				IF (ELLEV (sDim, vCurrentElement)=0  & Scan (pAnnee, vCurrentElement) >0 );
+					
+					SubsetElementInsert ( sDim, sSubSource, vCurrentElement, 1);
+				ENDIF; 
+			ELSE; 
+				Year = SUBST(pAnnee, 7, 4);
+				IF (ELLEV (sDim, vCurrentElement)=0  & Scan (year, vCurrentElement) >0 );
+					
+					SubsetElementInsert ( sDim, sSubSource, vCurrentElement, 1);
+				ENDIF; 
+			ENDIF; 
+			i=i+1; 
+		end; 
+	endif;
+	nDim = nDim + 1;
+End;
+
+######################################
+# -- Subsets : Affectation des subsets à la vue
+
+nDim = 1;
+While( nDim <= nNbDim );
+	sDim = TABDIM(pCube, nDim);
+ 	if(SubsetExists( sDim, sSubSource) <> 0);
+      		ViewSubsetAssign(pCube, sViewSource,sDim, sSubSource);
+	endif;
+  nDim = nDim + 1;
+End;
+
+######################################
+# Définition de la Datasource
+
+DataSourceType = 'VIEW';
+DatasourceNameForServer = sCubeSource;
+DatasourceCubeview = sViewSource;
+
+######################################
+# Filtre sur les éléments pour lesquels il y a des données
+
+ViewExtractSkipZeroesSet (sCubeSource,DatasourceCubeview, 1);
+ViewExtractSkipCalcsSet(sCubeSource, DatasourceCubeview, 1);
+ViewExtractSkipRuleValuesSet(sCubeSource, DatasourceCubeview, 0);
+
+
+iExportLine = 1;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+######################################
+# -- Ajout de la ligne d'en-tête
+
+if ( nBoolTitle = 0 );
+	nDim = 1;
+	While( nDim <= nNbDim);
+		sDim = TABDIM(pCube, nDim);
+		if(nDim =1);
+			sLigne = sDim;
+		else;
+			sLigne = sLigne | ';' | sDim;
+		endif;
+		nDim = nDim + 1;
+	End;
+	nBoolTitle = 1;
+
+	# Export des entetes de dimension 
+	AsciiOutput(Export_File,sLigne, 'Value' );
+endif;
+
+######################################
+# -- Traitement des lignes avec données
+
+
+# -- Boucle pour concatenation des variables
+nDim = 1;
+While( nDim <= nNbDim);
+	sElementName = EXPAND( '%' | 'v' | NumberToString(nDim) | '%');
+	if(nDim =1);
+		sFullElementName = sElementName;
+	
+	else;
+		sFullElementName = sFullElementName | ';' | sElementName;
+		
+	endif;
+	nDim = nDim + 1;
+End;
+
+
+# -- Ajout du +1 pour prendre en compte la variable vX contenant les données
+# -- nb de dimensions du cube +1 = valeur au croisement des cellules
+nVarValeur = nNbDim +1;
+
+# -- Utilisation de la fonction EXPAND pour convertir la variable en élement de dimension
+sVarValeur = EXPAND( '%'|'v'|NumberToString(nVarValeur)|'%');
+
+# -- Permet de recuperer le nom de l'élément pour tester son type
+sVarIndicateur = EXPAND( '%' | 'v' | NumberToString(nDimLast) | '%');
+
+ 
+# -- Retours attendus de la fonction DTYPE : "N" pour numerique, "C" : consolidation (cas non possible ici), "S" pour string.
+
+If(DTYPE(sDimLast,sVarIndicateur) @= 'S');
+	sValeur = sVarValeur ;
+else;
+
+	IF( sVarValeur @= 'Nan');
+		ItemSkip;
+	ELSE;
+   	 	nValeur = StringToNumber(sVarValeur);
+   	 	sValeur = NumberToStringEx(nValeur,'#,0.##############################', ',', ' ');
+	ENDIF;
+endif;
+
+# -- Export des éléments & données
+AsciiOutput( Export_File ,sFullElementName,sValeur);
+
+nNumberofRecords = nNumberofRecords +1;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+######################################
+#  Suppression vue et subsets
+
+If (ViewExists(sCubeSource,sViewSource) = 1);
+	ViewDestroy(sCubeSource, sViewSource);
+Endif;
+
+
+nDim = 1;
+While( TabDim( sCubeSource, nDim ) @<> '' );
+	sDim = TabDim( sCubeSource, nDim );
+	SubsetDestroy(sDim, sSubSource);
+nDim = nDim + 1;
+End;
+#endregion

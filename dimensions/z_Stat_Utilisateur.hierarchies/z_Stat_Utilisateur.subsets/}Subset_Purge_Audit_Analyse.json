@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"}Subset_Purge_Audit_Analyse",
+	"Expression":"{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [z_Stat_utilisateur] )}, ALL, RECURSIVE )}, 0)}"
+}

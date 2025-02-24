@@ -1,0 +1,25 @@
+{
+	"@type":"Cube",
+	"Name":"zz_process_reject",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('}Processes')"
+		},
+		{
+			"@id":"Dimensions('zz_Date_Time_loading')"
+		},
+		{
+			"@id":"Dimensions('zz_Num_Lign')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Rejects')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"zz_process_reject.views/Default.json",
+		"zz_process_reject.views/Par défaut.json",
+		"zz_process_reject.views/ZZ_PROCESS_REJECT_XXXX.12_YTD_RAZ.json"
+	]
+}

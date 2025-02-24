@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_exercice_VTD_Vector",
+	"Hierarchies@Code.links":
+	[
+		"z_exercice_VTD_Vector.hierarchies/z_exercice_VTD_Vector.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_exercice_VTD_Vector')/Hierarchies('z_exercice_VTD_Vector')"
+	}
+}

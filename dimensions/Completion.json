@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Completion",
+	"Hierarchies@Code.links":
+	[
+		"Completion.hierarchies/Completion.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Completion')/Hierarchies('Completion')"
+	}
+}

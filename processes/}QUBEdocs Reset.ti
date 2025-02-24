@@ -1,0 +1,83 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Added in addtional objects to reset (QUBEdocs client and Object dimensions) and to clear out the stats cubes
+#GENERALCOMMENT This process resets QUBEdocs to its intitial state.  It deletes all documentation and removes structures / elements form the cubes
+#DATASOURCECOMMENT Not Applicable
+#PROLOGCOMMENT Reset QUBEdocs by deleting structures in QUBEdocs dimensions
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Not Applicable
+#EPILOGCOMMENT Not Applicable
+
+
+IF(UPPER(pReset) @= 'Y');
+
+ sCube = 'QUBEDocs Definitions';
+
+ sQUBEdocsAppDim = 'QubeDocs Application';
+ sModelEl = 'Entire Model';
+
+ #Rebuild QUBEdocs Definitions Dimension
+ sQUBEdocsDim = 'QUBEdocs Definition';
+ sParent ='All Definitions';
+ DIMENSIONDELETEALLELEMENTS(sQUBEdocsDim);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', sParent,'C');   
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Cubes','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Cubes', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Dimensions','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Dimensions', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Processes','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Processes', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Chores','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Chores', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Users','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Users', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Groups','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Groups', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Folders','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Folders', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Other Documentation','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Other Documentation', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Definitions','C');   
+
+ #Rebuild QUBEdocs Object Dimension
+ sParent = 'All Objects';
+ sQUBEdocsDim = '}QUBEdocs Object';
+ DIMENSIONDELETEALLELEMENTS(sQUBEdocsDim);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', sParent,'C');   
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Cubes','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Cubes', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Dimensions','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Dimensions', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Processes','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Processes', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Chores','C'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'All Chores', 1);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'All Chores','N'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'Server', 1);
+
+ #Rebuild QUBEdocs Client Dimension
+ sQUBEdocsDim = '}QUBEdocs Client';
+ sParent ='All Clients';
+ DIMENSIONDELETEALLELEMENTS(sQUBEdocsDim);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '',sParent,'C');   
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'Server','N'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'Server', 1);
+ #Clear out Stats cube
+ EXECUTEPROCESS('}QUBEdocs Clear Stats');
+
+ #Rebuild QUBEdocs Stat Instance Dimension
+ sQUBEdocsDim = '}QUBEdocs Stat Instance';
+ DIMENSIONDELETEALLELEMENTS(sQUBEdocsDim);
+ DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'LATEST','N'); 
+
+ #Rebuild QUBEdocs Application Dimension & Clear out cube
+ DIMENSIONDELETEALLELEMENTS(sQUBEdocsAppDim);
+ DIMENSIONELEMENTINSERT(sQUBEdocsAppDim, '',sModelEl,'N');   
+ DIMENSIONELEMENTINSERT(sQUBEdocsAppDim, '','Application Folders','N');   
+ CUBECLEARDATA('QUBEDocs Applications');
+ ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

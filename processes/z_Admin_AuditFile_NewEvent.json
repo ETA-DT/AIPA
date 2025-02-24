@@ -1,0 +1,45 @@
+{
+	"@type":"Process",
+	"Name":"z_Admin_AuditFile_NewEvent",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"z_Admin_AuditFile_NewEvent.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pNewEvent",
+			"Prompt":"Numéro du nouvel évènement",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pObjType",
+			"Prompt":"Type d'évènement ou type d'objet (Libre)",
+			"Value":"Processus",
+			"Type":"String"
+		},
+		{
+			"Name":"pObjName",
+			"Prompt":"Nom de l'objet (Libre ou variable concernée)",
+			"Value":"vAuditFile_Col2",
+			"Type":"String"
+		},
+		{
+			"Name":"pDescription",
+			"Prompt":"Description (Libre ou variable concernée)",
+			"Value":"vAuditFile_Col3",
+			"Type":"String"
+		},
+		{
+			"Name":"pNumEvent",
+			"Prompt":"Numéro de l'évènement (Libre ou variable concernée)",
+			"Value":"vAuditFile_Col1",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

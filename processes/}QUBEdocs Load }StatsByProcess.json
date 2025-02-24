@@ -1,0 +1,61 @@
+{
+	"@type":"Process",
+	"Name":"}QUBEdocs Load }StatsByProcess",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"}QUBEdocs Load }StatsByProcess.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"TM1CubeView",
+		"dataSourceNameForClient":"}StatsByProcess",
+		"dataSourceNameForServer":"}StatsByProcess",
+		"view":"}QUBEdocs All"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pStatVersion",
+			"Prompt":"Version / Instance",
+			"Value":"LATEST",
+			"Type":"String"
+		}
+	],
+	"Variables":
+	[
+		{
+			"Name":"vTimeInterval",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vObject",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vStat",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vStatValue",
+			"Type":"String",
+			"Position":4,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

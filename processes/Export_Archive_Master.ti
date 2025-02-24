@@ -1,0 +1,98 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+##################################################################################
+# -- Processus Master
+# -- Export de tous les cubes d'une AAAA
+# -- Valable pour tout cube ayant au max 20 dimensions
+# -- /!\ Attention le process n'extrait pas les valeurs consolidées
+# -- Il faut executer le processus master 2 fois, en premier avec Period puis avec Period_YTD => L'ordre na pas d'importance car la purge devra etre faite une fois que tous les cubes sont exportés avec les deux dimensions
+# -- ON peut exécuter tous les cubes (ALL) ou juste un cube (solution positionnée, mais pas conseillé comme échangé avec Rozenn le 06/10/2022 car la maintenance et le risque d'oubli peut être important). 
+# -- MTA - Datatilt
+# -- 05/10/2022
+# --
+##################################################################################
+
+
+
+
+# -- Déclaration de la dimension source et du sous-ensemble
+vDim = 'z_Cubes';
+vAttr = 'Temps';
+ExecuteProcess('z_Listes_Cubes_Period');
+
+# -- Défintiion du MDX permettant de soit récupérer tous les cubes ayant pour dimension Period ou Period_YTD, soit récuperer le cube en paramètre
+IF( pCube @= 'All');
+	vSubsetName = 'Liste_Cubes' | pDimensionTemps; 
+	vMdx = '{FILTER( {TM1SUBSETALL( [' | vDim| '] )}, [' | vDim | '].[' | vAttr | '] = ' | char(34) | pDimensionTemps | char(34) | ')}';
+ELSE;
+	vSubsetName = pCube | '_Cube_Unique';
+	vMdx = '{[' | vDim | '].[' | pCube | ']}';
+ENDIF;
+
+IF (SubsetExists( vDim, vSubsetName) <> 0);
+	SubsetDestroy ( vDim, vSubsetName);
+	Subsetcreatebymdx( vSubsetName, vMdx);
+ELSE;
+	Subsetcreatebymdx( vSubsetName, vMdx);
+ENDIF;
+
+
+# -- Définition de la source de données
+DataSourceNameForServer = vDim;
+DataSourceDimensionSubset = vSubsetName;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+IF(pCube @='ALL' );
+
+	nNbDim = 1;
+	While( TABDIM(Cube, nNbDim) @<>' ' );
+		nNbDim = nNbDim + 1;   
+	End;
+	
+	nNbDim = nNbDim - 1;   
+	
+	i = 1;	
+	vNbMax = nNbDim;
+	While( i <= vNbMax );
+		vDimParcourue = TABDIM(Cube, i);
+		IF( vDimParcourue @= pDimensionTemps);
+			
+			ExecuteProcess ('Export_Archive','pCube', Cube, 'pAnnee', pAnnee, 'pDimensionTemps', pDimensionTemps);
+		ENDIF;
+		i = i + 1; 
+	End;
+
+ELSEIF( pCube @<>'') ;
+
+		ExecuteProcess ('Export_Archive','pCube', Cube, 'pAnnee', pAnnee, 'pDimensionTemps', pDimensionTemps);
+		
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+IF (SubsetExists( vDim, vSubsetName) <> 0);
+		SubsetDestroy ( vDim, vSubsetName);
+ENDIF;
+
+#endregion

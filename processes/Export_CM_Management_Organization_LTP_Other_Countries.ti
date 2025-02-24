@@ -1,0 +1,135 @@
+#region Prolog
+#########################################
+# Project : Tango - Multi-instance
+# Created by : MBO
+# Created at : 14/11/2011
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+nb_lign = 0;
+nb_reject = 0;
+nb_load = 0;
+
+zDim = 'Management_Organization_LTP';
+
+zProcess = 'Export_CM_' | zDim | '_Other_Countries';
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+Country = CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+
+DatasourceASCIIDelimiter =';';
+
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF(  DIMIX (zDim|'_TEMP', Management_Organization_LTP) = 0 ); 
+
+     Desc_English_0 = ATTRS( zDim , Management_Organization_LTP , 'English' );
+     Desc_French_0 = ATTRS( zDim , Management_Organization_LTP , 'French' );
+     Desc_Dutch_0 = ATTRS( zDim , Management_Organization_LTP , 'Dutch' );
+     Desc_German_0 = ATTRS( zDim , Management_Organization_LTP , 'German' );
+
+
+
+     Att_Year = ATTRS( zDim , Management_Organization_LTP , 'End of current contract year' );
+     Att_Status_Renewal = ATTRS( zDim , Management_Organization_LTP , 'Status Renewal' );
+     Att_New_contract_end_year = ATTRS( zDim , Management_Organization_LTP , 'New contract end year' );
+     Att_Growth_Type = ATTRS( zDim , Management_Organization_LTP , 'Growth Type' );
+     Att_Current_operator = ATTRS( zDim , Management_Organization_LTP , 'Current operator' );
+     Att_Assumed_CAFOP = ATTRS( zDim , Management_Organization_LTP , 'Assumed CAFOP' );
+     Att_Status_Growth = ATTRS( zDim , Management_Organization_LTP , 'Status Growth' );
+     Att_Starting_Date = ATTRS( zDim , Management_Organization_LTP , 'Starting Date' );
+     Att_Contract_duration = ATTRS( zDim , Management_Organization_LTP , 'Contract duration' );
+     Att_Included_LTP = ATTRS( zDim , Management_Organization_LTP , 'Included LTP' );
+     Att_Legal_Parent = ATTRS( zDim , Management_Organization_LTP , 'Legal Parent' );
+     Att_Project_status = ATTRS( zDim , Management_Organization_LTP , 'Project status' );
+     Att_LTP_Component_Flag = ATTRS( zDim , Management_Organization_LTP , 'LTP Component Flag' );
+  
+          zPrefixe = Country | '_Mapping_';
+
+          Export_File =  '\\' |  CellGetS( 'z_Admin_Param_Instance' , 'SERVER_NAME' , 'CM','STR_VAR1') | CellGetS( 'z_Admin_Param_Instance' , 'REP_CO_
+STRUC_EXPORT' , 'CM','STR_VAR1') |  '\' |  zPrefixe | zDim | '.csv';
+          ASCIIOUTPUT( Export_File, 
+                  Management_Organization_LTP , Desc_English_0 , Desc_French_0 , Desc_Dutch_0 , Desc_German_0 , 
+      Att_LTP_Component_Flag,
+      Att_Project_status,
+      Att_Legal_Parent,
+      Att_Year, 
+      Att_Status_Renewal ,
+     Att_New_contract_end_year, 
+     Att_Growth_Type, 
+     Att_Current_operator, 
+    Att_Assumed_CAFOP, 
+    Att_Status_Growth, 
+    Att_Starting_Date, 
+    Att_Contract_duration, 
+    Att_Included_LTP
+   );
+ 
+ENDIF;
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+pCountry=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+
+pChore='LTP_Task5_CM_Import_CM_Data_Export_CO_Data';
+
+pProcess_source=pCountry;
+pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+
+CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pperiod,zDateLoadingStart, pProcess_source ,'CORE_MODEL' , 'Start_date');
+CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pperiod,zDateLoadingStart ,pProcess_source, 'CORE_MODEL', 'End_date');
+CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pperiod,zDateLoadingStart, pProcess_source, 'CORE_MODEL' ,   'Status');
+
+
+#################################################################################
+#                                                                             DETAIL PROCESS SECTION
+
+zCube_Process = 'ZZ_PROCESS_Detail';
+
+CellPutS(zDateTimeLoadingStart , zCube_Process, zProcess ,zDateLoadingStart , 'Start_date');
+CellPutS(zDateTimeLoadingEnd , zCube_Process, zProcess ,zDateLoadingStart  , 'End_date');
+CellPutS('OK' , zCube_Process, zProcess ,zDateLoadingStart , 'Status');
+
+#################################################################################
+#                                                                             END PROCESS
+#################################################################################
+#endregion

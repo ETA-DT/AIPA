@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"ST_PL_YTD_Vue",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Period_YTD')/Hierarchies('Period_YTD')/Elements('2023.08')"
+		}
+	]
+}

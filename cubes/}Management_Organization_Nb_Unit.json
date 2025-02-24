@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"}Management_Organization_Nb_Unit",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Management_Organization')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"Views@Code.links":[]
+}

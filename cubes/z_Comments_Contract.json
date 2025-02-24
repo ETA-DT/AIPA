@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"z_Comments_Contract",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_Contract_Pending_Approval')"
+		},
+		{
+			"@id":"Dimensions('Comment')"
+		}
+	],
+	"Views@Code.links":[]
+}

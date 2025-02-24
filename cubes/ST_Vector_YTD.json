@@ -1,0 +1,36 @@
+{
+	"@type":"Cube",
+	"Name":"ST_Vector_YTD",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Currency')"
+		},
+		{
+			"@id":"Dimensions('Audit_ID')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')"
+		},
+		{
+			"@id":"Dimensions('Period_YTD')"
+		},
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('Integration_Rate')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')"
+		}
+	],
+	"ViewStorageMaxMemory":100000,
+	"ViewStorageMinTime":1,
+	"Views@Code.links":
+	[
+		"ST_Vector_YTD.views/mepvector.json",
+		"ST_Vector_YTD.views/mepvectorconso.json",
+		"ST_Vector_YTD.views/ST_Vector_YTD_Vue.json"
+	]
+}

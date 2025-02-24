@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"Years",
+	"Expression":"{TM1SORT( {TM1FILTERBYPATTERN( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [T_Periode] )}, ALL, RECURSIVE )}, \"2???\")}, ASC)}"
+}

@@ -1,0 +1,57 @@
+{
+	"@type":"Process",
+	"Name":"DL_Copy_LTP_OLD",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"DL_Copy_LTP_OLD.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pPhase_Source",
+			"Prompt":"Phase Source (LTP_YYYY_VC)",
+			"Value":"LTP_YYYY_Vx",
+			"Type":"String"
+		},
+		{
+			"Name":"pPhase_Target",
+			"Prompt":"Phase Cible (LTP_YYYY_V0)",
+			"Value":"LTP_YYYY_Vx",
+			"Type":"String"
+		},
+		{
+			"Name":"pLegal_Source",
+			"Prompt":"Code de l'entité légale (SU558 par exemple)",
+			"Value":"VTD_corp",
+			"Type":"String"
+		},
+		{
+			"Name":"pActivity_Source",
+			"Prompt":"Code de l'activité (UR_BU par exemple)",
+			"Value":"Tot_act",
+			"Type":"String"
+		},
+		{
+			"Name":"pPeriod_Source",
+			"Prompt":"Début de période à copier (F_YEAR_XXXX)",
+			"Value":"F_YEAR_XXXX",
+			"Type":"String"
+		},
+		{
+			"Name":"pPeriod_End",
+			"Prompt":"Fin de période à copier (F_YEAR_YYYY)",
+			"Value":"F_YEAR_YYYY",
+			"Type":"String"
+		},
+		{
+			"Name":"pType_Indicator",
+			"Prompt":"ALL ou Code de l'indicateur ou renseignez 'Saisie' pour les indicateurs de saisie",
+			"Value":"XXXXX",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

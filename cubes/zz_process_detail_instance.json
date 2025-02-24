@@ -1,0 +1,32 @@
+{
+	"@type":"Cube",
+	"Name":"zz_process_detail_instance",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('}Chores')"
+		},
+		{
+			"@id":"Dimensions('}Processes')"
+		},
+		{
+			"@id":"Dimensions('Period')"
+		},
+		{
+			"@id":"Dimensions('zz_Date_Time_loading')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Instance')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Source')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Detail')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"zz_process_detail_instance.views/Default.json"
+	]
+}

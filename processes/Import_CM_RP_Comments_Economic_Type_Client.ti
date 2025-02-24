@@ -1,0 +1,232 @@
+#region Prolog
+#########################################
+# Project : Tango - Multi-instance
+# Created by :NEK
+# Created at : 24/10/2011
+# Modified by :MBO
+# Modified at :14\11\2011
+# Modify reason :
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+zCube = 'RP_Comments_Economic_Type_Client';
+zCube_Reject = 'ZZ_PROCESS_REJECT_instance';
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+
+nb_lign = 0;
+nb_reject = 0;
+nb_load = 0;
+
+zProcess = 'Import_CM_RP_Comments_Economic_Type_Client';
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+
+Source_File = '\\'| CellGetS( 'z_Admin_Param_Instance' , 'SERVER_NAME' ,'CM', 'STR_VAR1') | CellGetS( 'z_Admin_Param_Instance' , 'REP_CO_DATA_EXPORT' 
+,'CM', 'STR_VAR1') |  pCountry | '_Data_' | zCube | '.csv';
+DataSourceNameForServer = Source_File;
+
+#################################################################################
+#                                                               Clear Reject Cube
+#################################################################################
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+P_NAME_RAZ = zCube_Reject | '_RAZ';
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+ViewCreate( zCube_Reject , P_NAME_RAZ );
+
+#-- Create subset in zz_Date_Time_loading and }Processes
+IF( SubsetExists( 'zz_Date_Time_loading' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ENDIF;
+
+IF( SubsetExists( '}Processes' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( '}Processes' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( '}Processes' , P_NAME_RAZ );
+ENDIF;
+
+IF( SubsetExists( 'zz_Process_Source' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'zz_Process_Source' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'zz_Process_Source' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'zz_Date_Time_loading' , P_NAME_RAZ ,zDateLoadingStart , 1 );
+SubsetElementInsert( '}Processes' , P_NAME_RAZ , zProcess , 1 );
+SubsetElementInsert( 'zz_Process_Source' , P_NAME_RAZ , pCountry , 1 );
+
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Date_Time_loading' , P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , '}Processes', P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Process_Source', P_NAME_RAZ);
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipCalcsSet ( zCube_Reject , P_NAME_RAZ , 1 );
+
+#-- Clear cube
+ViewZeroOut( zCube_Reject , P_NAME_RAZ );
+
+#-- Delete subset
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+SubsetDestroy( 'zz_Date_Time_loading' , P_NAME_RAZ );
+SubsetDestroy( '}Processes' , P_NAME_RAZ );
+
+
+#################################################################################
+#                                                               Clear CUBE
+#################################################################################
+P_NAME_RAZ = zCube | '_RAZ';
+ViewDestroy( zCube , P_NAME_RAZ );
+ViewCreate( zCube , P_NAME_RAZ );
+
+#-- Create subset in Legal_Organization
+SubsetDestroy( 'Legal_Organization' , P_NAME_RAZ );
+SubsetCreate( 'Legal_Organization' , P_NAME_RAZ );
+i=1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' )+1 );
+   ElemE = DIMNM( 'Legal_Organization' , i );
+       IF ( ATTRS ( 'Legal_Organization' , ElemE,'Country_entity' ) @= pCountry ) ;
+           SubsetElementInsert( 'Legal_Organization' , P_NAME_RAZ , ElemE , 1 );
+      ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , P_NAME_RAZ , 'Legal_Organization' , P_NAME_RAZ );
+
+#-- Create subset in Period
+IF( SubsetExists( 'Period' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_RAZ );
+ENDIF;
+SubsetElementInsert( 'Period' , P_NAME_RAZ , pPeriod , 1 );
+ViewSubsetAssign( zCube , P_NAME_RAZ , 'Period' , P_NAME_RAZ );
+
+#-- Clear cube
+ViewZeroOut( zCube , P_NAME_RAZ );
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube , P_NAME_RAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zCube , P_NAME_RAZ , 1 );
+ViewExtractSkipCalcsSet ( zCube , P_NAME_RAZ , 1 );
+
+#-- Delete subset
+ViewDestroy( zCube , P_NAME_RAZ );
+SubsetDestroy( 'Indicator' , P_NAME_RAZ );
+SubsetDestroy( 'Legal_Organization' , P_NAME_RAZ );
+SubsetDestroy( 'Period' , P_NAME_RAZ );
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+zRecord = vActivity | ';' |  vGaap | ';' | vIntegration_rate | ';' | vLegal_Organization | ';' | vManagement_Organization | ';' | 
+vPeriod | ';' | vApplicationSheet | ';' | vComment | ';' | vValue ;
+
+#################################################################################
+#                                                                             REJECT SECTION
+#################################################################################
+Nb_Lign = Nb_Lign + 1;
+
+# if the Period is different of the period in the file this record is reject
+IF( vPeriod @<> pPeriod );
+      Nb_Reject = Nb_Reject + 1;
+      zError_message = 'Rejected Data : The period in parameter is different of the period in the file at line ' |  NumberToString(Nb_Lign) ;
+      CellPutS( zRecord , zCube_Reject , zProcess , zDateLoadingStart , 'l' | NumberToString(Nb_Reject) ,pCountry, 'Record' );
+      CellPutS( zError_Message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | NumberToString(Nb_Reject) ,pCountry, 'Error_Message' );
+      ItemSkip;
+ENDIF;
+
+
+################################################################################
+#                                                               INPUT SECTION : Cube => RP_Comments_PL
+################################################################################
+
+CellPutS( vValue , zCube , vActivity , vEconomic_model , vGaap , vIntegration_Rate , vLegal_Organization , 
+vManagement_Organization , vPeriod , vType_Client, vApplicationSheet ,vComment );
+
+Nb_Load = Nb_Load + 1;
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+pChore = 'Task5_CM_Import_CM_Data_Export_CO_Data';
+
+pInstance=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+pSource =pCountry;
+
+pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+
+CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pInstance ,pSource ,'Start_date');
+CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pInstance ,pSource ,'End_date');
+
+CellPutS( NumberToString(nb_lign) , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pInstance ,pSource , 'Nb_Input_records');
+CellPutS( NumberToString(nb_reject) , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart ,pInstance ,pSource , 'Nb_reject_records');
+CellPutS( NumberToString(nb_load) , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pInstance ,pSource , 'Nb_load_records');
+
+CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pInstance ,pSource , 'Status');
+
+IF( Nb_Lign = Nb_Load);
+    CellPutS( 'OK' , zCube_Process_PP, pChore , zProcess , pPeriod , zDateLoadingStart , 
+    pInstance ,pSource, 'Status');
+ELSE;
+    CellPutS( 'KO' , zCube_Process_PP, pChore , zProcess , pPeriod , zDateLoadingStart , 
+   pInstance ,pSource , 'Status');
+ENDIF; 
+#################################################################################
+#                                                                             DETAIL PROCESS SECTION
+#################################################################################
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+
+CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date');
+CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date');
+CellPutS( NumberToString(nb_lign) , zCube_Process , zProcess , zDateLoadingStart , 'Nb_Input_records');
+CellPutS( NumberToString(nb_reject) , zCube_Process , zProcess , zDateLoadingStart , 'Nb_reject_records');
+CellPutS( NumberToString(nb_load) , zCube_Process , zProcess , zDateLoadingStart , 'Nb_load_records');
+
+IF( Nb_Lign = Nb_Load);
+    CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status');
+ELSE;
+    CellPutS( 'KO' , zCube_Process , zProcess , zDateLoadingStart , 'Status');
+    ItemReject( 'Process exited with errors at ' | TIME |  ' on ' | TODAY | '=> Check cubes : zz_Process_Detail_instance and  zz_Process_Reject_instan
+ce' );
+ENDIF; 
+
+#################################################################################
+#                                                                             END PROCESS
+#################################################################################
+#endregion

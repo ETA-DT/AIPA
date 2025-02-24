@@ -1,0 +1,145 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - Core Model
+# Created by : ASZ - Anone
+# Created at : 02/05/2016
+# Modified by : BTA 
+# Reason : Refonte de la sécurité + revue de la vue source qui était statique + ajout des commentaires
+# Date : 12/01/2017
+# Modified by : RSJC
+# Reason : Ajout droits groupe User_Strategy
+# Date : 10/06/2021
+#########################################
+
+#################################################################################
+#                                                               Déclaration des variables
+#################################################################################
+
+zCube = '}ElementSecurity_Indicator';
+zView = GetProcessName() ; 
+zSubset = GetProcessName() ; 
+
+#################################################################################
+#                                                               Source CUBE
+#################################################################################
+
+# -- Destruction et Construction de la vue
+ViewDestroy( zCube , zView );
+ViewCreate( zCube, zView );
+
+# -- Propriétés de la vue 
+ViewExtractSkipZeroesSet ( zCube , zView  , 0 );
+ViewExtractSkipRuleValuesSet ( zCube , zView  , 1 );
+ViewExtractSkipCalcsSet ( zCube , zView  , 0 );
+
+# -- Source du processus dynamique
+DatasourceNameForServer = zCube ;
+DatasourceCubeview = zView;
+
+
+#################################################################################
+#                                                               Clear Cube
+#################################################################################
+
+CubeClearData( zCube ) ;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- Ajout des modifications liées à la refonte de la sécurité
+
+IF( Groups @= 'Admin' % Groups @= 'DataAdmin' % Groups @= 'SecurityAdmin' ); 
+	ItemSkip;
+ENDIF;
+
+# -- Pour tous les indicator mettre WRITE sur Corporate Plus
+IF( Groups @= 'Corporate_Plus'  ); 
+
+	CellPutS( 'WRITE' , zCube , Indicator , Groups ); 
+
+ENDIF;
+
+
+IF( Groups @= 'Country_Project_Mgr' ); 
+
+	IF( ELISANC( 'Indicator' , 'Ind_op' , Indicator ) = 1 % Indicator @= 'Ind_op' ); 
+
+		CellPutS( 'WRITE' , zCube , Indicator , Groups ); 
+
+	ELSE ; 
+
+		CellPutS( 'READ' , zCube , Indicator , Groups ); 
+
+	ENDIF;
+
+ENDIF;
+## 10/06/2021 RSJC Ajout droits User_STrategy
+## IF( Groups @= 'Financial_Controller' % Groups @= 'Performance_Corporate' % Groups @= 'Data_Reporting_Reader' % Groups @= 'Data_LTP_Writer' % Groups @= 'Data_LTP_Reader' % Groups @= 'User_GIE' % Groups @= 'User_Holding' ) ; 
+IF( Groups @= 'Financial_Controller' % Groups @= 'Performance_Corporate' % Groups @= 'Data_Reporting_Reader' % Groups @= 'Data_LTP_Writer' % Groups @= 'Data_LTP_Reader' % Groups @= 'User_GIE' % Groups @= 'User_Holding' % Groups @= 'User_Strategy' ) ; 
+
+	CellPutS( 'READ' , zCube , Indicator , Groups ); 
+
+ENDIF;
+
+# --  Fin Ajout des modifications liées à la refonte de la sécurité
+
+
+
+IF(SUBST(Groups,1,2)@<>'R_' & SUBST(Groups,1,2)@<>'W_');
+  ItemSkip;
+ENDIF;
+
+IF(Groups@='R_Corporate');
+  CellPutS('READ', zCube , Indicator , Groups );
+  ItemSkip;
+ELSEIF(Groups@='W_Corporate');
+  CellPutS('WRITE', zCube , Indicator , Groups );
+  ItemSkip;
+ENDIF;
+
+
+vAnc_Indicator_1 = ELISANC('Indicator', 'Tot_var_CAFOP_bef_MF', Indicator);
+vAnc_Indicator_2 = ELISANC('Indicator', 'Ind_op', Indicator);
+
+vVal='';
+
+IF(SUBST(Groups,1,2)@='R_');
+	vVal='READ';
+ENDIF;
+
+IF(SUBST(Groups,1,2)@='W_');
+	IF(Indicator@='Tot_var_CAFOP_bef_MF' % Indicator@='Ind_op' % vAnc_Indicator_1=1 % vAnc_Indicator_2=1);
+		vVal='WRITE';
+	ELSE;
+		vVal='READ';
+	ENDIF;
+ENDIF;
+
+CellPutS(vVal, zCube , Indicator, Groups );
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- Destruction de la vue source 
+ViewDestroy( zCube , zView );
+
+
+
+
+#endregion

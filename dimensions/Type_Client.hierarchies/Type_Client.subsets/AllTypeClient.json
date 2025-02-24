@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"AllTypeClient",
+	"Expression":"{TM1FILTERBYLEVEL( {TM1SUBSETALL( [Type_Client] )}, 0)}"
+}

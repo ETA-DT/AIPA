@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"GIE_Nat_Analytique",
+	"Hierarchies@Code.links":
+	[
+		"GIE_Nat_Analytique.hierarchies/GIE_Nat_Analytique.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('GIE_Nat_Analytique')/Hierarchies('GIE_Nat_Analytique')"
+	}
+}

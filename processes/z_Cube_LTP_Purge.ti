@@ -1,0 +1,96 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+############################################
+# Project : Tango - Cube purge with Period dimension parameter
+# Created by : AEV
+# Created at : 15/09/2011
+# Modified by : 
+# Modified at : 
+# Modify reason :
+############################################
+
+P_NAME_RAZ = pCube | '_RAZ';
+ViewDestroy( pCube , P_NAME_RAZ );
+ViewCreate( pCube , P_NAME_RAZ );
+
+
+#--Create subset in Legal Organization
+IF( pLegalOrganization@= '' );
+   ProcessQuit;
+ELSE;
+   #-- Create subset in Legal Organization dimension
+   IF( SubsetExists( 'Legal_Organization', P_NAME_RAZ ) = 1 );
+      SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_RAZ);
+   ELSE;
+      SubsetCreate( 'Legal_Organization', P_NAME_RAZ );
+   ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' ) + 1 );
+    ElemA = DIMNM( 'Legal_Organization' , i );
+    IF( ELLEV( 'Legal_Organization' , ElemA ) = 0  & ( ELISANC( 'Legal_Organization' , pLegalOrganization , ElemA ) > 0 
+    % pLegalOrganization @= ElemA ));
+        SubsetElementInsert( 'Legal_Organization' , P_NAME_RAZ , ElemA , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( pCube , P_NAME_RAZ , 'Legal_Organization', P_NAME_RAZ );  
+ENDIF;
+
+
+
+#--Create subset in Phase
+IF( pPhase@= '' );
+    ProcessQuit;
+ELSE;
+   #-- Create subset in Phase dimension
+   IF( SubsetExists( 'Phase', P_NAME_RAZ ) = 1 );
+      SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ);
+   ELSE;
+      SubsetCreate( 'Phase', P_NAME_RAZ );
+   ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Phase' ) + 1 );
+    ElemP = DIMNM( 'Phase' , i );
+    IF( ELLEV( 'Phase' , ElemP) = 0  & ( ELISANC( 'Phase' , pPhase , ElemP ) > 0 
+    % pPhase @= ElemP ));
+        SubsetElementInsert( 'Phase' , P_NAME_RAZ , ElemP , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( pCube , P_NAME_RAZ , 'Phase', P_NAME_RAZ );  
+ENDIF;
+
+
+
+#-- Clear cube if Legal or Phase exist.
+IF( pLegalOrganization @<> '' & pPhase @<> '' );
+   ViewZeroOut( pCube , P_NAME_RAZ );
+ENDIF;
+
+#-- Delete subset
+#IF( pLegal_Organization @= ''  & pPhase @= '');
+#   ViewDestroy( pCube , P_NAME_RAZ );
+#ELSE;
+   ViewDestroy( pCube , P_NAME_RAZ );
+   SubsetDestroy( 'Legal_Organization', P_NAME_RAZ );
+   SubsetDestroy( 'Phase', P_NAME_RAZ );
+#ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

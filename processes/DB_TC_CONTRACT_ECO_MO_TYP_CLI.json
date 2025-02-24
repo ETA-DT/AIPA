@@ -1,0 +1,20 @@
+{
+	"@type":"Process",
+	"Name":"DB_TC_CONTRACT_ECO_MO_TYP_CLI",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"DB_TC_CONTRACT_ECO_MO_TYP_CLI.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"IgnoredInputVarName=Legal_Organization\fVarType=32\fColType=1165\f"
+	],
+	"DataSource":
+	{
+		"Type":"TM1DimensionSubset",
+		"dataSourceNameForClient":"Legal_Organization",
+		"dataSourceNameForServer":"Legal_Organization",
+		"subset":"L0"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

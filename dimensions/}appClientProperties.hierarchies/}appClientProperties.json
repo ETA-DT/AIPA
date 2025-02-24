@@ -1,0 +1,20 @@
+{
+	"@type":"Hierarchy",
+	"Name":"}appClientProperties",
+	"Elements":
+	[
+		{
+			"Name":"email1",
+			"Type":"String"
+		},
+		{
+			"Name":"First Name",
+			"Type":"String"
+		},
+		{
+			"Name":"Last Name",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":[]
+}

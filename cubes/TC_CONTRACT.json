@@ -1,0 +1,22 @@
+{
+	"@type":"Cube",
+	"Name":"TC_CONTRACT",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_management_organization')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"ViewStorageMinTime":1,
+	"Views@Code.links":
+	[
+		"TC_CONTRACT.views/Default.json",
+		"TC_CONTRACT.views/Par défaut.json"
+	]
+}

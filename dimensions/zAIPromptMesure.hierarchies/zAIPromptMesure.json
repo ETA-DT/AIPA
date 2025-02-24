@@ -1,0 +1,28 @@
+{
+	"@type":"Hierarchy",
+	"Name":"zAIPromptMesure",
+	"Elements":
+	[
+		{
+			"Name":"Prompt Info",
+			"Type":"String"
+		},
+		{
+			"Name":"Prompt Detail",
+			"Type":"String"
+		},
+		{
+			"Name":"Prompt Dim Drill",
+			"Type":"String"
+		},
+		{
+			"Name":"Niveau Drill",
+			"Type":"String"
+		},
+		{
+			"Name":"Prompt Model ID LLM",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":[]
+}

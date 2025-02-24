@@ -1,0 +1,85 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - Audit Files To Load
+# Processus d'alimentation des stats utilisateurs depuis les logs d'audit - Step 1
+# Created by : Anone
+# Created at : 03/03/2015
+# Modified by : YAD 
+# Modified at : 14/06/2016
+# Modify reason : Documentation + fix pAnnee
+# -- pAnnee :  année a traiter (horodatage deans les fichiers d'audit)
+# -- pRDH : Paramètre de reprise d'histo   Y / N
+#########################################
+
+IF( pRDH @= 'N' ) ; 
+      pAnnee = SUBST( CellGetS( 'z_Admin_Param' , 'CURRENT_PERIOD' , 'STR_VAR1' ) , 1 , 4 ) ;
+Endif;
+
+#-- Récupération de l'emplacement du fichier de commande
+TMP_DIR=CellGetS('z_Admin_Param','REP_TEMP','STR_VAR1') ;
+#-- Récupération de l'emplacement du répertoire de log
+LOG_DIR=CellGetS('z_Admin_Param','REP_LOG','STR_VAR1');
+#-- Récupération du(es) nom(s) du(es) fichier(s) d'audit(s)
+AUDIT_FILE='\tm1auditstore*';
+#-- Permet de supprimer le délimiteur du champ dans le batch
+DatasourceASCIIQuoteCharacter='';
+
+
+
+#-- Ecriture du fichier de commande
+#-- Destination du batch
+ASCIIOUTPUT(TMP_DIR | '\AuditFilesToLoad.bat','Set vAuditFiles=' | LOG_DIR | AUDIT_FILE );
+
+#-- Création d'un fichier listant les fichiers d'audit appartenant au répertoire en paramètre
+#-- DIR tm1auditstore*.log /A:-D /O:-D /T:W /B > AuditFilesToLoad.txt
+#-- [file_attributes] /A:-D => Not Folder
+#-- [sorted] /O:-D => Date & Time
+#-- [time] /T:W => Last Written
+#-- [options] /B => No Heading, file size or summary
+
+ASCIIOUTPUT(TMP_DIR | '\AuditFilesToLoad.bat','dir %vAuditFiles% /A:-D /O:-D /T:W /B >' | TMP_DIR | '\AuditFilesToLoad.txt');
+
+#-- Auto-suppression du batch
+ASCIIOUTPUT(TMP_DIR | '\AuditFilesToLoad.bat','del ' | TMP_DIR | '\AuditFilesToLoad.bat');
+
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#-- Mise à jour de la dimension z_Stat_Utilisateur avec la dimension }Clients
+ExecuteProcess('DB_z_Stat_Utilisateur_1');
+
+
+ExecuteCommand('cmd /c "Call ' | TMP_DIR | '\AuditFilesToLoad.bat && exit"',1);
+
+
+#-- Lecture/Formatage des logs d'audit et chargement dans le cube d'audit (z_Admin_Audit)
+ExecuteProcess('z_Admin_AuditFile_#2', 'pAuditFileList', 'AuditFilesToLoad.txt' , 'pRDH' , pRDH );
+
+
+#-- Chargement du cube d'analyse (z_Admin_Audit_Analyse)
+ExecuteProcess('DL_z_Stat_Audit_Analyse', 'pAnnee', pAnnee);
+#endregion

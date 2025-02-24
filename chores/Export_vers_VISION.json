@@ -1,0 +1,30 @@
+{
+	"@type":"Chore",
+	"Name":"Export_vers_VISION",
+	"StartTime":"2017-10-30T20:00Z",
+	"DSTSensitive":false,
+	"Active":true,
+	"ExecutionMode":"SingleCommit",
+	"Frequency":"P1DT00H00M00S",
+	"Tasks":
+	[
+		{
+			"Step":0,
+			"Parameters":
+			[
+				{
+					"Name":"pDEBUG",
+					"Value":0
+				},
+				{
+					"Name":"pPeriod",
+					"Value":"Default"
+				}
+			],
+			"Process":
+			{
+				"@id":"Processes('Export_Vision_STEP1')"
+			}
+		}
+	]
+}

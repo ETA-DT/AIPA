@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"}appClientProperties",
+	"Hierarchies@Code.links":
+	[
+		"}appClientProperties.hierarchies/}appClientProperties.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('}appClientProperties')/Hierarchies('}appClientProperties')"
+	}
+}

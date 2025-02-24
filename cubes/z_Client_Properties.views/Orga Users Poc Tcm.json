@@ -1,0 +1,15 @@
+{
+	"@type":"MDXView",
+	"Name":"Orga Users Poc Tcm",
+	"MDX@Code.link":"Orga Users Poc Tcm.mdx",
+	"Meta" : 
+	{
+		"Aliases" : {},
+		"ContextSets" : {},
+		"ExpandAboves" : 
+		{
+			"[z_Client_Properties].[z_Client_Properties]" : false,
+			"[}Clients].[}Clients]" : false
+		}
+	}
+}

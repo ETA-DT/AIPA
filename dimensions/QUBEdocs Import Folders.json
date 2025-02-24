@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"QUBEdocs Import Folders",
+	"Hierarchies@Code.links":
+	[
+		"QUBEdocs Import Folders.hierarchies/QUBEdocs Import Folders.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('QUBEdocs Import Folders')/Hierarchies('QUBEdocs Import Folders')"
+	}
+}

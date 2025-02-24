@@ -1,0 +1,12 @@
+{
+	"@type":"Hierarchy",
+	"Name":"z_Default_Management_Organization",
+	"Elements":
+	[
+		{
+			"Name":"VTD_corp",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

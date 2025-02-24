@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_contract_code_AX",
+	"Hierarchies@Code.links":
+	[
+		"z_contract_code_AX.hierarchies/z_contract_code_AX.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_contract_code_AX')/Hierarchies('z_contract_code_AX')"
+	}
+}

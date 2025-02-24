@@ -1,0 +1,323 @@
+#region Prolog
+#########################################
+# Projet : Tango - Construction de la dimension T_Periode de manière générique
+# Créé par : FBU
+# Créé le : 06/03/2012
+# Modifié par : MF et OB
+# Modifié le : 29/09/2014
+# Modification apportée : Ajout 4 attributs (Annee, Cumul, Mois du Cumul et Texte Mois)
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+IF(P_DEBUG<>0);
+	#--Définition du nom et de l'emplacement du fichier de debug
+	TXT_FILE_PATH = CellGetS( 'Z_ADMIN_PARAM' , 'REP_OUTPUT' , 'STR_VAR1' );
+	PROC_NAME=getprocessname();
+	TXT_FILE=TXT_FILE_PATH|'\DEBUG_'|PROC_NAME|'.txt';
+
+	IF(FILEEXISTS(TXT_FILE)=1);
+		ASCIIDELETE(TXT_FILE);
+	ENDIF;
+ENDIF;
+
+#-- Définition du nom du fichier
+zFile = 'T_Periode';
+zDim = 'T_Periode';
+
+IF( zFile @= '' );
+   zFile = zDim | '.csv';
+ELSE;
+   zFile = zFile | '.csv';
+ENDIF;
+
+#--Définition du nom et de l'emplacement du fichier source
+INPUT_FILE = CellGetS( 'Z_ADMIN_PARAM' , 'REP_ITF' , 'STR_VAR1' ) | '\' | zFile;
+
+#-- Affectation du fichier source en entrée du processus
+DataSourceNameForServer = INPUT_FILE;
+
+#-- Définition du nom et de l'emplacement du fichier de message
+CTRL_FILE = CellGetS( 'Z_ADMIN_PARAM' , 'REP_OUTPUT' , 'STR_VAR1' ) | '\' | zDim | '.txt';
+
+#-- Suppression du fichier précédent si il existe
+IF( FileExists( CTRL_FILE ) = 1 );
+   ASCIIDELETE( CTRL_FILE );
+ENDIF;
+
+#-- Avant tout, on teste si l'année saisie en paramètre existe déjà ou non dans la dimension période
+#IF( DIMIX( zDim , pAnnee ) <> 0 );
+#Flag = 0;
+#    Flag = 1;
+#    ItemReject( 'Attention!!!! La période ' | pAnnee | ' est déjà créée dans la dimension ' | zDim );
+#ENDIF;
+
+#-- Si la dimension n'existe pas alors on la crée sinon on supprime tous les éléments
+#-- ATTENTION : Risque de perte de données si suppression d'éléments dans le fichier (ou niveau 0 devient conso)
+IF( DIMIX( '}Dimensions' , zDim ) = 0 );
+   DIMENSIONCREATE( zDim );
+ELSE;
+#-- A mettre en commentaire lors du passage en exploitation (réservé aux développements)
+#   DIMENSIONDELETEALLELEMENTS( zDim );
+ENDIF;
+
+#-- Présentation de la dimension par hiérarchie
+DIMENSIONSORTORDER( zDim , 'ByInput' , 'ASCENDING' , 'ByHierarchy' , 'ASCENDING' );
+
+#--- Alias libéllé
+ATTRINSERT( zDim , '' , 'LIBELLE' , 'A' );
+
+#-- Start modif 20140930
+ATTRINSERT( zDim , '' , 'Z_CODE' , 'A' );
+#-- End modif 20140930
+
+#----------------------- Attribut Année précédente et Année suivante
+#-- Annee precedente
+ATTRINSERT( zDim , '' , 'Annee precedente' , 'S' );
+
+#-- Annee suivante
+ATTRINSERT( zDim , '' , 'Annee suivante' , 'S' );
+
+#-- Numéro de mois
+ATTRINSERT( zDim , '' , 'Nb_Mois' , 'N' );
+
+#-- Mois précédent
+ATTRINSERT( zDim , '' , 'Mois_prec' , 'S' );
+
+#-- Mois Suivant
+ATTRINSERT( zDim , '' , 'Mois_suiv' , 'S' );
+
+#-- Annee
+ATTRINSERT( zDim , '' , 'Annee' , 'S' );
+
+#-- Cumul
+ATTRINSERT( zDim , '' , 'Cumul' , 'S' );
+
+#-- Mois_du_Cumul
+ATTRINSERT( zDim , '' , 'Mois_du_Cumul' , 'S' );
+
+#-- Texte_Mois
+ATTRINSERT( zDim , '' , 'Texte_Mois' , 'S' );
+
+#-- Last_Month
+ATTRINSERT( zDim , '' , 'Last_Month' , 'S' );
+
+#-- Détermination des années précédentes et suivantes
+pAnneePrec = STR(NUMBR(pAnnee) - 1 , 4 , 0);
+pAnneeSuiv = STR(NUMBR(pAnnee) + 1 , 4 , 0);
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#-- Flag = 1 => On ignore toutes les lignes du processus car l'année existe déjà!!!!!
+#IF( Flag = 1 );
+#   ItemSkip;
+#ENDIF;
+
+#-- Retraitement des variables
+IF( SCAN( 'XXXX' , Enfant ) > 0 );
+   Enfant = SUBST( Enfant , 1 , SCAN( 'XXXX' , Enfant ) -1 ) | pAnnee | SUBST( Enfant , SCAN( 'XXXX' , Enfant ) + 4 , LONG( Enfant) );
+ENDIF;
+
+IF( SCAN( 'XXXX' , Parent ) > 0 );
+   Parent = SUBST( Parent , 1 , SCAN( 'XXXX' , Parent ) -1 ) | pAnnee | SUBST( Parent , SCAN( 'XXXX' , Parent ) + 4 , LONG( Parent ) );
+ENDIF;
+
+
+#-- Création des éléments
+Type = 'n';
+DIMENSIONELEMENTINSERT( zDim , '' , Enfant , IF( Type @<>'' , Type , 'n' ) );
+
+#-- Création du parent du fichier et rattachement
+IF( Parent @<>'' );
+
+#-- Création du parent si non nul
+   DIMENSIONELEMENTINSERT( zDim , '' , Parent , 'c' );
+   IF( Ponderation@<>'' );
+      p = NUMBR( Ponderation );
+   ELSE;
+      p = 1;
+   ENDIF;
+
+#-- Rattachement de l'enfant au parent
+   DIMENSIONELEMENTCOMPONENTADD( zDim , Parent , Enfant , p );
+ENDIF;
+
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#-- Flag = 1 => On ignore toutes les lignes du processus car l'année existe déjà!!!!!
+#IF( Flag = 1 );
+#   ItemSkip;
+#ENDIF;
+
+IF(P_DEBUG<>0);
+	ASCIIOUTPUT(TXT_FILE,'##################################');
+	ASCIIOUTPUT(TXT_FILE,'Element: '|Enfant, 'Annee precedente : '|annee_Prec, 'Annee suivante: '|annee_Suivante);
+ENDIF;
+
+#-- Retraitement des variables
+IF( SCAN( 'XXXX' , Enfant ) > 0 );
+   Enfant = SUBST( Enfant , 1 , SCAN( 'XXXX' , Enfant ) -1 ) | pAnnee | SUBST( Enfant , SCAN( 'XXXX' , Enfant ) + 4 , LONG( Enfant) );
+ENDIF;
+
+IF( SCAN( 'XXXX' , Parent ) > 0 );
+   Parent = SUBST( Parent , 1 , SCAN( 'XXXX' , Parent ) -1 ) | pAnnee | SUBST( Parent , SCAN( 'XXXX' , Parent ) + 4 , LONG( Parent ) );
+ENDIF;
+
+IF( SCAN( 'XXXX' , Libelle ) > 0 );
+   Libelle = SUBST( Libelle , 1 , SCAN( 'XXXX' , Libelle ) -1 ) | pAnnee | SUBST( Libelle , SCAN( 'XXXX' , Libelle ) + 4 , LONG( Libelle ) );
+ENDIF;
+
+IF( SCAN( 'XXXX' , z_code ) > 0 );
+   z_code = SUBST( z_code , 1 , SCAN( 'XXXX' , z_code ) -1 ) | pAnnee | SUBST( z_code , SCAN( 'XXXX' , z_code ) + 4 , LONG( z_code ) );
+ENDIF;
+
+IF( SCAN( 'XXXX' , annee_Prec ) > 0 );
+   annee_Prec = SUBST( annee_Prec , 1 , SCAN( 'XXXX' , annee_Prec ) -1 ) | pAnneePrec | SUBST( annee_Prec , SCAN( 'XXXX' , annee_Prec ) + 4 , LONG( an
+nee_Prec ) );
+ENDIF;
+
+IF( SCAN( 'XXXX' , annee_Suivante ) > 0 );
+   annee_Suivante = SUBST( annee_Suivante , 1 , SCAN( 'XXXX' , annee_Suivante ) -1 ) | pAnneeSuiv | SUBST( annee_Suivante , SCAN( 'XXXX' , annee_Suiva
+nte ) + 4 , LONG( annee_Suivante ) );
+ENDIF;
+
+# -- MODIF ajout attribut Mois_suiv et Mois_prec
+IF( SCAN( 'XXXX' , mois_prec ) > 0 );
+	IF(SUBST(mois_prec,1,7) @='XXXX.12');
+		mois_prec=pAnneePrec|SUBST( mois_prec , SCAN( 'XXXX' , mois_prec ) + 4 , LONG( mois_prec ) );
+	ELSE;
+	   mois_prec = SUBST( mois_prec , 1 , SCAN( 'XXXX' , mois_prec ) -1 ) | pAnnee | SUBST( mois_prec , SCAN( 'XXXX' , mois_prec ) + 4 , LONG( mois_prec 
+) );
+	ENDIF;
+ENDIF;
+
+IF( SCAN( 'XXXX' , mois_suiv ) > 0 );
+	IF(SUBST(mois_suiv,1,7) @='XXXX.01');
+		mois_suiv=pAnneeSuiv|SUBST( mois_suiv , SCAN( 'XXXX' , mois_suiv ) + 4 , LONG( mois_suiv ) );
+	ELSE;
+	   mois_suiv = SUBST( mois_suiv , 1 , SCAN( 'XXXX' , mois_suiv ) -1 ) | pAnnee | SUBST( mois_suiv , SCAN( 'XXXX' , mois_suiv ) + 4 , LONG( mois_suiv 
+) );
+	ENDIF;
+ENDIF;
+#-- End Modif
+
+
+#-- Start Modif 29/09/2014
+IF( SCAN( 'XXXX' , Annee ) > 0 );
+   Annee = SUBST( Annee , 1 , SCAN( 'XXXX' , Annee ) -1 ) | pAnnee | SUBST( Annee , SCAN( 'XXXX' , Annee ) + 4 , LONG( Annee) ) ;
+ENDIF;
+
+IF( SCAN( 'XXXX' , Cumul ) > 0 );
+   Cumul = SUBST( Cumul , 1 , SCAN( 'XXXX' , Cumul ) -1 ) | pAnnee | SUBST( Cumul , SCAN( 'XXXX' , Cumul ) + 4 , LONG( Cumul) ) ;
+ENDIF;
+
+IF( SCAN( 'XXXX' , Mois_du_Cumul ) > 0 );
+   Mois_du_Cumul = SUBST( Mois_du_Cumul , 1 , SCAN( 'XXXX' , Mois_du_Cumul ) -1 ) | pAnnee | SUBST( Mois_du_Cumul , SCAN( 'XXXX' , Mois_du_Cumul ) + 4
+ , LONG( Mois_du_Cumul) ) ;
+ENDIF;
+
+
+IF( SCAN( 'XXXX' , Last_month ) > 0 );
+   Last_month  = SUBST( Last_month , 1 , SCAN( 'XXXX' , Last_month  ) -1 ) | pAnnee | SUBST( Last_month  , SCAN( 'XXXX' , Last_month  ) + 4 , LONG( La
+st_month ) ) ;
+ENDIF;
+
+
+IF(P_DEBUG<>0);
+	ASCIIOUTPUT(TXT_FILE,'Element: '|Enfant, 'Annee precedente : '|annee_Prec, 'Annee suivante: '|annee_Suivante);
+ENDIF;
+
+
+#-- Mise à jour des attributs ALIAS
+   IF( Libelle @<>'' );
+      ATTRPUTS( Libelle , zDim , Enfant , 'LIBELLE' );
+   ENDIF;
+
+#-- Mise à jour des attributs 
+   IF( Num_Mois @<>'' );
+      ATTRPUTN( NUMBR( Num_Mois ) , zDim , Enfant , 'Nb_Mois' );
+   ENDIF;
+
+#-- Mise à jour des attributs 
+   IF( mois_Prec @<>'' );
+      ATTRPUTS( mois_Prec , zDim , Enfant ,  'mois_prec' );
+   ENDIF;
+
+#-- Mise à jour des attributs 
+   IF( mois_Suiv @<>'' );
+      ATTRPUTS( mois_Suiv , zDim , Enfant , 'mois_suiv' );
+   ENDIF;
+
+
+#-- Mise à jour des attributs 
+   IF( annee_Prec @<>'' );
+	IF(P_DEBUG<>0);
+		ASCIIOUTPUT(TXT_FILE,'ATTRS Element: '|Enfant, 'Annee precedente : '|annee_Prec);
+	ENDIF;
+	ATTRPUTS( annee_Prec , zDim , Enfant ,  'Annee precedente' );
+   ENDIF;
+
+#-- Mise à jour des attributs 
+   IF( annee_Suivante @<>'' );
+	IF(P_DEBUG<>0);
+		ASCIIOUTPUT(TXT_FILE,'ATTRS Element: '|Enfant, 'Annee suivante: '|annee_Suivante);
+	ENDIF;
+	ATTRPUTS( annee_Suivante , zDim , Enfant , 'Annee suivante' );
+   ENDIF;
+
+#-- Mise à jour des attributs 
+   IF( Annee @<>'' );
+      ATTRPUTS( Annee , zDim , Enfant , 'Annee' );
+   ENDIF;
+
+#-- Mise à jour des attributs 
+   IF( Cumul @<>'' );
+      ATTRPUTS( Cumul , zDim , Enfant , 'Cumul' );
+   ENDIF;
+
+#-- Mise à jour des attributs 
+   IF( Mois_du_Cumul @<>'' );
+      ATTRPUTS( Mois_du_Cumul , zDim , Enfant , 'Mois_du_Cumul' );
+   ENDIF;
+
+#-- Mise à jour des attributs 
+   IF( Texte_Mois @<>'' );
+      ATTRPUTS( Texte_Mois , zDim , Enfant , 'Texte_Mois' );
+   ENDIF;
+#-- End Modif 29/09/2014
+
+#-- Start Modif 30/09/2014
+   IF( z_code @<>'' );
+      ATTRPUTS( z_code, zDim , Enfant , 'Z_CODE' );
+   ENDIF;
+
+ IF( Last_Month @<>'' );
+      ATTRPUTS( Last_Month , zDim , Enfant , 'Last_Month ' );
+   ENDIF;
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"GIE_Type_Formation",
+	"Hierarchies@Code.links":
+	[
+		"GIE_Type_Formation.hierarchies/GIE_Type_Formation.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('GIE_Type_Formation')/Hierarchies('GIE_Type_Formation')"
+	}
+}

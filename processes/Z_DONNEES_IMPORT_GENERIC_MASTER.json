@@ -1,0 +1,111 @@
+{
+	"@type":"Process",
+	"Name":"Z_DONNEES_IMPORT_GENERIC_MASTER",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"Z_DONNEES_IMPORT_GENERIC_MASTER.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pCube",
+			"Prompt":"Cube ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pScenarioSource",
+			"Prompt":"Phase Source ?",
+			"Value":"BUD",
+			"Type":"String"
+		},
+		{
+			"Name":"pScenarioCible",
+			"Prompt":"Phase Cible ?",
+			"Value":"BUD",
+			"Type":"String"
+		},
+		{
+			"Name":"pVersionSource",
+			"Prompt":"Scenario Source ?",
+			"Value":"SCENARIO_0000001",
+			"Type":"String"
+		},
+		{
+			"Name":"pVersionCible",
+			"Prompt":"Scenario Cible ?",
+			"Value":"SCENARIO_0000001",
+			"Type":"String"
+		},
+		{
+			"Name":"pAnneeSource",
+			"Prompt":"Annee Source ?",
+			"Value":"N",
+			"Type":"String"
+		},
+		{
+			"Name":"pAnneeCible",
+			"Prompt":"Annee Cible ?",
+			"Value":"N",
+			"Type":"String"
+		},
+		{
+			"Name":"pMoisSource",
+			"Prompt":"Mois Source ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pMoisCible",
+			"Prompt":"Mois Cible ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pPrestationSource",
+			"Prompt":"Prestation Source ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pPrestationCible",
+			"Prompt":"Prestation Cible ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pOrgaSource",
+			"Prompt":"Immeuble Source ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pOrgaCible",
+			"Prompt":"Immeuble Cible ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pIndicateurSource",
+			"Prompt":"Indicateur Source ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pIndicateurCible",
+			"Prompt":"Indicateur Cible ?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pConfirmer",
+			"Prompt":"Confirmation (OUI) ?",
+			"Value":"OUI",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

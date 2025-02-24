@@ -1,0 +1,40 @@
+{
+	"@type":"Cube",
+	"Name":"General Ledger",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Time Month')"
+		},
+		{
+			"@id":"Dimensions('Version')"
+		},
+		{
+			"@id":"Dimensions('Currency')"
+		},
+		{
+			"@id":"Dimensions('Cost Centre')"
+		},
+		{
+			"@id":"Dimensions('Account')"
+		},
+		{
+			"@id":"Dimensions('Project')"
+		},
+		{
+			"@id":"Dimensions('General Ledger Source')"
+		},
+		{
+			"@id":"Dimensions('General Ledger Measure')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"General Ledger.views/Default.json",
+		"General Ledger.views/Pass 1.json",
+		"General Ledger.views/Pass 2.json",
+		"General Ledger.views/Pass 2_Input.json",
+		"General Ledger.views/Pass 3.json",
+		"General Ledger.views/Pass 3_Input.json"
+	]
+}

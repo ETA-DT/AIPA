@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"MONTH_ACTUAL",
+	"Expression":"{TM1FILTERBYPATTERN( {TM1SUBSETALL( [z_Stat_Date] )}, \r[z_Admin_Param].( [z_Admin_Param].[MONTH_ACTUAL] , [z_Str_Var].[STR_VAR1]) )}\r"
+}

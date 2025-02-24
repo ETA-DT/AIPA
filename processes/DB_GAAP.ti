@@ -1,0 +1,220 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - build dimension Gaap
+# Created by : FBU & LTH
+# Created at : 11/07/2011
+# Modified by : LTH
+# Modified at : 11/07/2011
+# Modify reason :
+# Modified by : FBU
+# Modified at : 01/12/2011
+# Modify reason : Ajout de la création d'une dimension avec tous les éléments au niveau 0
+# Modified by : BTA
+# Modified at : 21/11/2016
+# Modify reason : Suppression des langues German, Dutch et Portuguese
+#########################################
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+ExecuteProcess('DB_zz_Date_Time_loading');
+pCountry=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+
+zDim = 'Gaap';
+
+#Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\INPUT\STRUCTURE\' | zDim | '.csv';
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+DataSourceNameForServer = Source_File;
+
+DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+ATTRDELETE( zDim , 'German' );
+#ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+ATTRDELETE( zDim , 'Dutch' );
+#ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+ATTRDELETE( zDim , 'Portuguese' );
+#ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+IF( SCAN( '_Tech' , Level_2 ) > 0 % SCAN( '_Tech' , Level_1 ) > 0 );
+   p = 0;
+ELSE;
+   p = 1;
+ENDIF;
+
+
+IF( Level_4 @= '' );
+          DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'n');
+
+ELSEIF( Level_3 @= '' );
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4, p );
+
+ELSEIF( Level_2 @= '' );
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_3,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_4,Level_3, p );
+
+ELSEIF( Level_1 @= '' );
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_2,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_3,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_4,Level_3, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_3,Level_2, p );
+
+ELSEIF( Level_0 @= '' );
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_1,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_2,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_3,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_4,Level_3, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_3,Level_2, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_2,Level_1, p );
+
+ELSE;
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_0,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_1,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_2,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_3,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_4,Level_3, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_3,Level_2, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_2,Level_1, p );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_1,Level_0, p );
+
+ENDIF;
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+          IF( Level_4 @= '' );
+
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+
+          ELSEIF( Level_3 @= '' );
+
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+
+          ELSEIF( Level_2 @= '' );
+
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+                    ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+
+          ELSEIF( Level_1 @= '' );
+
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+                    ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+                    ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+                    ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+
+          ELSEIF( Level_0 @= '' );
+
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+                    ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+                    ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+                    ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+                    ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+                    ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+
+         ELSE;
+
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+                    ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+                    ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+                    ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+                    ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+                    ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+                    ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+                    ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+
+          ENDIF;
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zDim );
+
+if (pCountry @<>'CM');
+  zProcess = 'DB_' | zDim;
+  zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+  zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+  pChore='Task2_CO_Load_Common_Dimension_' | pCountry;
+  pProcess_source='CORE_MODEL';
+
+  CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry,pProcess_source ,  'Start_date'); 
+  CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,pProcess_source, 'End_date');
+  CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,pProcess_source,   'Status');
+endif;
+
+#-- Load Security
+
+ExecuteProcess( 'Import_CM_Security_Gaap' );
+
+SecurityRefresh;
+#endregion

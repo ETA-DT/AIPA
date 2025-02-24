@@ -1,0 +1,82 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+###############################################################
+# Project : Tango - Audit Files To Load // step 2
+# Created by : Anone
+# Created at : 29/12/2014
+# Modified by : YAD 
+# Modified at : 16/06/2016
+# Modify reason : Chgt de la période de référence vers le mois calendaire + mois réel ouvert
+##############################################################
+
+#-- Récupération de l'emplacement du fichier de commande
+TMP_DIR=CellGetS('z_Admin_Param','REP_TEMP','STR_VAR1') ;
+
+# Récuperation du nom du fichier source dans le cube du paramètre
+DataSourceNameForServer=TMP_DIR | '\AuditFilesToLoad.txt';
+
+#Source_File = '\\'| CellGetS( 'z_Admin_Param' , 'SERVER_NAME' , 'STR_VAR1') |'\TM1DATA\'| CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR2') | '\Temp\AuditFilestoLoad.txt';
+#DataSourceNameForServer=source_file;
+
+### Si RDH on traite tous les fichiers
+### Sinon on traite tous les fichiers du mois courant et les fichiers du mois réel chargé
+
+
+vDateCour = SUBST( CellGetS( 'z_Admin_Param' , 'CURRENT_PERIOD' , 'STR_VAR1' ) , 1 , 4 ) |
+                     SUBST( CellGetS( 'z_Admin_Param' , 'CURRENT_PERIOD' , 'STR_VAR1' ) , 6 , 2 ) ;
+                    
+vDateActual = SUBST( CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1' ) , 1 , 4 ) |
+                        SUBST( CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1' ) , 6 , 2 ) ;
+
+CTRL_FILE = CellGetS( 'Z_ADMIN_PARAM' , 'REP_OUTPUT' , 'STR_VAR1' ) | '\' | 'Stats_Utilisateurs_check'|'_'| 'Integre.txt';
+IF( FileExists( CTRL_FILE ) = 1 );
+   ASCIIDELETE( CTRL_FILE );
+ENDIF;
+
+
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+### Si RDH on traite tous les fichiers
+### Sinon on traite tous les fichiers du mois courant et les fichiers du mois réel chargé
+
+vDateAudit = SUBST( pAuditFile , 14 , 6 ) ;
+
+IF( pRDH @= 'Y' ) ;
+     ExecuteProcess('z_Admin_AuditFile_#3', 'pAuditFileName', pAuditFile );
+ELSE ;
+     #IF( vDateAudit @= vDateCour %  vDateAudit @= vDateActual) ;
+     # ASCIIOutput(CellGetS( 'Z_ADMIN_PARAM' , 'REP_OUTPUT' , 'STR_VAR1' ) | '\liste_fichiers_traités.txt',pAuditFile, vDateAudit, vDateCour) ;
+     IF( vDateAudit @= vDateCour) ;
+          ExecuteProcess('z_Admin_AuditFile_#3', 'pAuditFileName', pAuditFile );
+     ENDIF ;
+ENDIF ;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#-- Nombre d'enregistrements
+DatasourceASCIIDelimiter = ';';
+DatasourceASCIIQuoteCharacter = '';
+#ASCIIOutput(CTRL_FILE,  'Stats_Utilisateurs_checks_', Source_File);
+ASCIIOutput(CTRL_FILE,  'Stats_Utilisateurs_checks_', DataSourceNameForServer);
+#endregion

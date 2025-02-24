@@ -1,0 +1,24 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+TM1Path= CellGetS( 'z_Admin_Param' , 'REP_TM1DATA' ,'STR_VAR1') |'\';
+
+RuleLoadFromFile('Report_LTP', TM1Path|'NE_PAS_SUPPRIMER_RULES_Report_LTP.TXT');
+#endregion

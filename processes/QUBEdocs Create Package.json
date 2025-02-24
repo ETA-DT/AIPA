@@ -1,0 +1,33 @@
+{
+	"@type":"Process",
+	"Name":"QUBEdocs Create Package",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"QUBEdocs Create Package.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pDestFolder",
+			"Prompt":"Output Folder? (or API token)",
+			"Value":".\\",
+			"Type":"String"
+		},
+		{
+			"Name":"pUNCPath",
+			"Prompt":"UNC File Path? (if on unmapped drive)",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pTM1s",
+			"Prompt":"(Optional) tm1s.cfg location (if different to location of model data)",
+			"Value":".\\",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

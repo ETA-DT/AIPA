@@ -1,0 +1,653 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+######################################################################################
+
+#-- TANGO CORE MODEL -> TANGO GIE TRANSDEV Formation				
+#-- 
+#--  ---------------------------------------------------
+#-- |    Date    | Version | Author | Comment
+#-- |------------+---------+--------+----------------------
+#-- | 29/01/2014 |  V1.0   |   KPH | Initial version
+#--
+#--
+#-- | DD/MM/YYYY |  V#.#   |   XXX  | 
+#-- 
+#-- 
+#-- Process: DL_RP_GIE_Transdev_Formation_Actual_P&L
+#--
+#-- ********************
+#-- *** Parameters***
+#--*********************
+#-- * PS_PERIOD
+#--     Valid values List:
+#--        > YYYY.MM
+#--
+
+#######################################################################################
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################
+#### PROLOG : BEGIN       #####
+#########################
+
+#-- Region Prolog
+
+#region Variables definition
+	
+#---- Region PROCESSES Variables <> string: VS_PRO_ <>
+       
+     VS_PRO_LOADING_DATE = 'DB_zz_Date_Time_loading';
+     
+#end PROCESSES variables region
+       
+#---- Region CUBES Variables <> string: VS_CUB_ <>
+		
+     VS_CUB_GIE = 'ST_GIE_Transdev_Formation';
+     #CubeSetLogChanges( VS_CUB_GIE , 0 );
+     VS_CUB_PROCESS_REJECT = 'ZZ_PROCESS_REJECT';
+     VS_CUB_PROCESS_DETAIL = 'ZZ_PROCESS_DETAIL';
+     VS_CUB_ADMIN_PARAM = 'z_Admin_Param';
+       
+#end CUBES Variables region
+		
+#---- Region DIMENSIONS Variables <> string: VS_DIM_ <>
+		
+     VS_DIM_ANTENNES = 'GIE_Antennes';
+     VS_DIM_TYPE_FORMATION='GIE_Type_Formation';
+     VS_DIM_PARTENAIRES='GIE_Partenaires';
+     VS_DIM_PHASE = 'Phase';
+     VS_DIM_PERIOD = 'Period';
+     VS_DIM_NAT_ANALYTIQUE = 'GIE_Nat_Analytique';
+     VS_DIM_INDICATOR = 'GIE_INDICATOR';
+     VS_DIM_LOADING_DATE = 'zz_Date_Time_loading';
+     VS_DIM_PROCESS = '}Processes';
+     VS_DIM_CHORE = '}Chores';
+       
+#end DIMENSIONS Variables region
+		
+#---- Region ELEMENTS Variables <> string: VS_ELE_ <>
+       
+#-- Period
+     VS_ELE_PERIOD_CURRENT_MONTH_CORP = TIMST( NOW ,'\Y.\m' );
+     VS_ELE_PERIOD_LOG = '';
+	 
+#-- Phase
+     VS_ELE_PHASE_ACTUAL = 'ACT';
+	 
+#-- Comptes comptables
+     VS_ELE_INDICATOR_REJECT = 'Reject_Data';
+	 
+#--  Tiers
+     VS_ELE_PARTENAIRES_REJECT = 'Reject_Data';
+     VS_ELE_PARTENAIRES_EXTERNAL= 'TIERS_EXTERNE';
+
+#--  Type de formation
+     VS_ELE_TYPE_FORMATION_REJECT = 'Reject_Data';
+      VS_ELE_OTHERS_TYPE_FORMATION = 'Autres_Type_Formation';
+
+#-- Nature analytique
+
+   VS_ELE_NAT_ANALYTIQUE_REJECT = 'Reject_Data';
+
+#--  Antennes
+     VS_ELE_ANTENNES_REJECT = 'Reject_Data';
+     VS_ELE_OTHER_ANTENNE = 'NA';
+	 
+#-- z_Admin_Param
+     VS_ELE_ADMIN_PARAM_MONTH_CORP = 'MONTH_CORPORATE';
+     VS_ELE_ADMIN_PARAM_REP_DATA = 'REP_DATA';
+ 
+#-- z_Str_Var
+     VS_ELE_Z_STR_VAR_STR_1 = 'STR_VAR1';
+     VS_ELE_Z_STR_VAR_STR_2 = 'STR_VAR2';
+     VS_ELE_Z_STR_VAR_STR_3 = 'STR_VAR3';
+     VS_ELE_Z_STR_VAR_NUM_1 = 'NUM_VAR1';
+     VS_ELE_Z_STR_VAR_NUM_2 = 'NUM_VAR2';
+     VS_ELE_Z_STR_VAR_NUM_3 = 'NUM_VAR3';
+     
+#-- zz_Process_Rejects
+     VS_ELE_Z_PROCESS_REJECT_MESSAGE = 'Error_Message';
+     VS_ELE_Z_PROCESS_REJECT_RECORD = 'Record';
+      
+#end ELEMENTS Variables region
+	
+ #-- 
+       VS_VAR_NA = 'N/A';
+
+#region DATASOURCE Variables <> string: VS_DAT_ <> numbr: VN_DAT_ <>
+     #-- VS_DAT_ANTENNES
+     #-- VS_DAT_TYPE_FORMATION
+     #-- VS_DAT_PARTENAIRES
+     #-- VS_DAT_PHASE
+     #-- VS_DAT_PERIOD
+     #-- VS_DAT_NAT_ANALYTIQUE
+     #-- VS_DAT_INDICATOR
+     #-- VN_DAT_VALUE
+
+#End DATASOURCE Variables region
+
+
+#-- Region Variables depending on parameters
+      
+      #-- Default execution  
+      IF( PS_Period @= 'Param');
+
+      VS_VAR_PERIOD = CellGetS( VS_CUB_ADMIN_PARAM , VS_ELE_ADMIN_PARAM_MONTH_CORP , VS_ELE_Z_STR_VAR_STR_1);
+      
+
+      ELSE;
+
+      #-- Unusual execution with a specific value
+
+      VS_VAR_PERIOD = PS_PERIOD;
+
+      ENDIF; 
+
+       #-- Specific Period (YYYY.MM)
+     
+       IF ( LONG (VS_VAR_PERIOD) = 7);
+       VS_ELE_PERIOD_YEAR = VS_VAR_NA;
+       VS_ELE_PERIOD_MONTH= VS_VAR_PERIOD ;
+       VS_ELE_PERIOD_LOG = VS_ELE_PERIOD_MONTH;
+
+       ELSE;
+
+ #-- The period is invalid
+
+        ItemReject( 'The period ' | VS_VAR_PERIOD | ' is invalid. Parameter PS_PERIOD= ' | PS_PERIOD );
+        ProcessQuit;       
+
+         ENDIF;
+       
+#---- Region OTHERS Variables <> string: VS_VAR_ <> number: VN_VAR_ <>
+
+#-- Records counters
+     VN_VAR_RECORD= 0;
+     VN_VAR_RECORD_READ = 0;
+     VN_VAR_RECORD_REJECTED = 0;
+     VN_VAR_RECORD_LOADED = 0;
+     VN_VAR_DAT_RECORD = 0;
+	
+#-- Region SOURCE FILE
+     VS_VAR_DATA_FILE_NAME = 'Extraction_Coda_GIE';
+     VS_VAR_PROCESS_GIE= 'DL_ST_GIE_Transdev_Formation_Actual_P&L';
+     VS_VAR_DATA_FILE_DIR = CellGetS( VS_CUB_ADMIN_PARAM , VS_ELE_ADMIN_PARAM_REP_DATA , VS_ELE_Z_STR_VAR_STR_1 )| '\' |  VS_VAR_DATA_FILE_NAME | '.cs
+v';
+     Datasourcenameforserver = VS_VAR_DATA_FILE_DIR;
+	 
+     IF( FileExists( VS_VAR_DATA_FILE_DIR ) = 0 );
+     CubeSetLogChanges (VS_CUB_GIE, 1);	
+     ItemReject( Datasourcenameforserver| ' is not found.' );
+      ProcessQuit;      
+     ENDIF; 
+        
+#End SOURCE FILE region
+
+#-- Dates Parameters
+     VS_VAR_LOADING_START_DATE = TIMST(NOW ,'\Y-\M-\D' );
+     VS_VAR_LOADING_START_DATETIME = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+     VS_VAR_LOADING_END_DATETIME = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+	 	 
+#-- Mise à jour de la dimension Date		  
+     ExecuteProcess(VS_PRO_LOADING_DATE);
+
+      
+#End OTHERS VARIABLES REGION
+
+
+######  PURGE DU CUBE DE REJET  #######
+
+
+P_NAME_RAZ =  VS_CUB_PROCESS_REJECT | '_RAZ';
+
+ViewDestroy( VS_CUB_PROCESS_REJECT , P_NAME_RAZ );
+
+ViewCreate( VS_CUB_PROCESS_REJECT , P_NAME_RAZ );
+
+## CREATION DU SUBSET DANS  zz_Date_Time_loading
+
+IF( SubsetExists( VS_DIM_LOADING_DATE , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( VS_DIM_LOADING_DATE, P_NAME_RAZ );
+ELSE;
+    SubsetCreate( VS_DIM_LOADING_DATE , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert(VS_DIM_LOADING_DATE, P_NAME_RAZ ,VS_VAR_LOADING_START_DATE , 1 );
+
+
+## CREATION DU SUBSET DANS }Processes
+
+IF( SubsetExists( VS_DIM_PROCESS , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( VS_DIM_PROCESS , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( VS_DIM_PROCESS , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert ( VS_DIM_PROCESS, P_NAME_RAZ , VS_VAR_PROCESS_GIE , 1 );
+
+
+ViewSubsetAssign( VS_CUB_PROCESS_REJECT, P_NAME_RAZ , VS_DIM_PROCESS, P_NAME_RAZ);
+ViewSubsetAssign( VS_CUB_PROCESS_REJECT , P_NAME_RAZ , VS_DIM_LOADING_DATE, P_NAME_RAZ);
+
+
+## Nettoyage du cube 
+
+ViewZeroOut(  VS_CUB_PROCESS_REJECT , P_NAME_RAZ );
+
+## Suppression des subsets 
+
+ViewDestroy(  VS_CUB_PROCESS_REJECT , P_NAME_RAZ );
+SubsetDestroy( VS_DIM_LOADING_DATE, P_NAME_RAZ );
+SubsetDestroy( VS_DIM_PROCESS , P_NAME_RAZ );
+
+
+######  PURGE DU CUBE RP_GIE_Transdev_Formation #######
+
+
+P_NAME_RAZ = VS_CUB_GIE | '_RAZ';
+ViewDestroy( VS_CUB_GIE, P_NAME_RAZ );
+ViewCreate( VS_CUB_GIE , P_NAME_RAZ );
+
+################### Création du subset  dans Phase ################### 
+
+IF( SubsetExists( 'Phase' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'Phase' , P_NAME_RAZ , 'ACT' , 1 );
+ViewSubsetAssign( VS_CUB_GIE , P_NAME_RAZ , 'Phase' , P_NAME_RAZ );
+
+
+################### Création du subset  dans Period_YTD ################### 
+
+IF( SubsetExists( 'Period_YTD' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Period_YTD' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'Period_YTD' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'Period_YTD' , P_NAME_RAZ , VS_ELE_PERIOD_MONTH | '_YTD', 1 );
+ViewSubsetAssign( VS_CUB_GIE , P_NAME_RAZ , 'Period_YTD' , P_NAME_RAZ );
+
+
+###################  Nettoyage du cube ################### 
+
+ViewZeroOut( VS_CUB_GIE, P_NAME_RAZ );
+
+###################  Suppression des subsets ################### 
+
+ViewDestroy( VS_CUB_GIE , P_NAME_RAZ );
+SubsetDestroy( 'Phase' , P_NAME_RAZ );
+SubsetDestroy( 'Period_YTD' , P_NAME_RAZ );
+
+
+#########################
+#### PROLOG : END           #####
+#########################
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################
+#### DATA : BEGIN       #######
+#########################
+
+#### INITIALISATION DES VARIABLES ####	 
+
+VN_VAR_RECORD_READ = VN_VAR_RECORD_READ + 1;	
+VN_VAR_BLOCKING_ERROR = 0;
+VN_VAR_CUB_VAL = 0;
+VS_VAR_ERR_MESSAGE = ' ';   
+ 
+VS_VAR_ERR_RECORD = VS_DAT_ANTENNES 
+            | ';' | VS_DAT_TYPE_FORMATION
+            | ';' | VS_DAT_PARTENAIRES 
+            | ';' | VS_DAT_PHASE 
+            | ';' | VS_DAT_PERIOD 
+            | ';' | VS_DAT_NAT_ANALYTIQUE
+            | ';' | VS_DAT_INDICATOR 
+            | ';' | NumberToString( VN_DAT_VALUE );
+
+
+## --- Region Phase
+
+     IF ( VS_DAT_PHASE @= 'REALISE');
+     VS_DAT_PHASE = 'ACT';
+     ENDIF;
+		
+	
+#### GESTION DES REJETS ####	 
+
+
+## --- Region PERIOD
+
+
+# The period does not correspond to the period defined in the parameters 
+
+                 IF( VN_VAR_BLOCKING_ERROR = 0 ); 
+                 IF( VS_DAT_PERIOD  @<>VS_ELE_PERIOD_MONTH );       
+                 VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED +1;
+                 VN_VAR_BLOCKING_ERROR = 1;     
+                 VS_VAR_ERR_MESSAGE= 'Rejected Data : The period ' | VS_DAT_PERIOD| '  does not correspond to the period defined in the parameters at 
+lign ' |  numbertostring(VN_VAR_RECORD_READ) ;
+                 
+                CellPuts (VS_VAR_ERR_RECORD,VS_CUB_PROCESS_REJECT , VS_VAR_PROCESS_GIE , VS_VAR_LOADING_START_DATE , 'l' | numbertostring( VN_VAR_RECO
+RD_REJECTED) ,  VS_ELE_Z_PROCESS_REJECT_RECORD);
+  
+               CellPuts (VS_VAR_ERR_MESSAGE,VS_CUB_PROCESS_REJECT , VS_VAR_PROCESS_GIE , VS_VAR_LOADING_START_DATE , 'l' | numbertostring( VN_VAR_RECO
+RD_REJECTED) , VS_ELE_Z_PROCESS_REJECT_MESSAGE);     
+
+
+                 ENDIF; 
+                 ENDIF;      
+                            
+
+
+## --- END Region PERIOD
+
+  
+## --- Region PHASE
+
+
+ #The phase is not 'ACT'
+
+                 IF( VN_VAR_BLOCKING_ERROR = 0 ); 
+	 IF ( VS_DAT_PHASE @<>'ACT' );     
+                 VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED +1;         
+                 VN_VAR_BLOCKING_ERROR = 1;  
+                 VS_VAR_ERR_MESSAGE= 'Rejected Data : The phase ' | VS_DAT_PHASE | ' is not correct. The phase have to be ACT at lign ' |  numbertostr
+ing(VN_VAR_RECORD_READ) ;
+	 
+               CellPuts (VS_VAR_ERR_RECORD,VS_CUB_PROCESS_REJECT , VS_VAR_PROCESS_GIE , VS_VAR_LOADING_START_DATE , 'l' | numbertostring( VN_VAR_RECOR
+D_REJECTED) ,  VS_ELE_Z_PROCESS_REJECT_RECORD);
+  
+               CellPuts (VS_VAR_ERR_MESSAGE,VS_CUB_PROCESS_REJECT , VS_VAR_PROCESS_GIE , VS_VAR_LOADING_START_DATE , 'l' | numbertostring( VN_VAR_RECO
+RD_REJECTED) , VS_ELE_Z_PROCESS_REJECT_MESSAGE);
+                
+               ENDIF;  
+                ENDIF;  
+
+
+## --- END Region PHASE
+
+          
+         
+
+## --- Region ANTENNES
+
+	
+ # The antenne does not exist in the dimension antennes
+
+                  IF( Dimix ('GIE_Antennes', VS_DAT_ANTENNES) = 0);
+                 
+   
+                  VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED +1;
+
+                  VS_VAR_ERR_MESSAGE= 'Rejected Data : The antenne ' | VS_DAT_ANTENNES | ' does not exist in the dimension ' | VS_DIM_ANTENNES|' . The
+ data is loaded on reject_data. at lign ' |  numbertostring(VN_VAR_RECORD_READ) ;
+     
+	 # The antenne are loaded on Reject_Data element.
+	 
+                  # Region /!\ *** /!\ Replace by reject element /!\ *** /!\
+	 
+	 VS_DAT_ANTENNES = VS_ELE_ANTENNES_REJECT;
+	 
+	 # EndRegion /!\ *** /!\ Replace by reject element /!\ *** /!\
+	 
+                 ENDIF;
+               
+
+## --- END Region ANTENNES
+
+
+
+
+## --- Region TYPE FORMATION
+
+                 
+ #The type de formation does not exist in the dimension type de formation
+
+
+                IF( Dimix ('GIE_TYPE_FORMATION', VS_DAT_TYPE_FORMATION) = 0  );
+     
+                 VN_VAR_RECORD_REJECTED =VN_VAR_RECORD_REJECTED +1;
+
+                 VS_VAR_ERR_MESSAGE= 'Rejected Data : The type formation ' | VS_DAT_TYPE_FORMATION | ' does not exist  int the dimension ' | VS_DIM_TY
+PE_FORMATION| '. The data is loaded on reject_data. at lign ' |  numbertostring(VN_VAR_RECORD_READ) ;
+      
+	
+                   # The type de formation are loaded on Reject_Data element.
+	 
+                  # Region /!\ *** /!\ Replace by reject element /!\ *** /!\
+	 
+	 VS_DAT_TYPE_FORMATION = VS_ELE_TYPE_FORMATION_REJECT;
+	 
+	 # EndRegion /!\ *** /!\ Replace by reject element /!\ *** /!\	
+	 	
+                ENDIF;
+
+
+## ---  END Region TYPE FORMATION
+
+
+##--  Region PARTENAIRES
+  
+
+ #The partenaires does not exist in the dimension tiers
+	 
+	 IF( Dimix (' GIE_PARTENAIRES', VS_DAT_PARTENAIRES) = 0  );
+	 
+                VN_VAR_RECORD_REJECTED =VN_VAR_RECORD_REJECTED +1;
+
+                VS_VAR_ERR_MESSAGE= 'Rejected Data : The tiers ' | VS_DAT_PARTENAIRES | ' does not exist in the dimension ' | VS_DIM_PARTENAIRES| ' . 
+The data is loaded on reject_data.  at lign ' |  numbertostring(VN_VAR_RECORD_READ) ;
+     
+	 # The tiers are loaded on Reject_Data element.
+	 
+                # Region /!\ *** /!\ Replace by reject element /!\ *** /!\
+	 
+	 VS_DAT_PARTENAIRES = VS_ELE_PARTENAIRES_REJECT;
+	 
+	 # EndRegion /!\ *** /!\ Replace by reject element /!\ *** /!\	 
+	 	
+                   ENDIF;
+
+	 
+##-- END  Region PARTENAIRES
+
+
+##--  Region NATURES ANALYTIQUES	
+
+
+ #The Nature Analytique does not exist in the dimension tiers
+	 
+	IF( Dimix (' GIE_NAT_ANALYTIQUE', VS_DAT_NAT_ANALYTIQUE) = 0  );
+	 
+               VN_VAR_RECORD_REJECTED =VN_VAR_RECORD_REJECTED +1;
+
+                VS_VAR_ERR_MESSAGE= 'Rejected Data : The nature analytique ' | VS_DAT_NAT_ANALYTIQUE | ' does not exist in the dimension ' |  VS_DIM_N
+AT_ANALYTIQUE| ' The data is loaded on reject_data.  at lign ' |  numbertostring(VN_VAR_RECORD_READ) ;
+     
+	 # The tiers are loaded on Reject_Data element.
+	 
+                # Region /!\ *** /!\ Replace by reject element /!\ *** /!\
+	 
+	 VS_DAT_NAT_ANALYTIQUE = VS_ELE_NAT_ANALYTIQUE_REJECT;
+	 
+	 # EndRegion /!\ *** /!\ Replace by reject element /!\ *** /!\	 
+	 	
+                   ENDIF;
+
+
+##-- END Region NATURES ANALYTIQUES	
+
+
+	 
+##--  Region INDICATOR
+
+
+ #The compte comptabe does not exist in the dimension comptes comptables
+	 
+
+	
+ IF( Dimix (' GIE_INDICATOR ', VS_DAT_INDICATOR) = 0) ;
+	
+                VN_VAR_RECORD_REJECTED =VN_VAR_RECORD_REJECTED +1;
+
+                 VS_VAR_ERR_MESSAGE= 'Rejected Data : The comptes comptables ' | VS_DAT_INDICATOR | ' does not exist in the dimension '|VS_DI
+M_INDICATOR|'. The data is loaded on reject_data.  at lign ' |  numbertostring(VN_VAR_RECORD_READ) ;
+     
+	 # The rejected comptes comptables are loaded on Reject_Data element.
+	 
+	 # Region /!\ *** /!\ Replace by reject element /!\ *** /!\
+	 
+	   VS_DAT_INDICATOR = VS_ELE_INDICATOR_REJECT;
+	 
+	 # EndRegion /!\ *** /!\ Replace by reject element /!\ *** /!\
+	 
+	 ENDIF;
+
+
+##--  END Region INDICATOR
+
+
+
+####  ####	 
+
+
+  IF( VN_VAR_BLOCKING_ERROR = 1 );
+
+ IF( VN_VAR_RECORD_READ=1 ); ProcessQuit; 
+           Else; Itemskip;
+          
+Endif; 
+Endif;
+
+
+#### ---- CHARGEMENT DES DONNEES dans le cube  GIE_Transdev_Formation 
+
+
+                VS_DAT_PERIOD_YTD = VS_DAT_PERIOD |'_YTD';
+
+	# -- Traitement pour 2006 x 708800 ==> 2006 x 758810 
+	IF( VS_DAT_NAT_ANALYTIQUE @= '2006' & VS_DAT_INDICATOR @= '708800' );
+		VS_DAT_INDICATOR = '758810';
+	ENDIF;
+
+
+	VN_VAR_CUB_VAL = CellGetN  (VS_CUB_GIE,  VS_DAT_ANTENNES, VS_DAT_TYPE_FORMATION, VS_DAT_PARTENAIRES, VS_DAT_PHASE, VS_DAT_PERIOD_YTD, VS_DAT_NAT_ANAL
+YTIQUE, VS_DAT_INDICATOR);
+               
+                CellPutN ( VN_DAT_VALUE + VN_VAR_CUB_VAL, VS_CUB_GIE,  VS_DAT_ANTENNES, VS_DAT_TYPE_FORMATION, VS_DAT_PARTENAIRES, VS_DAT_PHASE, VS_DA
+T_PERIOD_YTD, VS_DAT_NAT_ANALYTIQUE, VS_DAT_INDICATOR);
+
+
+	 
+	 If( VS_DAT_ANTENNES @<> VS_ELE_ANTENNES_REJECT
+                 &VS_DAT_TYPE_FORMATION @<> VS_ELE_TYPE_FORMATION_REJECT
+                 & VS_DAT_PARTENAIRES @<> VS_ELE_PARTENAIRES_REJECT
+                 & VS_DAT_INDICATOR @<> VS_ELE_INDICATOR_REJECT
+                & VS_DAT_NAT_ANALYTIQUE @<> VS_ELE_NAT_ANALYTIQUE_REJECT
+                 );
+
+	 VN_VAR_RECORD_LOADED =  VN_VAR_RECORD_LOADED +1;
+	 
+	 ENDIF;
+
+
+#### ---- CHARGEMENT DES DONNEES dans le cube de reject
+
+
+               If( VS_VAR_ERR_MESSAGE @<> ' ' );
+       
+               CellPuts (VS_VAR_ERR_RECORD,VS_CUB_PROCESS_REJECT , VS_VAR_PROCESS_GIE , VS_VAR_LOADING_START_DATE , 'l' | numbertostring( VN_VAR_RECOR
+D_REJECTED) ,  VS_ELE_Z_PROCESS_REJECT_RECORD);
+  
+               CellPuts (VS_VAR_ERR_MESSAGE,VS_CUB_PROCESS_REJECT , VS_VAR_PROCESS_GIE , VS_VAR_LOADING_START_DATE , 'l' | numbertostring( VN_VAR_RECO
+RD_REJECTED) , VS_ELE_Z_PROCESS_REJECT_MESSAGE);
+     
+               ENDIF;
+
+
+#########################
+#### DATA : END           #######
+#########################
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#####################
+### BEGIN: EPILOGUE   ###
+#####################
+
+# Region Delete subset
+
+SubsetDestroy( VS_DIM_PHASE , P_NAME_RAZ );
+SubsetDestroy( VS_DIM_PERIOD  , P_NAME_RAZ );
+
+CubeSetLogChanges(VS_CUB_GIE, 1);
+
+VS_VAR_LOADING_END_DATETIME = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+
+# End Region Delete subset
+
+
+### DETAIL PROCESS SECTION ###
+
+# Region Process Detail
+
+  CellPutS(VS_VAR_LOADING_START_DATETIME ,  VS_CUB_PROCESS_DETAIL,   VS_VAR_PROCESS_GIE,VS_VAR_LOADING_START_DATE , 'Start_date');
+  CellPutS( VS_VAR_LOADING_END_DATETIME,  VS_CUB_PROCESS_DETAIL,   VS_VAR_PROCESS_GIE,VS_VAR_LOADING_START_DATE , 'End_date');
+  CellPutS(numbertostring (VN_VAR_RECORD_READ),  VS_CUB_PROCESS_DETAIL,   VS_VAR_PROCESS_GIE,VS_VAR_LOADING_START_DATE , 'Nb_Input_records');
+  CellPutS(numbertostring( VN_VAR_RECORD_REJECTED) ,  VS_CUB_PROCESS_DETAIL,   VS_VAR_PROCESS_GIE,VS_VAR_LOADING_START_DATE , 'Nb_reject_records');
+  CellPutS(numbertostring(VN_VAR_RECORD_LOADED) ,  VS_CUB_PROCESS_DETAIL,   VS_VAR_PROCESS_GIE,VS_VAR_LOADING_START_DATE , 'Nb_load_records');
+
+
+    IF (VN_VAR_RECORD_READ = VN_VAR_RECORD_LOADED);
+    CellPutS('OK' ,  VS_CUB_PROCESS_DETAIL,  VS_VAR_PROCESS_GIE,VS_VAR_LOADING_START_DATE, 'Status');
+
+    ELSE;
+
+    CellPutS ('KO' ,  VS_CUB_PROCESS_DETAIL,  VS_VAR_PROCESS_GIE,VS_VAR_LOADING_START_DATE, 'Status');
+    ItemReject( ' Process exited with errors at ' | TIME |  ' on ' | TODAY | '=> Check cubes : zz_Process_Detail and  zz_Process_Reject' );
+    
+    ENDIF;
+
+# EndRegion Process Detail
+
+#Region Datasource file archiving -> The file data is copied  in historical directory
+
+    ExecuteProcess(  'z_Tools_Data_Transfert'
+                , 'zFile' ,  VS_VAR_DATA_FILE_NAME
+                , 'zAnnee' , TIMST( NOW ,'\Y')
+                , 'zMois' , TIMST( NOW ,'\m') 
+                );
+
+# Endregion
+
+
+####################
+#### END : EPILOGUE ###
+################
+#endregion

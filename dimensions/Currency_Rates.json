@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Currency_Rates",
+	"Hierarchies@Code.links":
+	[
+		"Currency_Rates.hierarchies/Currency_Rates.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Currency_Rates')/Hierarchies('Currency_Rates')"
+	}
+}

@@ -1,0 +1,61 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+if(lower(P_valid)@= 'non' );
+
+Processbreak();
+
+Endif;
+
+
+if(subsetexists('}clients',P_Subset)=0);
+
+Processbreak();
+
+Endif;
+
+
+DatasourceNameForServer='}Clients';
+
+DatasourceDimensionSubset=P_Subset;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+DeleteClient(Client);
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+if(lower(P_valid)@='oui');
+
+if(subsetexists('}clients',P_Subset)=1);
+
+#subsetdestroy('}clients',P_Subset);
+SubsetDeleteAllElements('}clients',P_Subset);
+
+
+
+Else;
+
+ItemReject('Le sous-ensemble '| P_Subset| ' n''existe pas !');
+Processerror();
+
+Endif;
+
+Endif;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

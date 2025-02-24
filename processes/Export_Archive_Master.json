@@ -1,0 +1,49 @@
+{
+	"@type":"Process",
+	"Name":"Export_Archive_Master",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"Export_Archive_Master.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"TM1DimensionSubset",
+		"dataSourceNameForClient":"}Cubes",
+		"dataSourceNameForServer":"}Cubes",
+		"subset":"All"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pCube",
+			"Prompt":"All / nom cube",
+			"Value":"All",
+			"Type":"String"
+		},
+		{
+			"Name":"pAnnee",
+			"Prompt":"AAAA ou Total_AAAA",
+			"Value":"2014",
+			"Type":"String"
+		},
+		{
+			"Name":"pDimensionTemps",
+			"Prompt":"Period / Period_YTD",
+			"Value":"Period",
+			"Type":"String"
+		}
+	],
+	"Variables":
+	[
+		{
+			"Name":"Cube",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

@@ -1,0 +1,53 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Documented this process
+#GENERALCOMMENT This process adds a list of clients to the }QUBEdocs Client dimension so that performance stats can be tracked against them.
+#DATASOURCECOMMENT Not Applicable
+#PROLOGCOMMENT Adds clients based on the }clinets dimension and an additonal element to track server stats
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Not Applicable
+#EPILOGCOMMENT Not Applicable
+
+sQUBEdocsDim = '}QUBEdocs Client';
+
+DimensionDeleteAllElements(sQUBEdocsDim);
+sParent ='All Clients';
+
+###########################
+#ADD IN BASE CONSOLIDATIONS
+###########################
+DIMENSIONELEMENTINSERT(sQUBEdocsDim, '',sParent,'C');   
+DIMENSIONELEMENTINSERT(sQUBEdocsDim, '', 'Server','N'); DimensionElementComponentAdd(sQUBEdocsDim, sParent,'Server', 1);
+
+###########################
+#ADD CLIENTS
+###########################
+sDim = '}Clients'; 
+i=1;
+WHILE(i<=DIMSIZ(sDim));
+ sElement = DIMNM(sDim,i);
+ IF(SUBST(sElement,1,1) @<> '}');
+  DIMENSIONELEMENTINSERT(sQUBEdocsDim, '',   sElement,'N');
+  DIMENSIONELEMENTCOMPONENTADD(sQUBEdocsDim, sParent, sElement, 1);
+ ENDIF;
+ i=i+1;
+END;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

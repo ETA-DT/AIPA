@@ -1,0 +1,112 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+############################################
+# -- Processus de suppression des fichiers de log car saturation de la mémoire
+# -- Datatilt - MTA - 25/10/2021
+# -- 
+############################################
+
+
+# -- Définition du nombre de jours maximum a garder pour la suppression
+
+# -- Fichier Tm1s*.log
+jourlog = 14;
+
+#-- Fichier TM1ProcessError*.log
+jourerror = 14;
+
+#--Fichier Tm1auditstore*log
+jouraudit = 14;
+
+# -- Get le chemin 
+strPath = GetProcessErrorFileDirectory;
+
+# -- Warning, on prend toujours les fichier avec un début d'horodatage, sinon le processus de suppression ne marche pas car il trouve un fichier natif qu'on ne peut pas delete
+File1 = strPath | 'Tm1s20*.log';
+File2 = strPath | 'TM1ProcessError_20*.log';
+File3 = strPath | 'Tm1auditstore20*.log';
+
+
+# -- Parcours des fichiers ainsi que la suppression
+# -- On boucle pour chercher tous les fichiers
+# -- On initialise les variables
+
+
+strFile1   = 'Toto';
+strPrevFile1 = 'Toto2';
+
+# -- Fichier Tm1s*.log
+While( strFile1 @<> '' & strFile1 @<> strPrevFile1);
+	
+	strFile1 = WildcardFileSearch(File1, '');
+	
+      	date_file1 = DAYNO(SUBST(strFile1, 5,4) | '-' | SUBST(strFile1, 9,2) | '-' | SUBST(strFile1, 11,2)) ;
+	
+      	date_td = DAYNO(TODAY(1));
+	
+	IF(date_td - jourlog >= date_file1);
+		ASCIIDELETE(strPath | strFile1);
+      	Else;
+            		strPrevFile1 = strFile1;
+      	Endif;
+
+End; 
+
+strFile2   = 'Toto';
+strPrevFile2 = 'Toto2';
+
+#-- Fichier TM1ProcessError*.log
+While( strFile2 @<> '' & strFile2 @<> strPrevFile2);
+	
+	strFile2 = WildcardFileSearch(File2, '');
+	
+      	date_file2 = DAYNO(SUBST(strFile2, 17,4) | '-' | SUBST(strFile2, 21,2) | '-' | SUBST(strFile2, 23,2)) ;
+	
+      	date_td = DAYNO(TODAY(1));
+	
+	IF(date_td - jourerror >= date_file2);
+		ASCIIDELETE(strPath | strFile2);
+      	Else;
+            		strPrevFile2 = strFile2;
+      	Endif;
+
+End; 
+
+strFile3   = 'Toto';
+strPrevFile3 = 'Toto2';
+
+#--Fichier Tm1auditstore*log
+While( strFile3 @<> '' & strFile3 @<> strPrevFile3);
+	
+	strFile3 = WildcardFileSearch(File3, '');
+	
+      	date_file3 =  DAYNO(SUBST(strFile3, 14,4) | '-' | SUBST(strFile3, 18,2) | '-' | SUBST(strFile3, 20,2)) ;
+	
+      	date_td = DAYNO(TODAY(1));
+	
+	IF(date_td - jouraudit >= date_file3);
+		ASCIIDELETE(strPath | strFile3);
+      	Else;
+            		strPrevFile3 = strFile3;
+      	Endif;
+
+End; 
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

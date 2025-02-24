@@ -1,0 +1,13 @@
+{
+	"@type":"Subset",
+	"Name":"CORP_FR",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Legal_Organization_Corp')/Hierarchies('Legal_Organization_Corp')/Elements('VTD')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization_Corp')/Hierarchies('Legal_Organization_Corp')/Elements('SH001')"
+		}
+	]
+}

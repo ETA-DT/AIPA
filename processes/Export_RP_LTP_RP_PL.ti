@@ -1,0 +1,520 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- BTA 08/09/2016 
+# -- Update Cocoor N°32 : Gap sur les Management Fees
+# -- Ajout du cas des CAFOP pour les entités ayant des currencies de type non Euro. Le cas n'était pas pris en compte dans l'algorithme
+
+# -- MTA - Datatit - 09/11/2021
+# -- On prend en cmpte les legal organization en croissance grace a l'attribut external growth
+
+DatasourceASCIIDelimiter =';';
+
+zCube = 'RP_PL';
+zTargetCube ='RP_LTP';
+#CubeSetLogChanges(zTargetCube, 0);
+zProcess = 'Export_RP_LTP_RP_PL';
+
+nb_lign = 0;
+nb_load = 0;
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+pFichier = 'Data_EUR_'|pPeriod_RP_LTP|'_'|pPhase_RP_LTP|'_export_LTP.csv';
+Export_File  = CellGetS( 'z_Admin_Param' , 'REP_DATA' , 'STR_VAR1') |'\'| pFichier;
+pFichier2 = 'Data_LCL_'|pPeriod_RP_LTP|'_'|pPhase_RP_LTP|'_export_LTP.csv';
+Export_File2  = CellGetS( 'z_Admin_Param' , 'REP_DATA' , 'STR_VAR1') |'\'|pFichier2 ;
+
+Export_File_bis =  CellGetS( 'z_Admin_Param' , 'REP_DATA' , 'STR_VAR1') |'\'|'Data_test_currency.csv';
+
+
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+
+#################################################################################
+#                                                               Clear CUBE RP LTP ( Target Cube)
+#################################################################################
+P_NAME_RAZ = zTargetCube | '_RAZ';
+ViewDestroy( zTargetCube , P_NAME_RAZ );
+ViewCreate( zTargetCube , P_NAME_RAZ );
+
+#-- Create subset in Legal_Organization
+SubsetDestroy( 'Legal_Organization' , P_NAME_RAZ );
+SubsetCreate( 'Legal_Organization' , P_NAME_RAZ );
+i=1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' )+1 );
+   ElemE = DIMNM( 'Legal_Organization' , i );
+                SubsetElementInsert( 'Legal_Organization' , P_NAME_RAZ , ElemE , 1 );
+    i=i+1;
+END;
+ViewSubsetAssign( zTargetCube , P_NAME_RAZ , 'Legal_Organization' , P_NAME_RAZ );
+
+
+#-- Create subset in Indicator_LTP
+SubsetDestroy( 'Indicator_LTP' , P_NAME_RAZ );
+SubsetCreate( 'Indicator_LTP' , P_NAME_RAZ );
+i=1;
+WHILE( i < DIMSIZ ( 'Indicator_LTP' )+1 );
+   ElemE = DIMNM( 'Indicator_LTP' , i );
+            # Mantis 1777 - Purge des éléments transcodés uniquement
+              IF(  (ELLEV( 'Indicator_LTP' , ElemE ) = 0 & (attrs('Indicator_LTP', ElemE,'Flag_saisie')@<>'Saisie')));
+                SubsetElementInsert( 'Indicator_LTP' , P_NAME_RAZ , ElemE , 1 );
+             #else;
+             #itemskip;
+            ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zTargetCube, P_NAME_RAZ , 'Indicator_LTP' , P_NAME_RAZ );
+
+
+#-- Create subset in Period
+IF( SubsetExists( 'Period' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_RAZ );
+ENDIF;
+if(ELLEV('Period', pPeriod_RP_LTP)=0);
+ SubsetElementInsert(  'Period' , P_NAME_RAZ , pPeriod_RP_LTP, 1 );
+else;
+  i=1;
+  WHILE( i < DIMSIZ ( 'Period' )+1 );
+    ElemE = DIMNM( 'Period', i );
+    IF ( ELLEV('Period',ElemE)=0 & ELISANC('Period', pPeriod_RP_LTP,ElemE)=1) ;
+           SubsetElementInsert(  'Period' , P_NAME_RAZ  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+  END;
+endif;
+ViewSubsetAssign( zTargetCube , P_NAME_RAZ , 'Period' , P_NAME_RAZ );
+
+#-- Create subset in Phase
+IF( SubsetExists( 'Phase' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_RAZ );
+ENDIF;
+SubsetElementInsert( 'Phase' , P_NAME_RAZ , pPhase_RP_LTP , 1 );
+ViewSubsetAssign( zTargetCube , P_NAME_RAZ , 'Phase' , P_NAME_RAZ );
+
+
+
+#-- Clear cube Target RP_LTP
+ViewZeroOut(zTargetCube, P_NAME_RAZ );
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zTargetCube , P_NAME_RAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zTargetCube , P_NAME_RAZ , 1 );
+ViewExtractSkipCalcsSet ( zTargetCube , P_NAME_RAZ , 1 );
+
+#-- Delete subset
+ViewDestroy( zTargetCube , P_NAME_RAZ );
+SubsetDestroy( 'Indicator_LTP' , P_NAME_RAZ );
+SubsetDestroy( 'Legal_Organization' , P_NAME_RAZ );
+SubsetDestroy( 'Period' , P_NAME_RAZ );
+SubsetDestroy( 'Phase' , P_NAME_RAZ );
+
+
+#################################################################################
+#                                                               Source CUBE RP_PL
+#################################################################################
+P_NAME_SOURCE = zCube | '_Vue';
+ViewDestroy( zCube , P_NAME_SOURCE );
+ViewCreate( zCube , P_NAME_SOURCE );
+
+########################### Create subset in Legal_Organization #######################
+
+IF( SubsetExists( 'Legal_Organization' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Legal_Organization' , P_NAME_SOURCE );
+ENDIF;
+i=1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' )+1 );
+   ElemE = DIMNM( 'Legal_Organization' , i );
+      IF ( DIMIX ('z_Vector_Entity', ElemE) <> 0) ;
+           SubsetElementInsert( 'Legal_Organization' , P_NAME_SOURCE , ElemE , 1 );
+      ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Legal_Organization' , P_NAME_SOURCE );
+
+
+
+########################### Create subset in Period ###########################
+
+IF( SubsetExists( 'Period' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_SOURCE );
+ENDIF;
+#Mantis 2004 - Récupération des données Prévisionnel sur du Full_Year et données REEL sur une année.
+IF ( pPhase_RP_PL@<>'ACT');
+SubsetElementInsert( 'Period' , P_NAME_SOURCE , 'F_Year_'|pPeriod_RP_PL , 1 );
+ELSE;
+i = 1;
+WHILE( i < DIMSIZ ( 'Period' ) + 1 );
+    ElemP = DIMNM( 'Period' , i );
+    IF( ELLEV( 'Period' , ElemP ) = 0  & ELISANC( 'Period' , pPeriod_RP_PL , ElemP ) > 0 );
+        SubsetElementInsert( 'Period' , P_NAME_SOURCE , ElemP , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ENDIF;
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Period' , P_NAME_SOURCE );
+
+########################### Create subset in Phase ###########################
+
+IF( SubsetExists( 'Phase' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_SOURCE );
+ENDIF;
+SubsetElementInsert( 'Phase' , P_NAME_SOURCE  ,pPhase_RP_PL , 1 );
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Phase' , P_NAME_SOURCE );
+
+
+########################### Create subset in Gaap ###########################
+
+
+IF( SubsetExists( 'Gaap' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Gaap' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Gaap' , P_NAME_SOURCE );
+ENDIF;
+
+SubsetElementInsert( 'Gaap' , P_NAME_SOURCE  ,'Total_conso_wo_opt_dis' , 1 );
+SubsetElementInsert( 'Gaap' , P_NAME_SOURCE  ,'Delta_opt_for' , 2 );
+SubsetElementInsert( 'Gaap' , P_NAME_SOURCE  ,'Delta_discontinued_act' , 3 );
+
+
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Gaap' , P_NAME_SOURCE );
+
+
+########################### Create subset in Integration Rate ###########################
+
+IF( SubsetExists( 'Integration_Rate' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Integration_Rate' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Integration_ Rate' , P_NAME_SOURCE );
+ENDIF;
+
+SubsetElementInsert( 'Integration_Rate' , P_NAME_SOURCE  ,'APP' , 1 );
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Integration_Rate' , P_NAME_SOURCE );
+
+
+########################### Create subset in Currency ###################################
+
+IF( SubsetExists( 'Currency' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Currency' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Currency' , P_NAME_SOURCE );
+ENDIF;
+
+SubsetElementInsert( 'Currency' , P_NAME_SOURCE  ,'EUR' , 1 );
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Currency' , P_NAME_SOURCE );
+
+
+
+########################### Create subset in Indicator ###################################
+
+IF( SubsetExists( 'Indicator' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Indicator' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Indicator' , P_NAME_SOURCE );
+ENDIF;
+i=1;
+    WHILE( i < DIMSIZ ( 'Indicator' )+1 );
+        ElemP = DIMNM( 'Indicator' , i );
+        IF(  DIMIX ('z_Ind_PL', ElemP) <> 0) ;
+            SubsetElementInsert( 'Indicator' , P_NAME_SOURCE , ElemP , 1 );
+        ENDIF;
+        i=i+1;
+    END;
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Indicator' , P_NAME_SOURCE );
+
+
+########################### Create subset in Management Organization ###################################
+
+IF( SubsetExists( 'Management_Organization' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Management_Organization' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Management_Organization' , P_NAME_SOURCE );
+ENDIF;
+    SubsetElementInsert( 'Management_Organization' , P_NAME_SOURCE , 'VTD_corp' , 1 );
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Management_Organization' , P_NAME_SOURCE );
+
+
+########################### Create subset in Activity ###################################
+
+IF( SubsetExists( 'Activity' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Activity' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Activity' , P_NAME_SOURCE );
+ENDIF;
+    SubsetElementInsert( 'Activity' , P_NAME_SOURCE , 'Tot_act' , 1 );
+ViewSubsetAssign( zCube , P_NAME_SOURCE , 'Activity' , P_NAME_SOURCE );
+
+
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube , P_NAME_SOURCE , 1 );
+ViewExtractSkipRuleValuesSet ( zCube , P_NAME_SOURCE, 0);
+ViewExtractSkipCalcsSet ( zCube , P_NAME_SOURCE, 0);
+
+DatasourceNameForServer = zCube ;
+DatasourceCubeview = P_NAME_SOURCE ;
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+Nb_Lign = Nb_Lign + 1;
+
+
+## Mapping PL -> LTP Accounts ####
+
+z_cube_transco = 'TC_IND_LTP_PL';
+
+vLTP_Account = CellGetS(z_cube_transco, Indicator, 'STR_VAR1');
+
+#Mantis 2363 : filtre sur certains indicateurs pour les natures 5DIS10 et 5DIS12
+# Modif YAD du 20/12/2013 pour neutralisation RNFINPRS et RTCI21S + R_NFI500SC 
+
+if (Gaap@='Delta_discontinued_act' &
+	(
+	#vLTP_Account @='RNFINPRS' 
+	 vLTP_Account @='NFI165'
+	% vLTP_Account @='NFI150'
+	% vLTP_Account @='RTXINV1S'
+	% vLTP_Account @='RTXINV2S'
+	% vLTP_Account @='NFI220'
+	% vLTP_Account @='R_NFI260'
+	% vLTP_Account @='R_TCI22'
+	% vLTP_Account @='NFI240'
+	% vLTP_Account @='NFI250'
+	% vLTP_Account @='NFI270'
+	#% vLTP_Account @='RTCI21S'
+	% vLTP_Account @='NFI275'
+	% vLTP_Account @='RAS4300S'
+	% vLTP_Account @='PL2225'
+	% vLTP_Account @='NFI295'
+	% vLTP_Account @='R_NFI480'
+	% vLTP_Account @='NFI492'
+	% vLTP_Account @='NFI494'
+	% vLTP_Account @='NFI420'
+	% vLTP_Account @='RNFI400S'
+	% vLTP_Account @='NFI4401'
+	% vLTP_Account @='NFI4402'
+	#% vLTP_Account @='R_NFI500SC'
+	)
+);
+#ASCIIOUTPUT( Export_File2 ,Gaap, vLTP_Account);
+itemskip;
+
+Endif;
+
+
+
+IF (vLTP_Account @<> '');
+LTP_Account = vLTP_Account ;
+else;
+itemskip;
+ENDIF;
+
+## Transco Gaap -> LTP_ Components  #####
+
+#IF ( Gaap@='Total_conso_wo_opt_dis');
+#vLTP_Components = 'ZGP&AP_Country';
+#ELSE;
+#vLTP_Components = 'Transfo_Plan_Disp_Corp';
+#ENDIF;
+
+# -- MTA - Datatit - 09/11/2021
+# -- On prend en compte les legal organization en croissance grace a l'attribut external growth
+ExternalGrowth=  AttrS ('Legal_Organization', Legal_Organization, 'External_Growth');
+
+IF ( Gaap@='Total_conso_wo_opt_dis');
+	IF (ExternalGrowth @= 'Yes'); 
+		vLTP_Components = 'Growth_Plan_Ext_Country';
+	Else; 
+		vLTP_Components = 'ZGP&AP_Country';
+	Endif; 
+ELSE;
+	vLTP_Components = 'Transfo_Plan_Disp_Corp';
+ENDIF;
+
+
+##                         Weighting                  ######
+
+Weighting ='W_NO_APP';
+
+####      Transco Entity -> LTP Entity Input & Sub Activity #######
+
+z_cube_transco_entity = 'TC_ENTITY_SUB_ACTIVITY_VECTOR_ENTITY';
+
+vLTP_Legal_Input = CellGetS(z_cube_transco_entity, Legal_Organization, 'STR_VAR1');
+
+vSub_Activity = CellGetS(z_cube_transco_entity, Legal_Organization, 'STR_VAR2');
+
+IF ( vLTP_Legal_Input @<>'' & vSub_Activity @<>'');
+
+LTP_Legal_Input = vLTP_Legal_Input ;
+Sub_Activity = vSub_Activity ;
+ENDIF;
+
+####             Conversion rate  in RP_PL rate   ############
+
+v_Entity_Currency = attrs('Legal_Organization', Legal_Organization, 'Code_ISO');
+
+#### Conversion wih closing rate    #############
+
+IF( (ELISANC( 'Indicator' , 'Ind_fi_cs' , Indicator ) = 1 % ELISANC ( 'Indicator' , 'Ind_fi_bs' , Indicator) = 1 ) & v_Entity_Currency@<> 'EUR');
+#v_Rate = 'TX_CLOTURE';
+#vRate_RP_PL = CellGetN('ST_CURRENCY', pPeriod_RP_PL, pPhase_RP_PL, v_Entity_Currency, 'EUR', 'TX_CLOTURE');
+#Modif suite calcul moyenne du taux
+#Mantis 2004
+IF ( pPhase_RP_PL@<>'ACT');
+vRate_RP_PL = CellGetN('ST_CURRENCY', 'F_Year_'|pPeriod_RP_PL, pPhase_RP_PL, v_Entity_Currency, 'EUR', 'TX_CLOTURE');
+ELSE;
+vRate_RP_PL = CellGetN('ST_CURRENCY', pPeriod_RP_PL|'.12', pPhase_RP_PL, v_Entity_Currency, 'EUR', 'TX_CLOTURE');
+ENDIF;
+
+#### Conversion wih average rate   #############
+# -- BTA 07092016 - Point #32 COCOOR - Intégration du CAFOP pour les entités dont la currency <> 'EUR'
+ELSEIF ( (ELISANC( 'Indicator' , 'Ind_fi_pl_dest' , Indicator ) = 1 % ELISANC ( 'Indicator' , 'Ind_fi_pl_nat' , Indicator) = 1 % Indicator @= 'CAFOP' ) & v_Entity_Currency @
+<> 'EUR');
+#vRate = 'TX_MOYEN';
+#vRate_RP_PL = CellGetN('ST_CURRENCY', pPeriod_RP_PL, pPhase_RP_PL, v_Entity_Currency, 'EUR', 'TX_MOYEN');
+#Modif suite calcul moyenne du taux
+#Mantis 2004
+IF ( pPhase_RP_PL@<>'ACT');
+vRate_RP_PL = CellGetN('ST_CURRENCY', 'F_Year_'|pPeriod_RP_PL, pPhase_RP_PL, v_Entity_Currency, 'EUR', 'TX_MOYEN');
+ELSE;
+vRate_RP_PL = CellGetN('ST_CURRENCY', pPeriod_RP_PL|'.12', pPhase_RP_PL, v_Entity_Currency, 'EUR', 'TX_MOYEN');
+ENDIF;
+
+#### No conversion #############
+
+ELSEIF (v_Entity_Currency @='EUR');
+vRate_RP_PL = 1;       
+ENDIF;                     			
+
+
+####           Conversion rate in RP_LTP rate   ############
+
+v_Entity_Currency = attrs('Legal_Organization', Legal_Organization, 'Code_ISO');
+
+IF( (ELISANC( 'Indicator' , 'Ind_fi_cs' , Indicator ) = 1 % ELISANC ( 'Indicator' , 'Ind_fi_bs' , Indicator) = 1 ) & v_Entity_Currency@<> 'EUR');
+#v_Rate = 'TX_CLOTURE';
+vRate_RP_LTP = CellGetN('ST_CURRENCY', pPeriod_RP_LTP, pPhase_RP_LTP, v_Entity_Currency, 'EUR', 'TX_CLOTURE');
+
+# -- BTA 07092016 - Point #32 COCOOR - Intégration du CAFOP pour les entités dont la currency <> 'EUR'
+ELSEIF ( (ELISANC( 'Indicator' , 'Ind_fi_pl_dest' , Indicator ) = 1 % ELISANC ( 'Indicator' , 'Ind_fi_pl_nat' , Indicator) = 1 % Indicator @= 'CAFOP' )& v_Entity_Currency @<
+> 'EUR');
+#vRate = 'TX_MOYEN';
+vRate_RP_LTP = CellGetN('ST_CURRENCY', pPeriod_RP_LTP, pPhase_RP_LTP, v_Entity_Currency, 'EUR', 'TX_MOYEN');
+
+ELSEIF (v_Entity_Currency @='EUR');
+vRate_RP_LTP = 1;    
+ENDIF;
+
+
+
+####  Conversion rate in RP_LTP for Amount calculation in LCL currency  #######
+
+v_Entity_Currency_LCL = attrs('Legal_Organization', LTP_Legal_Input, 'Code_ISO');
+
+IF( (ELISANC( 'Indicator' , 'Ind_fi_cs' , Indicator ) = 1 % ELISANC ( 'Indicator' , 'Ind_fi_bs' , Indicator) = 1 ) & v_Entity_Currency_LCL@<> 'EUR');
+
+vRate_RP_LTP_LCL = CellGetN('ST_CURRENCY', pPeriod_RP_LTP, pPhase_RP_LTP, v_Entity_Currency_LCL, 'EUR', 'TX_CLOTURE');
+
+# -- BTA 07092016 - Point #32 COCOOR - Intégration du CAFOP pour les entités dont la currency <> 'EUR'
+ELSEIF ( (ELISANC( 'Indicator' , 'Ind_fi_pl_dest' , Indicator ) = 1 % ELISANC ( 'Indicator' , 'Ind_fi_pl_nat' , Indicator) = 1 % Indicator @= 'CAFOP' )& v_Entity_Currency_LC
+L @<> 'EUR');
+
+vRate_RP_LTP_LCL = CellGetN('ST_CURRENCY', pPeriod_RP_LTP, pPhase_RP_LTP, v_Entity_Currency_LCL, 'EUR', 'TX_MOYEN');
+
+ELSEIF (v_Entity_Currency_LCL@='EUR');
+vRate_RP_LTP_LCL = 1;    
+ENDIF;
+
+
+
+
+
+####  Indicator to mulitply by * (-1)  ##############
+v_Multiply = CellGetS(z_cube_transco, Indicator, 'STR_VAR2');
+
+if (v_Multiply @= 'S');
+v_Value = StringtoNumber(Value) * -1 ;
+else ;
+v_Value = StringtoNumber(Value) ;
+endif;
+ 
+
+vAmount_EUR_LTP_RATE = (v_Value * vRate_RP_LTP ) \ vRate_RP_PL;
+vAmount_LCL_LTP_RATE = vAmount_EUR_LTP_RATE * vRate_RP_LTP_LCL;
+
+
+
+ASCIIOUTPUT( Export_File , Sub_Activity,'EUR',vLTP_Components,Weighting, LTP_Legal_Input ,pPeriod_RP_LTP, pPhase_RP_LTP, LTP_Account ,NumbertoString(v
+Amount_EUR_LTP_RATE));
+
+ASCIIOUTPUT( Export_File2 , Sub_Activity,'LCL',vLTP_Components,Weighting, LTP_Legal_Input ,pPeriod_RP_LTP, pPhase_RP_LTP, LTP_Account ,NumbertoString(
+vAmount_LCL_LTP_RATE));
+
+
+
+Nb_Load = Nb_Load + 1;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Copy the file data in historical directory
+ExecuteProcess( 'z_Tools_Data_Transfert' , 'zFile' , 'Data_EUR_'|pPeriod_RP_LTP|'_'|pPhase_RP_LTP|'_export_LTP' );
+ExecuteProcess( 'z_Tools_Data_Transfert' , 'zFile' , 'Data_LCL_'|pPeriod_RP_LTP|'_'|pPhase_RP_LTP|'_export_LTP' );
+
+#-- Suppress view
+ViewDestroy( zCube , P_NAME_SOURCE );
+SubsetDestroy( 'Legal_Organization' , P_NAME_SOURCE );
+SubsetDestroy( 'Period' , P_NAME_SOURCE );
+SubsetDestroy( 'Phase' , P_NAME_SOURCE );
+SubsetDestroy( 'Gaap' , P_NAME_SOURCE );
+SubsetDestroy( 'Integration_Rate' , P_NAME_SOURCE );
+SubsetDestroy( 'Indicator' , P_NAME_SOURCE );
+SubsetDestroy( 'Currency' , P_NAME_SOURCE );
+SubsetDestroy( 'Activity' , P_NAME_SOURCE );
+SubsetDestroy( 'Management_Organization' , P_NAME_SOURCE );
+
+
+ExecuteProcess('Import_RP_LTP', 'pFichier', pFichier,'pPhase',pPhase_RP_LTP,'pPeriod',pPeriod_RP_LTP);
+ExecuteProcess('Import_RP_LTP', 'pFichier', pFichier2,'pPhase',pPhase_RP_LTP,'pPeriod',pPeriod_RP_LTP);
+#CubeSetLogChanges(zTargetCube, 1);
+
+# -- N. AZRI : Update 15/06/2021 - Lancer le process DL_RP_LTP_WEIGHTING
+ExecuteProcess( 'DL_RP_LTP_WEIGHTING', 'pPhase', pPhase_RP_LTP);
+
+# -- N. AZRI : Update 23/06/2021 - Lancer le process de copie vers Report
+ExecuteProcess('DL_Report_LTP_RP_LTP_by_Phase', 'pPhaseVersion', pPhase_RP_LTP);
+
+#endregion

@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Indicator_Contract_LTP",
+	"Hierarchies@Code.links":
+	[
+		"Indicator_Contract_LTP.hierarchies/Indicator_Contract_LTP.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Indicator_Contract_LTP')/Hierarchies('Indicator_Contract_LTP')"
+	}
+}

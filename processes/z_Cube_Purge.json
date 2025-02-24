@@ -1,0 +1,27 @@
+{
+	"@type":"Process",
+	"Name":"z_Cube_Purge",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"z_Cube_Purge.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pCube",
+			"Prompt":"Enter a cube name to purge",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pPeriod",
+			"Prompt":"Enter a period if exist",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

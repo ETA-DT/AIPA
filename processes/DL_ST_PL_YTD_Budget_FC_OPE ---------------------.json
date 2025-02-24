@@ -1,0 +1,13 @@
+{
+	"@type":"Process",
+	"Name":"DL_ST_PL_YTD_Budget_FC_OPE ---------------------",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"DL_ST_PL_YTD_Budget_FC_OPE ---------------------.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

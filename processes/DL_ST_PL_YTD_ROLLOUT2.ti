@@ -1,0 +1,1449 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+##########################################################################
+#-- TANGO
+#-- 
+#-- *********************
+#-- *** Modifications ***
+#-- *********************
+#-- 
+#--  ---------------------------------------------------
+#-- |    Date    | Version | Author | Comment
+#-- |------------+---------+--------+----------------------
+#-- | 30/09/2013 |  V1.0   |   TSD  | Initial version
+#-- | 18/03/2015 |  V1.1   |   YAD  | DATA modification // addition to Manage Interco Eliminationin the process for the ST_Partner_YTD cube
+#-- | 25/10/2016 |  V2.0   |   BTA  | Add rejects description more functional to be clearer for the end-users
+#-- | 02/10/2017 |  V2.1   |   RSJC  | Reject inactive indicators
+#-- | 18/10/2018 |  V3.0   |   RSJC  | Mapping contract code from AX
+#--
+#-- | DD/MM/YYYY |  V#.#   |   XXX  | 
+#-- 
+#-- Process : DL_ST_PL_YTD_--SmallWorld--
+#-- 
+#-- ******************
+#-- *** Parameters ***
+#-- ******************
+#-- 
+#-- • PS_SOURCE_ENTITY
+#--     Valid values list:
+#--        > AUS_NZ
+#--        > CAN
+#--        > POR
+#--        > POR_Hold
+#--        > UK
+#-- 
+#-- • PS_PHASE
+#--     Valid values list:
+#--        > Actual
+#--        > Budget
+#--        > Forecast_1
+#--        > Forecast_2
+#-- 
+#-- • PS_PERIOD
+#--     Valid values list:
+#--        > Param
+#--        > previous_month
+#--        > F_year_YYYY (only for Budget/Forecast)
+#--        > YYYY.MM
+#--        > YYYY
+#-- 
+#-- • PS_MEASURE_TYPE
+#--     Valid values list:
+#--        > OPE ==> operationnal indicators
+#--        > P&L ==> financial indicators
+#-- 
+#region /!\ WARNING /!\
+#-- /!\ *** /!\ ==> tag to highligth the modification of a datasource variable value
+#endregion /!\ WARNING /!\
+#-- 
+##########################################################################
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#####################
+### PROLOG : BEGIN
+######################
+ 
+#region Prolog
+
+#region Variables definition
+     
+     #region Independant Variables
+         
+         #region Processes Variables <> string: VS_PRO_ <>
+         
+             VS_PRO_NAME = GetProcessName();
+             VS_PRO_LOADING_DATE = 'DB_zz_Date_Time_loading';
+             VS_PRO_PURGE_DL_ST = 'z_Purge_DL_ST';
+             VS_PRO_FILE_TRANSFER = 'z_Tools_Data_Transfert';
+         
+         #endregion
+         
+         #region Cubes Variables <> string: VS_CUB_ <>
+         
+             VS_CUB_PL = 'ST_PL_YTD';
+             VS_CUB_PARTNER = 'ST_PARTNER_YTD';
+             VS_CUB_REJECT = 'ZZ_PROCESS_REJECT_CPP';
+             VS_CUB_PROCESS_DETAIL = 'ZZ_PROCESS_DETAIL';
+             VS_CUB_PROCESS_DETAIL_PP = 'ZZ_PROCESS_DETAIL_CPP';
+             VS_CUB_ADMIN_PARAM = 'z_Admin_Param';
+             VS_CUB_ENTITY_RATE = 'ST_Entity_Rates';
+         
+         #endregion
+         
+         #region Dimensions Variables <> string: VS_DIM_ <>
+         
+             VS_DIM_ACTIVITY = 'Activity';
+             VS_DIM_CURRENCY = 'Currency';
+             VS_DIM_GAAP = 'Gaap';
+             VS_DIM_LEGAL = 'Legal_Organization';
+             VS_DIM_MANAGEMENT = 'Management_Organization';
+             VS_DIM_PERIOD_YTD = 'Period_YTD';
+             VS_DIM_PHASE = 'Phase';
+             VS_DIM_MEASURE = 'Indicator';
+             VS_DIM_PERIOD = 'Period';
+             VS_DIM_PARTNER = 'Partner';
+             VS_DIM_LOADING_DATE = 'zz_Date_Time_loading';
+             VS_DIM_PROCESS = '}Processes';
+             VS_DIM_CHORE = '}Chores';
+             VS_DIM_INTEGRATION_RATE = 'Integration_Rate';
+         
+         #endregion
+         
+         #region Elements Variables <> string: VS_ELE_ <>
+         
+             #-- Period
+             VS_ELE_PERIOD_CURRENT_MONTH = TIMST( NOW ,'\Y.\m' );
+             VS_ELE_PERIOD_LOG = '';
+             
+             #-- Phase
+             VS_ELE_PHASE_ACTUAL = 'ACT';
+             VS_ELE_PHASE_BUDGET = 'BUDG_VC';
+             VS_ELE_PHASE_FORECAST_1 = 'FC_1_VC';
+             VS_ELE_PHASE_FORECAST_2 = 'FC_2_VC';
+             
+             #-- Activity
+             VS_ELE_ACTIVITY_REJECT = 'Reject_Data';
+             
+             #-- Gaap
+             VS_ELE_GAAP_LOCAL = 'Local_Gaap_Mgmt_tool';
+             VS_ELE_GAAP_PARTNER_ELIM = 'Eliminations_Mgmt_interco';
+
+             
+             #-- Partner
+             VS_ELE_PARTNER_EXTERNAL = 'SU9999';
+             VS_ELE_PARTNER_VE = 'Other_VE_entities';
+             
+             #-- Currency
+             VS_ELE_CURRENCY_LOCAL = 'LCL';
+             
+             #-- Indicator
+             VS_ELE_MEASURE_OPE = 'Ind_op';
+             VS_ELE_MEASURE_PL = 'Ind_fi_pl_nat';
+             VS_ELE_MEASURE_REJECT = 'Reject_Data';
+             
+             #-- Integration_Rate
+             VS_ELE_INTEGRATION_RATE_NO_APP = 'NO_APP';
+             
+             #-- z_Admin_Param
+             VS_ELE_ADMIN_PARAM_MONTH = 'MONTH_ACTUAL';
+             VS_ELE_ADMIN_PARAM_YEAR = 'YEAR_BUDGET_FORECAST';
+             VS_ELE_ADMIN_PARAM_REP_DATA = 'REP_DATA';
+             
+             #-- z_Str_Var
+             VS_ELE_Z_STR_VAR_STR_1 = 'STR_VAR1';
+             VS_ELE_Z_STR_VAR_STR_2 = 'STR_VAR2';
+             VS_ELE_Z_STR_VAR_STR_3 = 'STR_VAR3';
+             VS_ELE_Z_STR_VAR_NUM_1 = 'NUM_VAR1';
+             VS_ELE_Z_STR_VAR_NUM_2 = 'NUM_VAR2';
+             VS_ELE_Z_STR_VAR_NUM_3 = 'NUM_VAR3';
+             
+             #-- zz_Process_Rejects
+             VS_ELE_Z_PROCESS_REJECT_MESSAGE = 'Error_Message';
+             VS_ELE_Z_PROCESS_REJECT_RECORD = 'Record';
+         
+         #endregion
+         
+         #region Attributes Variables <> string: VS_ATT_ <>
+         
+             VS_ATT_SOURCE_ENTITY_NAME = 'Source_entity';
+             VS_ATT_PERIOD_PREV_MONTH_NAME = 'M-1';
+         
+         #endregion
+         
+         #region Datasource Variables <> string: VS_DAT_ <> numbr: VN_DAT_ <>
+         
+             #-- VS_DAT_LEGAL
+             #-- VS_DAT_MANAGEMENT
+             #-- VS_DAT_ACTIVITY
+             #-- VS_DAT_PHASE
+             #-- VS_DAT_PERIOD
+             #-- VS_DAT_GAAP
+             #-- VS_DAT_MEASURE
+             #-- VS_DAT_PARTNER
+             #-- VN_DAT_VALUE
+
+             #-- VN_VAR_CUB_VAL_ELIM          
+         
+         
+         #endregion
+          
+         #region Other Variables <> string: VS_VAR_ <> number: VN_VAR_ <>
+         
+             #-- Expected values for parameters
+             VS_VAR_PS_PHASE_ACTUAL = 'Actual';
+             VS_VAR_PS_PHASE_BUDGET = 'Budget';
+             VS_VAR_PS_PHASE_FORECAST_1 = 'Forecast_1';
+             VS_VAR_PS_PHASE_FORECAST_2 = 'Forecast_2';
+             VS_VAR_PS_SOURCE_ENTITY_AUS_NZ = 'AUS_NZ';
+             VS_VAR_PS_SOURCE_ENTITY_CAN = 'CAN';
+             VS_VAR_PS_SOURCE_ENTITY_POR = 'POR';
+             VS_VAR_PS_SOURCE_ENTITY_POR_HOLD = 'POR_Hold';
+             VS_VAR_PS_SOURCE_ENTITY_UK = 'UK';
+            VS_VAR_PS_SOURCE_ENTITY_SW = 'SW';
+             VS_VAR_PS_MEASURE_TYPE_OPE = 'OPE';
+             VS_VAR_PS_MEASURE_TYPE_PL = 'P&L';
+             
+             #-- Records counters
+             VN_VAR_RECORD_READ = 0;
+             VN_VAR_RECORD_REJECTED = 0;
+             VN_VAR_RECORD_LOADED = 0;
+             
+             #-- Dates
+             VS_VAR_LOADING_START_DATE = TIMST( NOW , '\Y-\M-\D' );
+             VS_VAR_LOADING_START_DATETIME = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+             VS_VAR_LOADING_END_DATETIME = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+             
+             #-- 
+             VS_VAR_NA = 'N/A';
+         
+         #endregion
+        
+     #endregion
+ 
+     #region Variables depending on parameters
+     
+         #region Phase         
+     
+             if( PS_PHASE @= VS_VAR_PS_PHASE_ACTUAL ); VS_ELE_PHASE = VS_ELE_PHASE_ACTUAL;
+             elseif( PS_PHASE @= VS_VAR_PS_PHASE_BUDGET ); VS_ELE_PHASE = VS_ELE_PHASE_BUDGET;
+             elseif( PS_PHASE @= VS_VAR_PS_PHASE_FORECAST_1 ); VS_ELE_PHASE = VS_ELE_PHASE_FORECAST_1;
+             elseif( PS_PHASE @= VS_VAR_PS_PHASE_FORECAST_2 ); VS_ELE_PHASE = VS_ELE_PHASE_FORECAST_2;
+             else;
+             
+                 #-- The Phase specified is not valid
+            ItemReject( 'The value ' | PS_PHASE | ' is invalid for PS_PHASE parameter. Must be ' | VS_VAR_PS_PHASE_ACTUAL | ', ' | VS_VAR_PS_PHASE_BUD
+GET | ', ' | VS_VAR_PS_PHASE_FORECAST_1 | ' or ' | VS_VAR_PS_PHASE_FORECAST_2 );
+                 ProcessQuit;
+             
+             endif;
+             
+         #endregion
+     
+         #region Period
+             
+             if( VS_ELE_PHASE @= VS_ELE_PHASE_ACTUAL );
+             
+             #region Actual
+             
+                 if( PS_PERIOD @= 'Param' );
+                 
+                     #-- Default execution
+                     VS_VAR_PERIOD = CellGetS( VS_CUB_ADMIN_PARAM , VS_ELE_ADMIN_PARAM_MONTH , VS_ELE_Z_STR_VAR_STR_1 );
+                 
+                 else;
+                 
+                     #-- Unusual execution with a specific value
+                     VS_VAR_PERIOD = PS_PERIOD;                     
+                 
+                 endif;
+                 
+                 if( SUBST( VS_VAR_PERIOD , 1 , 7 ) @= 'F_year_' );
+                 
+                     #-- The period is invalid
+                     ItemReject( 'The period ' | VS_VAR_PERIOD | ' is invalid for Actual data. Parameter PS_PERIOD= ' | PS_PERIOD );
+                     ProcessQuit;
+                 
+                 elseif( VS_VAR_PERIOD @= 'previous_month' );
+                 
+                     #-- Previous month (Specific Period)
+                     VS_ELE_PERIOD_YEAR = VS_VAR_NA;
+                     VS_ELE_PERIOD_MONTH = ATTRS( VS_DIM_PERIOD , VS_ELE_PERIOD_CURRENT_MONTH , VS_ATT_PERIOD_PREV_MONTH_NAME ) | '_YTD';
+                     VS_ELE_PERIOD_LOG = VS_ELE_PERIOD_MONTH;
+                 
+                 elseif( LONG( VS_VAR_PERIOD ) = 4 );
+                 
+                     #-- Total Year (YYYY)
+                     VS_ELE_PERIOD_YEAR = 'Total_' | VS_VAR_PERIOD;
+                     VS_ELE_PERIOD_MONTH = VS_VAR_NA;
+                     VS_ELE_PERIOD_LOG = VS_ELE_PERIOD_YEAR;
+                 
+                 elseif( LONG( VS_VAR_PERIOD ) = 7 );
+                 
+                     #-- Specific Period (YYYY.MM)
+                     VS_ELE_PERIOD_YEAR = VS_VAR_NA;
+                     VS_ELE_PERIOD_MONTH = VS_VAR_PERIOD | '_YTD';
+                     VS_ELE_PERIOD_LOG = VS_ELE_PERIOD_MONTH;
+                 
+                 else;
+                 
+                     #-- The period is invalid
+                     ItemReject( 'The period ' | VS_VAR_PERIOD | ' is invalid. Parameter PS_PERIOD= ' | PS_PERIOD );
+                     ProcessQuit;
+                 
+                 endif;
+                 
+             #endregion
+             
+             else;
+             
+             #region Budget, Forecast_1 or Forecast_2
+             
+                 if( PS_PERIOD @= 'Param' );
+                 
+                     #-- Default execution
+                     VS_VAR_PERIOD = CellGetS( VS_CUB_ADMIN_PARAM , VS_ELE_ADMIN_PARAM_YEAR , VS_ELE_Z_STR_VAR_STR_1 );
+                 
+                 else;
+                 
+                     #-- Unusual execution with a secific value
+                     VS_VAR_PERIOD = PS_PERIOD;
+                 
+                 endif;
+                 
+                 if( SUBST( VS_VAR_PERIOD , 1 , 7 ) @= 'F_year_' );
+                 
+                     #-- Specific Period
+                     VS_ELE_PERIOD_YEAR = VS_VAR_NA;
+                     VS_ELE_PERIOD_MONTH = VS_VAR_PERIOD;
+                     VS_ELE_PERIOD_LOG = VS_ELE_PERIOD_MONTH;
+                 
+                 elseif( VS_VAR_PERIOD @= 'previous_month' );
+                 
+                     #-- Previous month (Specific Period)
+                     VS_ELE_PERIOD_YEAR = VS_VAR_NA;
+                     VS_ELE_PERIOD_MONTH = ATTRS( VS_DIM_PERIOD , VS_ELE_PERIOD_CURRENT_MONTH , VS_ATT_PERIOD_PREV_MONTH_NAME ) | '_YTD';
+                     VS_ELE_PERIOD_LOG = VS_ELE_PERIOD_MONTH;
+                 
+                 elseif( LONG( VS_VAR_PERIOD ) = 4 );
+                 
+                     #-- Total Year (YYYY)
+                     VS_ELE_PERIOD_YEAR = 'Total_' | VS_VAR_PERIOD;
+                     VS_ELE_PERIOD_MONTH = VS_VAR_NA;
+                     VS_ELE_PERIOD_LOG = VS_ELE_PERIOD_YEAR;
+                 
+                 elseif( LONG( VS_VAR_PERIOD ) = 7 );
+                 
+                     #-- Specific Period (YYYY.MM)
+                     VS_ELE_PERIOD_YEAR = VS_VAR_NA;
+                     VS_ELE_PERIOD_MONTH = VS_VAR_PERIOD | '_YTD';
+                     VS_ELE_PERIOD_LOG = VS_ELE_PERIOD_MONTH;
+                 
+                 else;
+                 
+                     #-- The period is invalid
+                     ItemReject( 'The period ' | VS_VAR_PERIOD | ' is invalid. Parameter PS_PERIOD= ' | PS_PERIOD );
+                     ProcessQuit;
+                 
+                 endif;
+                 
+             #endregion
+             
+             endif;
+             
+             if( VS_ELE_PERIOD_MONTH @= VS_VAR_NA & DIMIX( VS_DIM_PERIOD_YTD , VS_ELE_PERIOD_YEAR ) = 0 );
+             
+                 #-- The period is invalid
+                 ItemReject( 'The period ' | VS_ELE_PERIOD_YEAR | ' does not exist in the dimension ' | VS_DIM_PERIOD_YTD );
+                 ProcessQuit;
+             
+             elseif( VS_ELE_PERIOD_YEAR @= VS_VAR_NA & DIMIX( VS_DIM_PERIOD_YTD , VS_ELE_PERIOD_MONTH ) = 0 );
+             
+                 #-- The period is invalid
+                 ItemReject( 'The period ' | VS_ELE_PERIOD_MONTH | ' does not exist in the dimension ' | VS_DIM_PERIOD_YTD );
+                 ProcessQuit;
+             
+             endif;
+             
+         #endregion
+     
+         #region Source Entity         
+             # V1.3
+             # if( PS_SOURCE_ENTITY @<> VS_VAR_PS_SOURCE_ENTITY_AUS_NZ & PS_SOURCE_ENTITY @<> VS_VAR_PS_SOURCE_ENTITY_CAN & PS_SOURCE_ENTITY @<> VS_VA
+             # R_PS_SOURCE_ENTITY_POR_Hold & PS_SOURCE_ENTITY @<> VS_VAR_PS_SOURCE_ENTITY_POR & PS_SOURCE_ENTITY @<> VS_VAR_PS_SOURCE_ENTITY_UK & PS_SOURCE_ENTITY @<
+             # > VS_VAR_PS_SOURCE_ENTITY_SW );
+             
+			 if( Upper (ATTRS( 'zz_Process_Source', PS_SOURCE_ENTITY, 'NEW_COUNTRY')) @<> 'YES');
+                 #-- The specified source entity is not in <>SmallWorld<>
+                 ItemReject( 'The value ' | PS_SOURCE_ENTITY | ' is invalid for PS_SOURCE_ENTITY parameter. Must be Yes in the NEW_COUNTRY of the dimension zz_Process_Source' );
+                 ProcessQuit;
+             
+             endif;
+             
+             VS_ATT_SOURCE_ENTITY_VAL = PS_SOURCE_ENTITY;
+             
+         #endregion
+         
+         #region Legal_Organization
+         
+             VS_ELE_LEGAL_REJECT = VS_ATT_SOURCE_ENTITY_VAL | '_Reject';
+             
+             if( DIMIX( VS_DIM_LEGAL , VS_ELE_LEGAL_REJECT ) = 0 );
+             
+                 ItemReject(  'Environnement issue: the element ' | VS_ELE_LEGAL_REJECT | ' does not exist in the dimension ' | VS_DIM_LEGAL | '.' );
+                 ProcessQuit;
+             
+             endif;
+         
+         #endregion
+         
+         #region Management_Organization
+         
+             VS_ELE_MANAGEMENT_REJECT = VS_ATT_SOURCE_ENTITY_VAL | '_Reject';
+
+            
+             if( DIMIX( VS_DIM_MANAGEMENT , VS_ELE_MANAGEMENT_REJECT ) = 0 );
+             
+                 ItemReject(  'Environnement issue: the element ' | VS_ELE_MANAGEMENT_REJECT | ' does not exist in the dimension ' | VS_DIM_MANAGEMENT | '.' );
+                 ProcessQuit;
+             
+             endif;
+
+
+           
+         #endregion
+         
+         #region Indicator
+
+
+             if( PS_MEASURE_TYPE @<> VS_VAR_PS_MEASURE_TYPE_OPE & PS_MEASURE_TYPE @<> VS_VAR_PS_MEASURE_TYPE_PL );
+             
+                 ItemReject( 'The value ' | PS_MEASURE_TYPE | ' is invalid for PS_MEASURE_TYPE parameter. Must be ' | VS_VAR_PS_MEASURE_TYPE_OPE | ' or ' | VS_VAR_PS_MEASURE_TYPE_PL );
+                 ProcessQuit;
+             
+             endif;
+             
+             if( PS_MEASURE_TYPE @= VS_VAR_PS_MEASURE_TYPE_OPE ); VS_ELE_MEASURE_TYPE = VS_ELE_MEASURE_OPE;
+             else; VS_ELE_MEASURE_TYPE = VS_ELE_MEASURE_PL;
+             endif;
+             
+         #endregion
+
+         #region Elements Variables <> string: VS_ELE_ <>
+         
+             #-- }Chores
+             VS_ELE_CHORE_NAME = 'DL_' | PS_SOURCE_ENTITY | '_' | PS_MEASURE_TYPE;
+         
+         #endregion
+         
+         #region Source File
+         
+             VS_VAR_DATA_FILE_DIR = CellGetS( VS_CUB_ADMIN_PARAM , VS_ELE_ADMIN_PARAM_REP_DATA , VS_ELE_Z_STR_VAR_STR_1 );
+             VS_VAR_DATA_FILE_NAME_BASE = 'Data_' | PS_MEASURE_TYPE | '_' | PS_PHASE | '_' | PS_SOURCE_ENTITY;
+             VS_VAR_DATA_FILE_NAME = VS_VAR_DATA_FILE_NAME_BASE | '.csv';
+             
+             VS_VAR_DATA_FILE_PATH = VS_VAR_DATA_FILE_DIR | '\' | VS_VAR_DATA_FILE_NAME;
+
+
+             vTampon = 0;
+
+             if( FileExists( VS_VAR_DATA_FILE_PATH ) = 0 );
+             
+                 # RSJC 19/10/2018 Ajout message dans cube de rejet. VOIR POURQUOI NE MARCHE PAS
+
+	# -- ANA Modification 08/02.2021 On enlève les commentaires pour intégrer les rejets liés à l'abscence de fichiers
+                
+	# -- En utilisant un processquit, on rencontre un problème de CellPut car le processus n'allant pas jusqu'à l'onglet Data, TI n'applique pas les traitements de données effectuées dans les onglets précédents
+	# -- Il faut utiliser un processbreak pour le forcer à aller en Epilogue
+
+	vTampon = 1;	
+
+                 ProcessBreak;
+             
+             endif;
+             
+             DataSourceNameForServer = VS_VAR_DATA_FILE_PATH;
+         
+         #endregion 
+         
+
+         
+         #region Views & Subsets
+         
+             VS_VAR_REJECT_CLEAR = VS_CUB_REJECT | '_' | PS_MEASURE_TYPE | '_' | PS_SOURCE_ENTITY | '_' | PS_PHASE | '_' | PS_PERIOD | '_CLEAR';
+             VS_VAR_PL_CLEAR = VS_CUB_PL | '_' | PS_MEASURE_TYPE | '_' | PS_SOURCE_ENTITY | '_' | PS_PHASE | '_' | PS_PERIOD | '_CLEAR';
+             VS_VAR_PARTNER_CLEAR = VS_CUB_PARTNER | '_' | PS_MEASURE_TYPE | '_' | PS_SOURCE_ENTITY | '_' | PS_PHASE | '_' | PS_PERIOD | '_CLEAR';    
+         
+         
+         #endregion
+     
+     #endregion 
+
+#endregion
+    
+#region Clear Views
+
+     #region ZZ_PROCESS_REJECT_CHORE_PERIOD_PHASE
+     
+         #-- Add the date in zz_Date_Time_loading dimension
+         ExecuteProcess( VS_PRO_LOADING_DATE );
+         
+         #-- View
+         if( ViewExists( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR ) = 1 ); ViewDestroy( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR ); endif;
+         ViewCreate( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR );
+         
+         #-- Subset Phase
+         if( SubsetExists( VS_DIM_LOADING_DATE , VS_VAR_REJECT_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_LOADING_DATE , VS_VAR_REJECT_CLEAR ); endif;
+         SubsetCreate( VS_DIM_LOADING_DATE , VS_VAR_REJECT_CLEAR );
+         SubsetElementInsert( VS_DIM_LOADING_DATE , VS_VAR_REJECT_CLEAR , VS_VAR_LOADING_START_DATE , 1 );
+         
+         #-- Subset }Processes
+         if( SubsetExists( VS_DIM_PROCESS , VS_VAR_REJECT_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_PROCESS , VS_VAR_REJECT_CLEAR ); endif;
+         SubsetCreate( VS_DIM_PROCESS , VS_VAR_REJECT_CLEAR );
+         SubsetElementInsert( VS_DIM_PROCESS , VS_VAR_REJECT_CLEAR , VS_PRO_NAME , 1 );
+         
+         #-- Subset }Chores
+         if( SubsetExists( VS_DIM_CHORE , VS_VAR_REJECT_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_CHORE , VS_VAR_REJECT_CLEAR ); endif;
+         SubsetCreate( VS_DIM_CHORE , VS_VAR_REJECT_CLEAR );
+         SubsetElementInsert( VS_DIM_CHORE , VS_VAR_REJECT_CLEAR , VS_ELE_CHORE_NAME , 1 );
+         
+         #-- Subset Period
+         if( SubsetExists( VS_DIM_PERIOD_YTD , VS_VAR_REJECT_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_PERIOD_YTD , VS_VAR_REJECT_CLEAR ); endif;
+         SubsetCreate( VS_DIM_PERIOD_YTD , VS_VAR_REJECT_CLEAR );
+         if( VS_ELE_PERIOD_YEAR @= VS_VAR_NA );
+         
+             SubsetElementInsert( VS_DIM_PERIOD_YTD , VS_VAR_REJECT_CLEAR , VS_ELE_PERIOD_MONTH , 1 );
+         else;
+         
+             SubsetElementInsert( VS_DIM_PERIOD_YTD , VS_VAR_REJECT_CLEAR , VS_ELE_PERIOD_YEAR , 1 );
+         
+         endif;
+         
+         #-- Subset Phase
+         if( SubsetExists( VS_DIM_PHASE , VS_VAR_REJECT_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_PHASE , VS_VAR_REJECT_CLEAR ); endif;
+         SubsetCreate( VS_DIM_PHASE , VS_VAR_REJECT_CLEAR );
+         SubsetElementInsert( VS_DIM_PHASE , VS_VAR_REJECT_CLEAR , VS_ELE_PHASE , 1 );
+         
+         #-- View Subset Assign
+         ViewSubsetAssign( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR , VS_DIM_LOADING_DATE , VS_VAR_REJECT_CLEAR );
+         ViewSubsetAssign( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR , VS_DIM_PROCESS , VS_VAR_REJECT_CLEAR );
+         ViewSubsetAssign( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR , VS_DIM_CHORE , VS_VAR_REJECT_CLEAR );
+         ViewSubsetAssign( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR , VS_DIM_PERIOD_YTD , VS_VAR_REJECT_CLEAR );
+         ViewSubsetAssign( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR , VS_DIM_PHASE , VS_VAR_REJECT_CLEAR );
+         
+         #-- Clear View
+         ViewZeroOut( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR );
+         
+         #-- Destroy
+         ViewDestroy( VS_CUB_REJECT , VS_VAR_REJECT_CLEAR );
+         SubsetDestroy( VS_DIM_LOADING_DATE , VS_VAR_REJECT_CLEAR );
+         SubsetDestroy( VS_DIM_PROCESS , VS_VAR_REJECT_CLEAR );
+         SubsetDestroy( VS_DIM_CHORE , VS_VAR_REJECT_CLEAR );
+         SubsetDestroy( VS_DIM_PERIOD_YTD , VS_VAR_REJECT_CLEAR );
+         SubsetDestroy( VS_DIM_PHASE , VS_VAR_REJECT_CLEAR );
+     
+     #endregion
+
+     #region ST_PL_YTD
+     
+         #-- View
+         if( ViewExists( VS_CUB_PL , VS_VAR_PL_CLEAR ) = 1 ); ViewDestroy( VS_CUB_PL , VS_VAR_PL_CLEAR ); endif;
+         ViewCreate( VS_CUB_PL , VS_VAR_PL_CLEAR );
+         
+         #-- Subset Phase
+         if( SubsetExists( VS_DIM_PHASE , VS_VAR_PL_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_PHASE , VS_VAR_PL_CLEAR ); endif;
+         SubsetCreate( VS_DIM_PHASE , VS_VAR_PL_CLEAR );
+         SubsetElementInsert( VS_DIM_PHASE , VS_VAR_PL_CLEAR , VS_ELE_PHASE , 1 );
+         
+         #-- Subset Legal_Organization
+         if( SubsetExists( VS_DIM_LEGAL , VS_VAR_PL_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_LEGAL , VS_VAR_PL_CLEAR ); endif;
+         SubsetCreate( VS_DIM_LEGAL , VS_VAR_PL_CLEAR );
+         i=1;
+         while( i < DIMSIZ( VS_DIM_LEGAL ) + 1 );
+             VS_ELE_I = DIMNM( VS_DIM_LEGAL , i );
+             if ( ATTRS ( VS_DIM_LEGAL , VS_ELE_I , VS_ATT_SOURCE_ENTITY_NAME ) @= VS_ATT_SOURCE_ENTITY_VAL );
+                 SubsetElementInsert( VS_DIM_LEGAL , VS_VAR_PL_CLEAR , VS_ELE_I , 1 );
+             endif;
+             i=i+1;
+         end;
+         SubsetElementInsert( VS_DIM_LEGAL , VS_VAR_PL_CLEAR , VS_ELE_LEGAL_REJECT , 1 );
+         
+         #-- Subset Measure
+         if( SubsetExists( VS_DIM_MEASURE , VS_VAR_PL_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_MEASURE , VS_VAR_PL_CLEAR ); endif;
+         SubsetCreate( VS_DIM_MEASURE , VS_VAR_PL_CLEAR );
+         i=1;
+         while( i < DIMSIZ( VS_DIM_MEASURE ) + 1 );
+             VS_ELE_I = DIMNM( VS_DIM_MEASURE , i );
+
+            # -- RSJC 03/10/2017 : Non sélection des indicateurs inactifs
+             if ( ELISANC( VS_DIM_MEASURE , VS_ELE_MEASURE_TYPE , VS_ELE_I ) > 0 );
+         ##    if ( ELISANC( VS_DIM_MEASURE , VS_ELE_MEASURE_TYPE , VS_ELE_I ) > 0 & ATTRS(VS_DIM_MEASURE,VS_ELE_I, 'INACTIF')  @<> 'OUI' );
+                 SubsetElementInsert( VS_DIM_MEASURE , VS_VAR_PL_CLEAR , VS_ELE_I , 1 );
+             endif;
+             i=i+1;
+         end;
+         
+         #-- Period_YTD
+         if( SubsetExists( VS_DIM_PERIOD_YTD , VS_VAR_PL_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_PERIOD_YTD , VS_VAR_PL_CLEAR ); endif;
+         SubsetCreate( VS_DIM_PERIOD_YTD , VS_VAR_PL_CLEAR );
+         if( VS_ELE_PERIOD_YEAR @= VS_VAR_NA );
+         
+             SubsetElementInsert( VS_DIM_PERIOD_YTD , VS_VAR_PL_CLEAR , VS_ELE_PERIOD_MONTH , 1 );
+         
+         else;
+         
+             i=1;
+             while( i < DIMSIZ( VS_DIM_PERIOD_YTD ) + 1 );
+                 VS_ELE_I = DIMNM( VS_DIM_PERIOD_YTD , i );
+                 if ( ELLEV( VS_DIM_PERIOD_YTD , VS_ELE_I ) = 0 & ELISANC( VS_DIM_PERIOD_YTD , VS_ELE_PERIOD_YEAR , VS_ELE_I ) > 0 );
+                     SubsetElementInsert( VS_DIM_PERIOD_YTD , VS_VAR_PL_CLEAR , VS_ELE_I , 1 );
+                 endif;
+                 i=i+1;
+             end;
+         
+         endif;
+         
+         #-- View Subset Assign
+         ViewSubsetAssign( VS_CUB_PL , VS_VAR_PL_CLEAR , VS_DIM_PHASE , VS_VAR_PL_CLEAR );
+         ViewSubsetAssign( VS_CUB_PL , VS_VAR_PL_CLEAR , VS_DIM_LEGAL , VS_VAR_PL_CLEAR );
+         ViewSubsetAssign( VS_CUB_PL , VS_VAR_PL_CLEAR , VS_DIM_MEASURE , VS_VAR_PL_CLEAR );
+         ViewSubsetAssign( VS_CUB_PL , VS_VAR_PL_CLEAR , VS_DIM_PERIOD_YTD , VS_VAR_PL_CLEAR );
+     
+     #endregion
+     
+     #region ST_PARTNER_YTD
+     
+         if( VS_ELE_MEASURE_TYPE @= VS_ELE_MEASURE_PL );
+         
+             #-- ST_PARTNER_YTD is only filled in for financial indicators
+             
+             #-- View
+             if( ViewExists( VS_CUB_PARTNER , VS_VAR_PARTNER_CLEAR ) = 1 ); ViewDestroy( VS_CUB_PARTNER , VS_VAR_PARTNER_CLEAR ); endif;
+             ViewCreate( VS_CUB_PARTNER , VS_VAR_PARTNER_CLEAR );
+             
+             #-- Subset Phase
+             if( SubsetExists( VS_DIM_PHASE , VS_VAR_PARTNER_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_PHASE , VS_VAR_PARTNER_CLEAR ); endif;
+             SubsetCreate( VS_DIM_PHASE , VS_VAR_PARTNER_CLEAR );
+             SubsetElementInsert( VS_DIM_PHASE , VS_VAR_PARTNER_CLEAR , VS_ELE_PHASE , 1 );
+             
+             #-- Subset Legal_Organization
+             if( SubsetExists( VS_DIM_LEGAL , VS_VAR_PARTNER_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_LEGAL , VS_VAR_PARTNER_CLEAR ); endif;
+             SubsetCreate( VS_DIM_LEGAL , VS_VAR_PARTNER_CLEAR );
+             i=1;
+             while( i < DIMSIZ( VS_DIM_LEGAL ) + 1 );
+                 VS_ELE_I = DIMNM( VS_DIM_LEGAL , i );
+                 if ( ATTRS ( VS_DIM_LEGAL , VS_ELE_I , VS_ATT_SOURCE_ENTITY_NAME ) @= VS_ATT_SOURCE_ENTITY_VAL );
+                     SubsetElementInsert( VS_DIM_LEGAL , VS_VAR_PARTNER_CLEAR , VS_ELE_I , 1 );
+                 endif;
+                 i=i+1;
+             end;
+             SubsetElementInsert( VS_DIM_LEGAL , VS_VAR_PARTNER_CLEAR , VS_ELE_LEGAL_REJECT , 1 );
+             
+             #-- Subset Measure
+             if( SubsetExists( VS_DIM_MEASURE , VS_VAR_PARTNER_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_MEASURE , VS_VAR_PARTNER_CLEAR ); endif;
+             SubsetCreate( VS_DIM_MEASURE , VS_VAR_PARTNER_CLEAR );
+             i=1;
+             while( i < DIMSIZ( VS_DIM_MEASURE ) + 1 );
+                 VS_ELE_I = DIMNM( VS_DIM_MEASURE , i );
+
+           # -- RSJC 03/10/2017 : Non sélection des indicateurs inactifs
+              if ( ELISANC( VS_DIM_MEASURE , VS_ELE_MEASURE_TYPE , VS_ELE_I ) > 0 );
+          ##   if ( ELISANC( VS_DIM_MEASURE , VS_ELE_MEASURE_TYPE , VS_ELE_I ) > 0 & ATTRS(VS_DIM_MEASURE,VS_ELE_I, 'INACTIF')  @<> 'OUI' );
+
+                     SubsetElementInsert( VS_DIM_MEASURE , VS_VAR_PARTNER_CLEAR , VS_ELE_I , 1 );
+                 endif;
+                 i=i+1;
+             end;
+             
+             #-- Period_YTD
+             if( SubsetExists( VS_DIM_PERIOD_YTD , VS_VAR_PARTNER_CLEAR ) = 1 ); SubsetDestroy( VS_DIM_PERIOD_YTD , VS_VAR_PARTNER_CLEAR ); endif;
+             SubsetCreate( VS_DIM_PERIOD_YTD , VS_VAR_PARTNER_CLEAR );
+             if( VS_ELE_PERIOD_YEAR @= VS_VAR_NA );
+             
+                 SubsetElementInsert( VS_DIM_PERIOD_YTD , VS_VAR_PARTNER_CLEAR , VS_ELE_PERIOD_MONTH , 1 );
+             
+             else;
+             
+                 i=1;
+                 while( i < DIMSIZ( VS_DIM_PERIOD_YTD ) + 1 );
+                     VS_ELE_I = DIMNM( VS_DIM_PERIOD_YTD , i );
+                     if ( ELLEV( VS_DIM_PERIOD_YTD , VS_ELE_I ) = 0 & ELISANC( VS_DIM_PERIOD_YTD , VS_ELE_PERIOD_YEAR , VS_ELE_I ) > 0 );
+                         SubsetElementInsert( VS_DIM_PERIOD_YTD , VS_VAR_PARTNER_CLEAR , VS_ELE_I , 1 );
+                     endif;
+                     i=i+1;
+                 end;
+             
+             endif;
+             
+             #-- View Subset Assign
+             ViewSubsetAssign( VS_CUB_PARTNER , VS_VAR_PARTNER_CLEAR , VS_DIM_PHASE , VS_VAR_PARTNER_CLEAR );
+             ViewSubsetAssign( VS_CUB_PARTNER , VS_VAR_PARTNER_CLEAR , VS_DIM_LEGAL , VS_VAR_PARTNER_CLEAR );
+             ViewSubsetAssign( VS_CUB_PARTNER , VS_VAR_PARTNER_CLEAR , VS_DIM_MEASURE , VS_VAR_PARTNER_CLEAR );
+             ViewSubsetAssign( VS_CUB_PARTNER , VS_VAR_PARTNER_CLEAR , VS_DIM_PERIOD_YTD , VS_VAR_PARTNER_CLEAR );
+         
+         endif;
+     
+     #endregion
+
+#endregion
+
+CubeSetLogChanges( VS_CUB_PL , 0 );
+CubeSetLogChanges( VS_CUB_PARTNER , 0 );
+
+#endregion
+
+######################
+### PROLOG : END
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+TextOutput( GetProcessName() | '.txt', 'Start : ' | TIMST( NOW , '\Y-\M-\D \h:\i:\s' ) );
+
+######################
+### DATA : BEGIN
+######################
+
+#region Data
+
+#-- Variables reset/update 
+VN_VAR_RECORD_READ = VN_VAR_RECORD_READ + 1;
+VN_VAR_BLOCKING_ERROR = 0;
+VN_VAR_CUB_VAL = 0;
+VN_VAR_CUB_VAL_ELIM= 0;
+
+VS_VAR_ERR_MESSAGE = '';             
+
+#-- BTA 25/10/2016 : Initial indicators for clearer instructions
+VS_VAR_ERR_TECH_MESSAGE = ''; 
+VS_VAR_ERR_FUNCT_MESSAGE = ''; 
+VS_VAR_ERR_INSTRUCTION_MESSAGE = '';
+VS_DAT_LEGAL_Keep_Old_value = VS_DAT_LEGAL ;
+
+VS_VAR_ERR_RECORD = VS_DAT_LEGAL 
+            | ';' | VS_DAT_MANAGEMENT 
+            | ';' | VS_DAT_ACTIVITY 
+            | ';' | VS_DAT_PHASE 
+            | ';' | VS_DAT_PERIOD 
+            | ';' | VS_DAT_GAAP 
+            | ';' | VS_DAT_MEASURE 
+            | ';' | VS_DAT_PARTNER 
+            | ';' | NumberToString( VN_DAT_VALUE );
+
+     #region Controls
+     
+         #region Blocking Controls
+         
+             #region Indicator
+
+                 
+                 #-- The element doesn't exist
+                 if( DIMIX( VS_DIM_MEASURE , VS_DAT_MEASURE ) = 0 );
+                 
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     
+                          if( VS_ELE_MEASURE_TYPE @= VS_ELE_MEASURE_PL );
+                     
+                              #-- Financial indicators are loaded on Reject_Data element
+                              VS_VAR_ERR_MESSAGE = 'Rejected Data : the element ' | VS_DAT_MEASURE | ' does not exist in ' | VS_DIM_MEASURE | '. Will be loaded on ' | VS_ELE_MEASURE_REJECT | ' (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+ 	 	# -- BTA 25/10/2016 : Update the message
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : The element ' | VS_DAT_MEASURE | ' does not exist in the dimension Indicator at the line
+				 ' | NumberToString( VN_VAR_RECORD_READ ) | '. Will be loaded on the indicator Reject_Data in line ' | NumberToString( VN_VAR_RECORD_READ ) | ' in the cube ST_PL_YTD.' ;
+
+		VS_VAR_ERR_FUNCT_MESSAGE = 'The indicator ' | VS_DAT_MEASURE | ' does not exist in Tango Core Model. The line ' | 
+				 NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE = 'Please contact your financial controller to know the indicator to use, update the data file and reload data.' ;		
+
+                         
+                              #region /!\ *** /!\ Replace by reject element /!\ *** /!\
+                         
+                                  VS_DAT_MEASURE = VS_ELE_MEASURE_REJECT;
+                         
+                              #endregion /!\ *** /!\ Replace by reject element /!\ *** /!\
+                     
+                          else;
+                               #-- The record is rejected
+                              VN_VAR_BLOCKING_ERROR = 1;
+                              VS_VAR_ERR_MESSAGE = 'Rejected Data : the element ' | VS_DAT_MEASURE | ' does not exist in ' | VS_DIM_MEASURE | ' (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+                          endif;
+
+           
+                 #-- The element is not of the correct type
+                 elseif( ELISANC( VS_DIM_MEASURE , VS_ELE_MEASURE_TYPE, VS_DAT_MEASURE ) = 0  );
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     VN_VAR_BLOCKING_ERROR = 1;
+                     
+                          if( VS_ELE_MEASURE_TYPE @= VS_ELE_MEASURE_PL );
+                     
+                               VS_VAR_ERR_MESSAGE = 'Rejected Data : ' | VS_DAT_MEASURE | ' is not a financial indicator (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+     		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : ' | VS_DAT_MEASURE | ' is not a financial indicator. Line ' | NumberToString( VN_VAR_RECORD_READ ) ;
+
+		VS_VAR_ERR_FUNCT_MESSAGE =  VS_DAT_MEASURE | ' is not a financial indicator. The line ' |  NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ; 
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE = 'Please update the data file and reload data.' ;		
+                     
+                          else;
+                     
+                               VS_VAR_ERR_MESSAGE = 'Rejected Data : ' | VS_DAT_MEASURE | ' is not an operational indicator (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : ' | VS_DAT_MEASURE | ' is not an operational indicator. Line ' | NumberToString( VN_VAR_RECORD_READ ) ;
+
+		VS_VAR_ERR_FUNCT_MESSAGE =  VS_DAT_MEASURE | ' is not an operational indicator. The line ' |  NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ; 
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE = 'Please update the data file and reload data.' ;		
+                     
+                          endif;
+                 
+                #-- RSJC 03/10/2017 - The element is inactive
+                 elseif(ATTRS(VS_DIM_MEASURE,VS_DAT_MEASURE, 'INACTIF')  @= 'OUI'  );
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+
+                                VS_VAR_ERR_MESSAGE = 'Rejected Data : ' | VS_DAT_MEASURE | ' is inactive (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+                	VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : ' | VS_DAT_MEASURE | ' is inactive. Line ' | NumberToString( VN_VAR_RECORD_READ ) ;
+		VS_VAR_ERR_FUNCT_MESSAGE =  VS_DAT_MEASURE | ' is inactive and should not be used. The line ' |  NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ; 
+		VS_VAR_ERR_INSTRUCTION_MESSAGE = 'Please update the data file and reload data.' ;
+ 
+                             #Replace by reject element
+                                VS_DAT_MEASURE = VS_ELE_MEASURE_REJECT;
+                 endif;
+
+             
+             #endregion
+             
+             if( VN_VAR_BLOCKING_ERROR = 0 );
+             
+             #region Phase
+             
+                 if( VS_ELE_PHASE @<> VS_DAT_PHASE );
+                 
+                     #-- The Phase doesn't correspond to the parameter
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     VN_VAR_BLOCKING_ERROR = 1;
+                     VS_VAR_ERR_MESSAGE = 'Rejected Data : Phase ' | VS_ELE_PHASE | ' is expected, but ' | VS_DAT_PHASE | ' found (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Phase ' | VS_ELE_PHASE | ' is expected, but ' | VS_DAT_PHASE | ' found (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE = 'Phase ' | VS_ELE_PHASE | ' is expected, but ' | VS_DAT_PHASE | ' found. The line ' | NumberToString( VN_VAR_RECORD_READ )| ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE = 'Please update the data file and reload data.' ;	
+                 
+                 endif;
+             
+             #endregion
+             
+             endif;
+             
+             if( VN_VAR_BLOCKING_ERROR = 0 );
+             
+             #region Legal_Organization
+             
+                 if( DIMIX( VS_DIM_LEGAL, VS_DAT_LEGAL ) > 0 );
+                 if( ATTRS( VS_DIM_LEGAL , VS_DAT_LEGAL , VS_ATT_SOURCE_ENTITY_NAME ) @<> VS_ATT_SOURCE_ENTITY_VAL );
+                 
+                     #-- The entity source is incorrect
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     VN_VAR_BLOCKING_ERROR = 1;
+                     VS_VAR_ERR_MESSAGE = 'Rejected Data : Legal_Organization ' | VS_DAT_LEGAL | ' has not ' | VS_ATT_SOURCE_ENTITY_VAL | ' as ' | VS_
+ATT_SOURCE_ENTITY_NAME | ' (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+                 
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Legal Organisation ' | VS_DAT_LEGAL | ' has not ' | VS_ATT_SOURCE_ENTITY_VAL | ' as Source_Entity (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE = 'The entity ' | VS_DAT_LEGAL | ' is not supposed to be loaded by ' | VS_ATT_SOURCE_ENTITY_VAL | '. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE = 'Please contact Tango support if you have to load data for this entity.' ;	
+
+                 endif;
+                 endif;
+             
+             #endregion
+             
+             endif;
+             
+             if( VN_VAR_BLOCKING_ERROR = 0 );
+             
+             #region Period
+             
+                 if( VS_ELE_PERIOD_YEAR @= VS_VAR_NA & VS_DAT_PERIOD @<> VS_ELE_PERIOD_MONTH );
+                 
+                     #-- The Period is incorrect
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     VN_VAR_BLOCKING_ERROR = 1;
+                     VS_VAR_ERR_MESSAGE = 'Rejected Data : Period ' | VS_ELE_PERIOD_MONTH | ' is expected, but ' | VS_DAT_PERIOD | ' found (line ' | N
+umberToString( VN_VAR_RECORD_READ ) | ')';
+                 
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Period ' | VS_ELE_PERIOD_MONTH | ' is expected, but ' | VS_DAT_PERIOD | ' found (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE = 'Period ' | VS_ELE_PERIOD_MONTH | ' is expected, but ' | VS_DAT_PERIOD | ' found. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE =  'Please update the data file and reload data.' ;
+
+
+                 elseif( VS_ELE_PERIOD_MONTH @= VS_VAR_NA & ELISANC( VS_DIM_PERIOD_YTD , VS_ELE_PERIOD_YEAR , VS_DAT_PERIOD ) = 0 );
+                 
+                     #-- The Period is incorrect
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     VN_VAR_BLOCKING_ERROR = 1;
+                     VS_VAR_ERR_MESSAGE = 'Rejected Data : Period ' | VS_DAT_PERIOD | ' is not part of ' | VS_ELE_PERIOD_YEAR | ' (line ' | NumberToSt
+ring( VN_VAR_RECORD_READ ) | ')';
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Period ' | VS_DAT_PERIOD | ' is not part of ' | VS_ELE_PERIOD_YEAR | ' (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE =  'Period ' | VS_DAT_PERIOD | ' is not part of ' | VS_ELE_PERIOD_YEAR | '. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE =  'Please update the data file and reload data.' ;
+                 
+                 endif;
+             
+             #endregion
+             
+             endif;
+         
+         #endregion
+         
+         if( VN_VAR_BLOCKING_ERROR = 0 );
+         
+         #region Other Controls
+         
+             #region Legal_Organization
+             
+                 if( DIMIX( VS_DIM_LEGAL , VS_DAT_LEGAL ) = 0 );
+                 
+                     #-- The entity doesn't exist
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     VS_VAR_ERR_MESSAGE = 'Rejected Data : Legal_Organization ' | VS_DAT_LEGAL | ' does not exist (line ' | NumberToString( VN_VAR_REC
+ORD_READ ) | ')';
+                     
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Legal Organization ' | VS_DAT_LEGAL | ' does not exist. (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE =  'The entity ' | VS_DAT_LEGAL |  ' does not exist in Tango. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE =  'Please update the data file and reload data or contact Tango support if the entity is consolidated.' ;
+
+
+                     #region /!\ *** /!\ Replace by reject element /!\ *** /!\
+                     
+                         VS_DAT_LEGAL = VS_ELE_LEGAL_REJECT;
+                     
+                     #endregion /!\ *** /!\ Replace by reject element /!\ *** /!\
+                 
+                 endif;
+             
+             #endregion
+             
+             #region Management_Organization
+
+
+                    ## RSJC 18/10/2018 Mapping contract code AX
+                   VS_DAT_MANAGEMENT_AX = VS_DAT_MANAGEMENT;
+                   if( DIMIX( 'z_contract_code_AX' , VS_DAT_MANAGEMENT) <> 0 );
+                         VS_DAT_MANAGEMENT = ATTRS(  'z_contract_code_AX', VS_DAT_MANAGEMENT_AX, 'TCM_Code');
+                  endif;     
+                  
+
+
+
+                if( DIMIX( VS_DIM_MANAGEMENT , VS_DAT_MANAGEMENT ) = 0 );
+                   
+                     #-- The contract doesn't exist
+                     #-- Only one reject message can be logged --> keep the first
+                     if( VS_VAR_ERR_MESSAGE @= '' );
+                         VS_VAR_ERR_MESSAGE = 'Rejected Data : Management_Organization ' | VS_DAT_MANAGEMENT | ' does not exist (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Management Organization ' | VS_DAT_MANAGEMENT | ' does not exist. (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE =  'The management unit ' | VS_DAT_MANAGEMENT |  ' does not exist in Tango. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE =  'Please create the new management unit in Tango, ask your financial controller to validate it and reload data.' ;
+
+                         VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     endif;
+                     
+                     #region /!\ *** /!\ Replace by reject element /!\ *** /!\
+                     
+                         VS_DAT_MANAGEMENT = VS_ELE_MANAGEMENT_REJECT;
+                     
+                     #endregion /!\ *** /!\ Replace by reject element /!\ *** /!\
+                 
+                 elseif( VS_DAT_LEGAL @= VS_ELE_LEGAL_REJECT );
+                 
+                     #region /!\ *** /!\ Replace by reject element /!\ *** /!\
+                     
+                         VS_DAT_MANAGEMENT = VS_ELE_MANAGEMENT_REJECT;
+                     
+                     #endregion /!\ *** /!\ Replace by reject element /!\ *** /!\
+
+
+                 endif;
+             
+             #endregion
+             
+             #region Activity
+             
+                 if( DIMIX( VS_DIM_ACTIVITY , VS_DAT_ACTIVITY ) = 0 );
+                 
+                     #-- The Activity doesn't exist
+                     #-- Only one reject message can be logged --> keep the first
+                     if( VS_VAR_ERR_MESSAGE @= '' );
+                         VS_VAR_ERR_MESSAGE = 'Rejected Data : Activity ' | VS_DAT_ACTIVITY | ' does not exist (line ' | NumberToString( VN_VAR_RECORD
+_READ ) | ')';
+
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Activity ' | VS_DAT_ACTIVITY | ' does not exist. (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE =  'The activity ' | VS_DAT_ACTIVITY |  ' does not exist in Tango. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE =  'Please update the data file and reload data.' ;
+
+
+                         VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     endif;
+                     
+                     #region /!\ *** /!\ Replace by reject element /!\ *** /!\
+                     
+                         VS_DAT_ACTIVITY = VS_ELE_ACTIVITY_REJECT;
+                     
+                     #endregion /!\ *** /!\ Replace by reject element /!\ *** /!\
+                 
+                 endif;
+             
+             #endregion
+             
+             #region Gaap
+             
+                 if( VS_DAT_GAAP @= '' );
+                 
+                     #-- The Gaap is empty
+                     #-- Only one reject message can be logged --> keep the first
+                     #--if( VS_VAR_ERR_MESSAGE @= '' ); 
+                     #VS_VAR_ERR_MESSAGE = 'Rejected Data : Gaap was empty (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+                   
+
+                     #RSJC 22/02/16 : Ajout condition rejet si type indicateur = P&L      
+                  #       if(PS_MEASURE_TYPE @= 'P&L');
+                  #       VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                  #       endif;
+
+                    #-- endif;
+		                          
+                     #region /!\ *** /!\ Replace by Local_Gaap element /!\ *** /!\
+                     #--This reject message is deactivated to avoid the producing of a lot of reject element
+
+                         VS_DAT_GAAP = VS_ELE_GAAP_LOCAL;
+                     
+                     #endregion /!\ *** /!\ Replace by Local_Gaap element /!\ *** /!\
+                 
+                 elseif( DIMIX( VS_DIM_GAAP , VS_DAT_GAAP ) = 0 );
+                 
+                     #-- The Gaap doesn't exist
+                     #-- Only one reject message can be logged --> keep the first
+                     if( VS_VAR_ERR_MESSAGE @= '' );
+                         VS_VAR_ERR_MESSAGE = 'Rejected Data : Gaap ' | VS_DAT_GAAP | ' does not exist (line ' | NumberToString( VN_VAR_RECORD_READ ) 
+| ')';
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Gaap ' | VS_DAT_GAAP | ' does not exist. (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE =  'The gaap ' | VS_DAT_GAAP |  ' does not exist in Tango. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE =  'Please update the data file and reload data.' ;
+
+                         VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     endif;
+                     
+                     #region /!\ *** /!\ Replace by Local_Gaap element /!\ *** /!\
+                     
+                         VS_DAT_GAAP = VS_ELE_GAAP_LOCAL;
+                     
+                     #endregion /!\ *** /!\ Replace by Local_Gaap element /!\ *** /!\
+                 
+                 
+                 endif;
+             
+             #endregion
+             
+             #region Partner
+             
+                 if( VS_ELE_MEASURE_TYPE @= VS_ELE_MEASURE_PL );
+                 
+                     #-- ST_PARTNER_YTD is only filled in for financial indicators
+                 
+                     if( VS_DAT_PARTNER @= ''  %  VS_DAT_PARTNER @= 'S9999' );
+
+                         #-- If partner is empty or partner is 'S9999' (code used in Vector)
+                         #-- Consider as external
+                         #-- Only one reject message can be logged --> keep the first
+                         #--if( VS_VAR_ERR_MESSAGE @= '' );
+                             #--VS_VAR_ERR_MESSAGE = 'Rejected Data : Partner is empty or S9999  (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+                             #--VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                         #--endif;
+                         #region /!\ *** /!\ Replace by reject element /!\ *** /!\
+			#-- This reject message is deactivated to avoid the producing of a lot of reject element
+                         
+                             VS_DAT_PARTNER = VS_ELE_PARTNER_EXTERNAL;
+                         
+                         #endregion /!\ *** /!\ Replace by reject element /!\ *** /!\
+                     
+                     elseif( DIMIX( VS_DIM_PARTNER , VS_DAT_PARTNER ) = 0 );
+                     
+                         #-- Consider as external
+                         #-- Only one reject message can be logged --> keep the first
+                         if( VS_VAR_ERR_MESSAGE @= '' );
+                             VS_VAR_ERR_MESSAGE = 'Rejected Data : Partner ' | VS_DAT_PARTNER | ' does not exist (line ' | NumberToString( VN_VAR_RECO
+RD_READ ) | ')';
+
+
+		# -- BTA 25/10/2016 : Update the message for clearer instruction
+		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Partner ' | VS_DAT_PARTNER | ' does not exist. (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+
+		VS_VAR_ERR_FUNCT_MESSAGE =  'The partner ' | VS_DAT_PARTNER |  ' does not exist in Tango. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+
+		VS_VAR_ERR_INSTRUCTION_MESSAGE =  'Please update the data file and reload data.' ;
+
+
+                             VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                         endif;
+                         #region /!\ *** /!\ Replace by reject element /!\ *** /!\
+                         
+                             VS_DAT_PARTNER = VS_ELE_PARTNER_VE;
+                         
+                         #endregion /!\ *** /!\ Replace by reject element /!\ *** /!\
+                     
+                     endif;
+                 
+                 endif;
+             
+             #endregion
+         
+         #endregion
+         
+         endif;
+
+         
+             # -- ANA Modification 04/02/2021 L'entity Rate nulle n'est plus considérée comme un rejet
+#         if( VN_VAR_BLOCKING_ERROR = 0 );
+#         
+#         #region Entity_Rates
+#         
+#             if( SUBST( VS_DAT_PERIOD , 1 , 7 ) @= 'F_year_' );
+#             
+#                 if( ( CellGetN( VS_CUB_ENTITY_RATE , VS_DAT_LEGAL , VS_DAT_PERIOD , VS_DAT_PHASE , VS_ELE_Z_STR_VAR_NUM_1 ) = 0 )  
+#                   & ( CellGetN( VS_CUB_ENTITY_RATE , VS_DAT_LEGAL , VS_DAT_PERIOD , VS_DAT_PHASE , VS_ELE_Z_STR_VAR_NUM_2 ) = 0 ) 
+#                   );
+#                 
+#                     #-- The entity source is incorrect
+#                     #-- Only one reject message can be logged --> keep blocking control message but count only one reject
+#                     if( VS_VAR_ERR_MESSAGE @= '' );
+#                         VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+#                     endif;
+#                     VN_VAR_BLOCKING_ERROR = 1;
+#                     VS_VAR_ERR_MESSAGE = 'Rejected Data : Entity Rate is empty for ' | VS_DAT_LEGAL | ' on Period ' | VS_DAT_PERIOD | ' (line ' | Num
+#berToString( VN_VAR_RECORD_READ ) | ')';
+#               
+					#VN_VAR_RECORD_LOADED = VN_VAR_RECORD_LOADED + 1;
+#                 endif;
+#             
+#             elseif( ( CellGetN( VS_CUB_ENTITY_RATE , VS_DAT_LEGAL , SUBST( VS_DAT_PERIOD , 1 , 7 ) , VS_DAT_PHASE , VS_ELE_Z_STR_VAR_NUM_1 ) = 0 )  
+#                   & ( CellGetN( VS_CUB_ENTITY_RATE , VS_DAT_LEGAL , SUBST( VS_DAT_PERIOD , 1 , 7 ) , VS_DAT_PHASE , VS_ELE_Z_STR_VAR_NUM_2 ) = 0 
+#	   # -- BTA 31/10/2016 : Ajout de la condition: Si l'entité légale est égale à Reject Entity alors, il faut faire remonter l'erreur de l'entité non existente en priorité, plutôt que l'absence de l'integration rate de l'entité Reject 
+#	   & VS_DAT_LEGAL @<> VS_ELE_LEGAL_REJECT ) 
+#                   );
+#             
+#                 #-- The entity source is incorrect
+#                 #-- Only one reject message can be logged --> keep blocking control message but count only one reject
+#                 if( VS_VAR_ERR_MESSAGE @= '' );
+#                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+#                 endif;
+#                 VN_VAR_BLOCKING_ERROR = 1;
+#                 VS_VAR_ERR_MESSAGE = 'Rejected Data : Entity Rate is empty for ' | VS_DAT_LEGAL | ' on Period ' | VS_DAT_PERIOD | ' (line ' | NumberT
+#oString( VN_VAR_RECORD_READ ) | ')';
+#
+#		# -- BTA 25/10/2016 : Update the message for clearer instruction
+#		VS_VAR_ERR_TECH_MESSAGE = 'Rejected Data : Entity rate is empty for ' | VS_DAT_LEGAL_Keep_Old_value | ' (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+#
+#		VS_VAR_ERR_FUNCT_MESSAGE =  'Entity Rate is empty for ' | VS_DAT_LEGAL_Keep_Old_value | ' on Period ' | VS_DAT_PERIOD |  '. The line ' | NumberToString( VN_VAR_RECORD_READ ) | ' is not loaded in Tango.' ;
+#
+#		VS_VAR_ERR_INSTRUCTION_MESSAGE =  'If this entity is consolidated, please contact Tango support.' ;
+#            
+#				#VN_VAR_RECORD_LOADED = VN_VAR_RECORD_LOADED + 1;
+#             endif;
+#         
+#         #endregion
+#         
+#         endif;
+         
+         
+         if( VN_VAR_BLOCKING_ERROR = 0 );
+         
+         #region Target Control
+         
+             if( CellIsUpdateAble( VS_CUB_PL , VS_DAT_ACTIVITY , VS_ELE_CURRENCY_LOCAL , VS_DAT_GAAP , VS_DAT_LEGAL , VS_DAT_MANAGEMENT , VS_DAT_PERIO
+D , VS_DAT_PHASE , VS_DAT_MEASURE ) = 0 );
+             
+                 #-- Crossing is not writable * Due to tests and default/reject value, crossing maybe different from datasource 
+                 #  --> write crossing in the Reject Cube message
+                 #-- Only one reject message can be logged --> keep blocking control message but count only one reject
+                 if( VS_VAR_ERR_MESSAGE @= '' );
+                     VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                 endif;
+                 VN_VAR_BLOCKING_ERROR = 1;
+                 VS_VAR_ERR_MESSAGE = 'Rejected Data : Crossing of ' | VS_CUB_PL | ' cube ' | VS_DAT_ACTIVITY | ', ' | VS_ELE_CURRENCY_LOCAL | ', ' | 
+VS_DAT_GAAP | ', ' | VS_DAT_LEGAL | ', ' | VS_DAT_MANAGEMENT | ', ' | VS_DAT_PERIOD | ', ' | VS_DAT_PHASE | ', ' | VS_DAT_MEASURE |' is not updatable 
+(line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+             
+             endif;
+             
+             if( VS_ELE_MEASURE_TYPE @= VS_ELE_MEASURE_PL );
+             
+                 if( CellIsUpdateAble( VS_CUB_PARTNER , VS_ELE_INTEGRATION_RATE_NO_APP , VS_DAT_ACTIVITY , VS_ELE_CURRENCY_LOCAL , VS_DAT_GAAP , VS_DA
+T_LEGAL , VS_DAT_MANAGEMENT , VS_DAT_PARTNER , VS_DAT_PERIOD , VS_DAT_PHASE , VS_DAT_MEASURE ) = 0 );
+             
+                     #-- Crossing is not writable * Due to tests and default/reject value, crossing maybe different from datasource
+                     # --> write crossing  in the Reject Cube message
+                     #-- Only one reject message can be logged --> keep blocking control message but count only one reject
+                     if( VS_VAR_ERR_MESSAGE @= '' );
+                         VN_VAR_RECORD_REJECTED = VN_VAR_RECORD_REJECTED + 1;
+                     endif;
+                     VN_VAR_BLOCKING_ERROR = 1;
+                     VS_VAR_ERR_MESSAGE = 'Rejected Data : Crossing of ' | VS_CUB_PARTNER | ' cube ' | VS_ELE_INTEGRATION_RATE_NO_APP | ', ' | VS_DAT_
+ACTIVITY | ', ' | VS_ELE_CURRENCY_LOCAL | ', ' | VS_DAT_GAAP | ', ' | VS_DAT_LEGAL | ', ' | VS_DAT_MANAGEMENT | ', ' | VS_DAT_PARTNER | ', ' | VS_DAT_
+PERIOD | ', ' | VS_DAT_PHASE | ', ' | VS_DAT_MEASURE |' is not updatable (line ' | NumberToString( VN_VAR_RECORD_READ ) | ')';
+                 
+                 endif;
+             
+             endif;
+         
+         #endregion
+         
+         endif;
+         
+         if( VS_VAR_ERR_MESSAGE @<> '' );
+         
+             CellPutS( VS_VAR_ERR_MESSAGE , VS_CUB_REJECT , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , 'l' | NumberToString( VN_VAR
+_RECORD_REJECTED ) , VS_ELE_PERIOD_LOG , VS_ELE_PHASE  , VS_ELE_Z_PROCESS_REJECT_MESSAGE );
+             CellPutS( VS_VAR_ERR_RECORD , VS_CUB_REJECT , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , 'l' | NumberToString( VN_VAR_
+RECORD_REJECTED ) , VS_ELE_PERIOD_LOG , VS_ELE_PHASE  , VS_ELE_Z_PROCESS_REJECT_RECORD );
+
+	# -- BTA 25/10/2016 - Update for clear message to end users
+	CellPutS( VS_VAR_ERR_TECH_MESSAGE , VS_CUB_REJECT , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , 'l' | NumberToString( VN_VAR
+_RECORD_REJECTED ) , VS_ELE_PERIOD_LOG , VS_ELE_PHASE  , 'Technical_Message'  );
+
+	CellPutS( VS_VAR_ERR_FUNCT_MESSAGE , VS_CUB_REJECT , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , 'l' | NumberToString( VN_VAR
+_RECORD_REJECTED ) , VS_ELE_PERIOD_LOG , VS_ELE_PHASE  , 'Functional_Message');	
+
+	CellPutS( VS_VAR_ERR_INSTRUCTION_MESSAGE , VS_CUB_REJECT , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , 'l' | NumberToString( VN_VAR
+_RECORD_REJECTED ) , VS_ELE_PERIOD_LOG , VS_ELE_PHASE  , 'Instruction_to_Resolve_the_issue'  );
+
+
+         endif;
+         
+         if( VN_VAR_BLOCKING_ERROR = 1 );
+         
+             if( VN_VAR_RECORD_READ = 1 ); 
+				
+				ItemReject(VS_VAR_ERR_MESSAGE);
+				#ProcessQuit;
+				
+             else; 
+				ItemSkip;
+             endif;
+         
+         endif;
+         
+         if( VN_VAR_RECORD_READ = 1 );
+         
+             ExecuteProcess( VS_PRO_PURGE_DL_ST 
+                           , 'Cube_Name' , VS_CUB_PL 
+                           , 'Cube_View' , VS_VAR_PL_CLEAR  
+                           );
+             
+             if( VS_ELE_MEASURE_TYPE @= VS_ELE_MEASURE_PL );
+             
+                 ExecuteProcess( VS_PRO_PURGE_DL_ST 
+                               , 'Cube_Name' , VS_CUB_PARTNER 
+                               , 'Cube_View' , VS_VAR_PARTNER_CLEAR  
+                               );
+             
+             endif;
+         
+         endif;
+     
+     #endregion
+     
+     #region Data feeding
+     
+         VN_VAR_CUB_VAL = CellGetN ( VS_CUB_PL , VS_DAT_ACTIVITY , VS_ELE_CURRENCY_LOCAL , VS_DAT_GAAP , VS_DAT_LEGAL , VS_DAT_MANAGEMENT , VS_DAT_PER
+IOD , VS_DAT_PHASE , VS_DAT_MEASURE );
+         CellPutN ( VN_DAT_VALUE + VN_VAR_CUB_VAL , VS_CUB_PL , VS_DAT_ACTIVITY , VS_ELE_CURRENCY_LOCAL , VS_DAT_GAAP , VS_DAT_LEGAL , VS_DAT_MANAGEME
+NT , VS_DAT_PERIOD , VS_DAT_PHASE , VS_DAT_MEASURE );
+         
+         if( VS_ELE_MEASURE_TYPE @= VS_ELE_MEASURE_PL );
+         
+             VN_VAR_CUB_VAL = CellGetN ( VS_CUB_PARTNER , VS_ELE_INTEGRATION_RATE_NO_APP , VS_DAT_ACTIVITY , VS_ELE_CURRENCY_LOCAL , VS_DAT_GAAP , VS_
+DAT_LEGAL , VS_DAT_MANAGEMENT , VS_DAT_PARTNER , VS_DAT_PERIOD , VS_DAT_PHASE , VS_DAT_MEASURE );
+             CellPutN ( VN_DAT_VALUE + VN_VAR_CUB_VAL , VS_CUB_PARTNER , VS_ELE_INTEGRATION_RATE_NO_APP , VS_DAT_ACTIVITY , VS_ELE_CURRENCY_LOCAL , VS
+_DAT_GAAP , VS_DAT_LEGAL , VS_DAT_MANAGEMENT , VS_DAT_PARTNER , VS_DAT_PERIOD , VS_DAT_PHASE , VS_DAT_MEASURE );
+             
+## /!\ WARNING /!\ Region interco Elimination
+## YAD addition to Manage Interco Eliminationin the process for the ST_Partner_YTD cube // 18 03 2015
+
+ if(VS_DAT_PARTNER @<>'S9999' &  VS_DAT_PARTNER @<> 'Other_VE_entities' & VS_DAT_PARTNER @<> 'SU9999');
+# if(VS_DAT_PARTNER @<>'S9999' &  VS_DAT_PARTNER @<> 'Other_VE_entities' & VS_DAT_GAAP @='Local_Gaap_Mgmt_Tool' & PS_MEASURE_TYPE@='P&L');
+
+         VN_VAR_CUB_VAL_ELIM = CellGetN ( VS_CUB_PARTNER , VS_ELE_INTEGRATION_RATE_NO_APP , VS_DAT_ACTIVITY , VS_ELE_CURRENCY_LOCAL , VS_ELE_GAAP_PART
+NER_ELIM , VS_DAT_LEGAL , VS_DAT_MANAGEMENT , VS_DAT_PARTNER , VS_DAT_PERIOD , VS_DAT_PHASE , VS_DAT_MEASURE );
+  CellPutN ( (((-1)*VN_DAT_VALUE )+ VN_VAR_CUB_VAL_ELIM), VS_CUB_PARTNER , VS_ELE_INTEGRATION_RATE_NO_APP , VS_DAT_ACTIVITY , VS_ELE_CURRENCY_LOCAL , 
+VS_ELE_GAAP_PARTNER_ELIM , VS_DAT_LEGAL , VS_DAT_MANAGEMENT , VS_DAT_PARTNER , VS_DAT_PERIOD , VS_DAT_PHASE , VS_DAT_MEASURE );
+         
+ endif;
+## YAD Interco Elimination  ST_Partner_YTD cube // 18 03 2015 
+##/!\ WARNING /!\ End region interco Elimination
+
+         endif;
+         
+         if( VS_DAT_LEGAL @<> VS_ELE_LEGAL_REJECT
+           & VS_DAT_MANAGEMENT @<> VS_ELE_MANAGEMENT_REJECT
+           & VS_DAT_ACTIVITY @<> VS_ELE_ACTIVITY_REJECT
+           & VS_DAT_MEASURE @<> VS_ELE_MEASURE_REJECT
+           );
+           
+           VN_VAR_RECORD_LOADED = VN_VAR_RECORD_LOADED + 1;
+           
+         endif;
+     
+     #endregion
+
+#endregion
+
+######################
+### DATA : END
+######################
+
+TextOutput( GetProcessName() | '.txt', 'End: ' | TIMST( NOW , '\Y-\M-\D \h:\i:\s' ) );
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+######################
+### EPILOG : BEGIN
+######################
+
+# -- Traitement des rejets liés à l'abscence de fichiers
+IF( vTampon = 1);
+
+	VS_VAR_ERR_MESSAGE = 'The file' | VS_VAR_DATA_FILE_PATH | ' cannot be found.';
+	VS_VAR_ERR_INSTRUCTION_MESSAGE = 'Please send the file ' | VS_VAR_DATA_FILE_PATH | ' to Tango Core Model after checking its name';
+
+                CellPutS( VS_VAR_ERR_MESSAGE , VS_CUB_REJECT , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , 'l' | NumberToString( VN_VAR_RECORD_REJECTED+1 ) , VS_ELE_PERIOD_LOG , VS_ELE_PHASE  , VS_ELE_Z_PROCESS_REJECT_MESSAGE );
+	CellPutS( VS_VAR_ERR_INSTRUCTION_MESSAGE , VS_CUB_REJECT , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , 'l' | NumberToString( VN_VAR_RECORD_REJECTED+1 ) , VS_ELE_PERIOD_LOG , VS_ELE_PHASE  , 'Instruction_to_Resolve_the_issue'  );
+
+	ItemReject(  VS_VAR_DATA_FILE_PATH | ' cannot be found.' );
+ENDIF;
+
+#region Epilog
+
+CubeSetLogChanges( VS_CUB_PL , 1 );
+CubeSetLogChanges( VS_CUB_PARTNER , 1 );
+
+#region Clear Views
+
+    ViewDestroy( VS_CUB_PL , VS_VAR_PL_CLEAR );
+    SubsetDestroy( VS_DIM_PHASE , VS_VAR_PL_CLEAR );
+    SubsetDestroy( VS_DIM_LEGAL , VS_VAR_PL_CLEAR );
+    SubsetDestroy( VS_DIM_MEASURE , VS_VAR_PL_CLEAR );
+    SubsetDestroy( VS_DIM_PERIOD_YTD , VS_VAR_PL_CLEAR );
+    
+    if( VS_ELE_MEASURE_TYPE @= VS_ELE_MEASURE_PL );
+    
+         ViewDestroy( VS_CUB_PARTNER , VS_VAR_PARTNER_CLEAR );
+         SubsetDestroy( VS_DIM_PHASE , VS_VAR_PARTNER_CLEAR );
+         SubsetDestroy( VS_DIM_LEGAL , VS_VAR_PARTNER_CLEAR );
+         SubsetDestroy( VS_DIM_MEASURE , VS_VAR_PARTNER_CLEAR );
+         SubsetDestroy( VS_DIM_PERIOD_YTD , VS_VAR_PARTNER_CLEAR );
+    
+    endif;
+
+#endregion
+
+VS_VAR_LOADING_END_DATETIME = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+
+#region Process Detail by Period & Phase
+
+     CellPutS( VS_VAR_LOADING_START_DATETIME , VS_CUB_PROCESS_DETAIL_PP , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , VS_ELE_PERIOD_
+LOG , VS_ELE_PHASE , 'Start_Date' );
+     CellPutS( VS_VAR_LOADING_END_DATETIME , VS_CUB_PROCESS_DETAIL_PP , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , VS_ELE_PERIOD_LO
+G , VS_ELE_PHASE , 'End_Date' );
+     CellPutS( NumberToString(VN_VAR_RECORD_READ) , VS_CUB_PROCESS_DETAIL_PP , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , VS_ELE_PE
+RIOD_LOG , VS_ELE_PHASE , 'Nb_Input_Records' );
+     CellPutS( NumberToString(VN_VAR_RECORD_REJECTED) , VS_CUB_PROCESS_DETAIL_PP , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , VS_EL
+E_PERIOD_LOG , VS_ELE_PHASE , 'Nb_Reject_Records' );
+     CellPutS( NumberToString(VN_VAR_RECORD_LOADED) , VS_CUB_PROCESS_DETAIL_PP , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , VS_ELE_
+PERIOD_LOG , VS_ELE_PHASE , 'Nb_Load_Records' );
+
+     
+     if( VN_VAR_RECORD_READ = VN_VAR_RECORD_LOADED );
+     
+         CellPutS( 'OK' , VS_CUB_PROCESS_DETAIL_PP , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , VS_ELE_PERIOD_LOG , VS_ELE_PHASE , 
+'Status' );
+     
+     else;
+     
+         CellPutS( 'KO' , VS_CUB_PROCESS_DETAIL_PP , VS_ELE_CHORE_NAME , VS_PRO_NAME , VS_VAR_LOADING_START_DATE , VS_ELE_PERIOD_LOG , VS_ELE_PHASE , 
+'Status' );
+     
+     endif;
+
+#endregion
+
+#region Datasource file archiving
+
+    ExecuteProcess( VS_PRO_FILE_TRANSFER 
+                , 'zFile' , VS_VAR_DATA_FILE_NAME_BASE 
+                , 'zAnnee' , TIMST( NOW ,'\Y') 
+                , 'zMois' , TIMST( NOW ,'\m') 
+                );
+
+#endregion
+
+#endregion
+
+IF (VN_VAR_RECORD_REJECTED >0);
+	ItemReject('Elements rejected please check cubes : "zz_process_detail_cpp" and "zz_process_reject_cpp"');
+	ProcessError();
+ENDIF;
+
+
+######################
+### EPILOG : END
+######################
+#endregion

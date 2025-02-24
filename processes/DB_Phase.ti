@@ -1,0 +1,170 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - build dimension Phase
+# Created by : FBU & LTH
+# Created at : 11/07/2011
+# Modified by : LTH
+# Modified at : 11/07/2011
+# Modify reason :
+# Modified by : FBU
+# Modified at : 01/12/2011
+# Modify reason : Ajout de la création d'une dimension avec tous les éléments au niveau 0
+# Modified by : BTA
+# Modified at : 21/11/2016
+# Modify reason : Suppression des langues German, Dutch et Portuguese
+#########################################
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+ExecuteProcess('DB_zz_Date_Time_loading');
+pCountry=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+zDim ='Phase';
+
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+DataSourceNameForServer = Source_File;
+
+
+#DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+ATTRDELETE( zDim , 'German' );
+#ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+ATTRDELETE( zDim , 'Dutch' );
+#ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+ATTRDELETE( zDim , 'Portuguese' );
+#ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+
+#-- Type
+ATTRDELETE( zDim , 'Type' );
+ATTRINSERT( zDim , '' , 'Type' , 'S' );
+
+
+
+############################################
+#-- Dimension Phase_Leaf
+############################################
+
+#DIMENSIONDELETEALLELEMENTS( zDim2 );
+#DIMENSIONSORTORDER( zDim2 ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+#ATTRDELETE( zDim2 , 'English' );
+#ATTRINSERT( zDim2 , '' , 'English' , 'A' );
+
+#ATTRDELETE( zDim2 , 'French' );
+#ATTRINSERT( zDim2 , '' , 'French' , 'A' );
+
+#ATTRDELETE( zDim2 , 'Type' );
+#ATTRINSERT( zDim2 , '' , 'Type' , 'S' );
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( Level_0 @= '' );
+
+          DIMENSIONELEMENTINSERT( zDim ,'',Level_1,'n');
+
+ELSE;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_0,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_1,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_1,Level_0, Ponderation);
+
+ENDIF;
+
+
+
+############################################
+#-- Dimension Phase_Leaf
+############################################
+
+#DIMENSIONELEMENTINSERT( zDim2 ,'',Level_0,'n');
+#DIMENSIONELEMENTINSERT( zDim2 ,'',Level_1,'n');
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( Level_0 @= '' );
+
+       ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+       ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+       ATTRPUTS( Type, zDim , Level_1 , 'Type');
+
+ELSE;
+
+       ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+       ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+       ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+       ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+       ATTRPUTS( Type, zDim , Level_0 , 'Type');
+
+ENDIF;
+
+
+############################################
+#-- Dimension Phase_Leaf
+############################################
+
+#IF( Level_0 @<> '' );
+#       ATTRPUTS( Desc_English_0 , zDim2 , Level_0 , 'English' );
+#       ATTRPUTS( Desc_French_0 , zDim2 , Level_0 , 'French' );
+#ENDIF;
+
+#IF( Level_1 @<> '' );
+#       ATTRPUTS( Desc_English_1 , zDim2 , Level_1 , 'English' );
+#       ATTRPUTS( Desc_French_1 , zDim2 , Level_1 , 'French' );
+#ENDIF;
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zDim );
+
+if (pCountry @<>'CM');
+  zProcess = 'DB_' | zDim;
+  zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+  zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+  pChore='Task2_CO_Load_Common_Dimension_' | pCountry;
+  pProcess_source='CORE_MODEL';
+
+  CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry,pProcess_source ,  'Start_date'); 
+  CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,pProcess_source, 'End_date');
+  CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,pProcess_source,   'Status');
+endif;
+
+#-- Load Security
+ExecuteProcess( 'Import_CM_Security_Phase');
+
+SecurityRefresh;
+#endregion

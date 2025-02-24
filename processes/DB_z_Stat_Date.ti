@@ -1,0 +1,164 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+
+
+
+
+
+
+#-- Dimension utilisateur source et cible
+vDim = 'z_Stat_Date' ;
+
+#-- Si la dimension n'existe pas, on la crée
+IF(DimensionExists( vDim ) = 0 ) ;
+   DimensionCreate( vDim ) ;
+ENDIF;
+
+#DimensionDeleteAllelements( vDim ) ;
+
+#AttrDelete( vDim , 'Code' ) ;
+#AttrInsert( vDim , '' , 'Code' , 'A' ) ;
+#AttrDelete( vDim , 'Libelle' ) ;
+#AttrInsert( vDim , '' , 'Libelle' , 'A' ) ;
+#AttrDelete( vDim , 'Libelle_Court' ) ;
+#AttrInsert( vDim , '' , 'Libelle_Court' , 'A' ) ;
+
+#AttrDelete( vDim , 'Annee' ) ;
+#AttrInsert( vDim , '' , 'Annee' , 'S' ) ;
+#AttrDelete( vDim , 'Cumul' ) ;
+#AttrInsert( vDim , '' , 'Cumul' , 'S' ) ;
+#AttrDelete( vDim , 'Nb_Mois' ) ;
+#AttrInsert( vDim , '' , 'Nb_Mois' , 'N' ) ;
+#AttrDelete( vDim , 'Jour' ) ;
+#AttrInsert( vDim , '' , 'Jour' , 'N' ) ;
+#AttrDelete( vDim , 'Jour_Txt' ) ;
+#AttrInsert( vDim , '' , 'Jour_Txt' , 'S' ) ;
+#AttrDelete( vDim , 'EstOuvrable' ) ;
+#AttrInsert( vDim , '' , 'EstOuvrable' , 'S' ) ;
+#AttrDelete( vDim , 'Nb_Jour_Ouvrable' ) ;
+#AttrInsert( vDim , '' , 'Nb_Jour_Ouvrable' , 'N' ) ;
+#AttrDelete( vDim , 'Periode_Precedente' ) ;
+#AttrInsert( vDim , '' , 'Periode_Precedente' , 'S' ) ;
+#AttrDelete( vDim , 'Periode_Suivante' ) ;
+#AttrInsert( vDim , '' , 'Periode_Suivante' , 'S' ) ;
+
+#-- Trie la dimension
+DimensionSortOrder( vDim , 'ByInput' , 'Ascending' , 'ByHierarchy' , 'Ascending' ) ;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+DimensionElementInsert( vDim , '' , vDate , 'n' ) ;
+
+IF( LONG( vMois ) = 1 ) ;
+     vMois_Ret = '0' | SUBST( vMois , 1 , 1 ) ;
+ELSE ;
+     vMois_Ret = SUBST( vMois , 1 , 2 ) ;
+ENDIF ;
+
+IF( vMois_Ret @<> '01' ) ;
+     vMois_Ret_Prec =  NumberToString( NUMBR( vMois_Ret ) - 1 ) ;
+     IF( LONG( vMois_Ret_Prec ) = 1 ) ;
+          vMois_Ret_Prec2 = '0' | SUBST( vMois_Ret_Prec , 1 , 1 ) ;
+     ELSE ;
+          vMois_Ret_Prec2 = SUBST( vMois_Ret_Prec , 1 , 2 ) ;
+     ENDIF ;
+ENDIF ;
+
+DimensionElementInsert( vDim , '' , vAnnee | '.' | vMois_Ret , 'c' ) ;
+DimensionElementComponentAdd( vDim , vAnnee | '.' | vMois_Ret , vDate , 1 ) ;
+DimensionElementInsert( vDim , '' , vAnnee , 'c' ) ;
+DimensionElementComponentAdd( vDim , vAnnee , vAnnee | '.' | vMois_Ret , 1 ) ;
+
+
+
+#-- Hiérarchie Cumul
+
+DimensionElementInsert( vDim , '' , vAnnee | '.' | vMois_Ret | '_Cumul' , 'c' ) ;
+DimensionElementInsert( vDim , '' , vAnnee | '_Cumul' , 'c' ) ;
+
+DimensionElementComponentAdd( vDim , vAnnee | '_Cumul' , vAnnee | '.' | vMois_Ret | '_Cumul' , 0 ) ;
+DimensionElementComponentAdd( vDim , vAnnee  | '.' | vMois_Ret | '_Cumul' , vAnnee  | '.' | vMois_Ret , 1 ) ;
+
+IF( vMois @= '1' ) ;
+     DimensionElementComponentAdd( vDim , vAnnee  | '.' | vMois_Ret | '_Cumul' , vAnnee  | '.' | vMois_Ret , 1 ) ;
+ELSE ;
+     DimensionElementComponentAdd( vDim , vAnnee  | '.' | vMois_Ret | '_Cumul' , vAnnee  | '.' | vMois_Ret , 1 ) ;
+     DimensionElementComponentAdd( vDim , vAnnee  | '.' | vMois_Ret | '_Cumul' , vAnnee  | '.' | vMois_Ret_Prec2 | '_Cumul' , 1 ) ;
+ENDIF ;
+
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( LONG( vMois ) = 1 ) ;
+     vMois_Ret = '0' | SUBST( vMois , 1 , 1 ) ;
+ELSE ;
+     vMois_Ret = SUBST( vMois , 1 , 2 ) ;
+ENDIF ;
+
+IF( LONG( vJour) = 1 ) ;
+     vJour_Ret = '0' | SUBST( vJour, 1 , 1 ) ;
+ELSE ;
+     vJour_Ret = SUBST( vJour, 1 , 2 ) ;
+ENDIF ;
+
+
+ATTRPUTS( vDate , vDim , vDate , 'Code' ) ;
+ATTRPUTS( vJour_Text | ' ' | vJour_Ret | ' ' | vMois_Text | ' ' | vAnnee , vDim , vDate , 'Libelle' ) ;
+ATTRPUTS( vJour_Ret | ' ' | vMois_Court | ' ' | SUBST( vAnnee , 3 , 2 ) , vDim , vDate , 'Libelle_Court' ) ;
+
+ATTRPUTS( vAnnee , vDim , vDate , 'Annee' ) ;
+
+ATTRPUTS( vAnnee | '.' | vMois_Ret | '_Cumul' , vDim ,  vAnnee | '.' | vMois_Ret , 'Cumul' ) ;
+
+ATTRPUTN( NUMBR( vJour ) , vDim , vDate , 'Nb_Mois' ) ;
+
+ATTRPUTN( vJour_Num , vDim , vDate , 'Jour' ) ;
+
+ATTRPUTS( vJour_Text , vDim , vDate , 'Jour_Txt' ) ;
+
+ATTRPUTS( vEstOuvrable , vDim , vDate , 'EstOuvrable' ) ;
+
+ATTRPUTN( vJour_Ouvr_Num , vDim , vAnnee | '.' | vMois_Ret , 'Nb_Jour_Ouvrable' ) ;
+
+IF( Periode_Precedente @<>'' ) ;
+     ATTRPUTS( Periode_Precedente , vDim , vDate , 'Periode_Precedente' ) ;
+     ATTRPUTS( SUBST( ATTRS( vDim , SUBST( Periode_Precedente , 1 , 8 ) | '01' , 'Periode_Precedente' ) , 1 , 4 ) | '.' | SUBST( ATTRS( vDim , SUBST( 
+Periode_Precedente , 1 , 8 ) | '01' , 'Periode_Precedente' ) , 6 , 2 ) , vDim , vAnnee | '.' | vMois_Ret , 'Periode_Precedente' ) ;
+ENDIF ;
+IF( Periode_Suivante @<>'' ) ;
+     ATTRPUTS( Periode_Suivante , vDim , vDate , 'Periode_Suivante' ) ;
+     ATTRPUTS( SUBST( Periode_Suivante , 1 , 4 ) | '.' | SUBST( Periode_Suivante , 6 , 2 ) , vDim , vAnnee | '.' | vMois_Ret , 'Periode_Suivante' ) ;
+ENDIF ;
+
+
+ATTRPUTS( 'Cumul à date ' | vMois_Text | ' ' | vAnnee , vDim , vAnnee | '.' | vMois_Ret | '_Cumul' , 'Libelle' ) ;
+ATTRPUTS( 'Cumul à date ' | vAnnee , vDim , vAnnee | '_Cumul' , 'Libelle' ) ;
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

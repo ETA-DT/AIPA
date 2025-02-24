@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_indicator_PL_NL_EXACT",
+	"Hierarchies@Code.links":
+	[
+		"z_indicator_PL_NL_EXACT.hierarchies/z_indicator_PL_NL_EXACT.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_indicator_PL_NL_EXACT')/Hierarchies('z_indicator_PL_NL_EXACT')"
+	}
+}

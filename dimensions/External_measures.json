@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"External_measures",
+	"Hierarchies@Code.links":
+	[
+		"External_measures.hierarchies/External_measures.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('External_measures')/Hierarchies('External_measures')"
+	}
+}

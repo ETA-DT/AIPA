@@ -1,0 +1,21 @@
+{
+	"@type":"Process",
+	"Name":"}Attachments_Extender",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"}Attachments_Extender.ti",
+	"UIData":"CubeAction=1511\tDataAction=1503\tCubeLogChanges=0\t",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pMaxAttachments",
+			"Prompt":"Maximum Attachments Allowed",
+			"Value":10,
+			"Type":"Numeric"
+		}
+	],
+	"Variables":[]
+}

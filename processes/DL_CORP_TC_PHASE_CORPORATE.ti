@@ -1,0 +1,177 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#################################################################################
+# Project : Tango - Chargement des donées dans le cube TC_IND_PL_CODA
+# Created by : MBO
+# Created at : 19/01/2012
+# Modified by : 
+# Modified at : 
+# Modify reason :
+#################################################################################
+
+
+################### Cubes ###################
+zCube = 'TC_PHASE_CORPORATE';
+CubeSetLogChanges(zCube, 0);
+zCube_Reject = 'ZZ_PROCESS_REJECT';
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+
+################### Initialisation des compteurs ###################
+Nb_Lign = 0;
+Nb_Reject = 0;
+Nb_Load = 0;
+
+################### Ficher source ###################
+zSource = 'Phase_Mapping_VTD_VECTOR';
+zProcess = 'DL_CORP_TC_PHASE_CORPORATE';
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_DATA' , 'STR_VAR1') | '\' |  zsource | '.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     CubeSetLogChanges(zCube, 1);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+
+################### Paramètres ###################
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_CORPORATE' , 'STR_VAR1');
+
+
+################### MAJ de la dimension date ###################
+ExecuteProcess('DB_zz_Date_Time_loading');
+
+
+#################################################################################
+#                                                               Purge du cube de rejet
+#################################################################################
+
+
+P_NAME_RAZ = zCube_Reject | '_RAZ';
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+ViewCreate( zCube_Reject , P_NAME_RAZ );
+
+
+###################  Création du subset  dans zz_Date_Time_loading ################### 
+
+IF( SubsetExists( 'zz_Date_Time_loading' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'zz_Date_Time_loading' , P_NAME_RAZ ,zDateLoadingStart , 1 );
+
+
+################### Création du subset  dans }Processes ################### 
+
+IF( SubsetExists( '}Processes' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( '}Processes' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( '}Processes' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( '}Processes' , P_NAME_RAZ , zProcess , 1 );
+
+
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , '}Processes', P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Date_Time_loading' , P_NAME_RAZ);
+
+###################  Nettoyage du cube ################### 
+ViewZeroOut( zCube_Reject , P_NAME_RAZ );
+
+###################  Suppression des subsets ################### 
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+SubsetDestroy( 'zz_Date_Time_loading' , P_NAME_RAZ );
+SubsetDestroy( '}Processes' , P_NAME_RAZ );
+
+
+
+
+#################################################################################
+#                                                               Purge du cube TC_PHASE_CORPORATE
+#################################################################################
+
+P_NAME_RAZ = zCube | '_RAZ';
+ViewDestroy( zCube , P_NAME_RAZ );
+ViewCreate( zCube , P_NAME_RAZ );
+
+#-- Clear cube
+ViewZeroOut( zCube , P_NAME_RAZ );
+
+#-- Delete subset
+ViewDestroy( zCube , P_NAME_RAZ );
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+Nb_Lign=Nb_Lign+1;
+
+#################################################################################
+#                                                   CHARGEMENT DANS LE CUBE TC_IND_PL_CODA
+#################################################################################
+
+
+CellPutS( vPhaseVector, zCube, vPhaseCorp,vPeriodCorp , 'STR_VAR1');
+CellPutS( vExerciceVector, zCube, vPhaseCorp,vPeriodCorp ,'STR_VAR2');
+CellPutS( vPeriodVector, zCube,vPhaseCorp,vPeriodCorp , 'STR_VAR3');
+
+Nb_Load = Nb_Load + 1;
+
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+CubeSetLogChanges(zCube, 1);
+#-- Copy the file data in historical directory
+ExecuteProcess( 'z_Tools_Data_Transfert' , 'zFile' , zsource , 'zAnnee' , SUBST( pPeriod , 1 , 4 ) , 'zMois' , SUBST( pPeriod , 6 , 2 )  );
+
+
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+#################################################################################
+#                                                                             DETAIL PROCESS SECTION
+#################################################################################
+
+CellPutS(zDateTimeLoadingStart , zCube_Process, zProcess ,zDateLoadingStart , 'Start_date');
+CellPutS(zDateTimeLoadingEnd , zCube_Process, zProcess ,zDateLoadingStart  , 'End_date');
+CellPutS(numbertostring(nb_lign) , zCube_Process, zProcess ,zDateLoadingStart  , 'Nb_Input_records');
+CellPutS(numbertostring(nb_reject) , zCube_Process, zProcess ,zDateLoadingStart  , 'Nb_reject_records');
+CellPutS(numbertostring(nb_load) , zCube_Process, zProcess ,zDateLoadingStart , 'Nb_load_records');
+
+IF(nb_lign = nb_load);
+    CellPutS('OK' , zCube_Process, zProcess ,zDateLoadingStart , 'Status');
+else;
+    CellPutS('KO' , zCube_Process, zProcess ,zDateLoadingStart , 'Status');
+    ItemReject( ' Process exited with errors at ' | TIME |  ' on ' | TODAY | '=> Check cubes : zz_Process_Detail and  zz_Process_Reject' );
+endif;
+
+#################################################################################
+#                                                                             END PROCESS
+#################################################################################
+#endregion

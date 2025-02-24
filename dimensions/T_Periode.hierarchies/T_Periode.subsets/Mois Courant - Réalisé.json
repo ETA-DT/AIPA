@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"Mois Courant - Réalisé",
+	"Expression":"{TM1FILTERBYPATTERN({TM1SUBSETALL([T_Periode])}, [z_admin_param].([z_admin_param].[mois_courant],[z_valeur].[STR_VAR1]))} "
+}

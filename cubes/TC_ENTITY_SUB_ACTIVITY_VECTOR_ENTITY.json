@@ -1,0 +1,17 @@
+{
+	"@type":"Cube",
+	"Name":"TC_ENTITY_SUB_ACTIVITY_VECTOR_ENTITY",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_Vector_Entity')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"TC_ENTITY_SUB_ACTIVITY_VECTOR_ENTITY.views/Default.json"
+	]
+}

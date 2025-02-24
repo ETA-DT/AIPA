@@ -1,0 +1,17 @@
+{
+	"@type":"Cube",
+	"Name":"TM1py_output",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('TM1py_Scripts')"
+		},
+		{
+			"@id":"Dimensions('TM1py_outputs')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"TM1py_output.views/TM1pyView.json"
+	]
+}

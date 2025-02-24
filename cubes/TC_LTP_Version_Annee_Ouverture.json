@@ -1,0 +1,20 @@
+{
+	"@type":"Cube",
+	"Name":"TC_LTP_Version_Annee_Ouverture",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('Period')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"TC_LTP_Version_Annee_Ouverture.views/Default.json"
+	]
+}

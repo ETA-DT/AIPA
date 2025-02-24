@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"DL_RP_PL_VECTOR_PL2225_FCF",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Currency')/Hierarchies('Currency')/Elements('eur')"
+		}
+	]
+}

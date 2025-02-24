@@ -1,0 +1,420 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+#Processus de copie ancienne UM vers nouvelle 
+# Créé par : RSJC
+# Créé le : 24/05/2016
+# Modifié par :
+# Modifié le :
+# Modification apportée :
+#########################################
+
+#-- Déclaration des variables
+zCube = 'RP_PL';
+
+#-- Suppression de la Consignation dans la log
+CubeSetLogChanges( zCube, 0 );
+
+
+###########################################
+#--------------------------- Création de la vue Source --------------------------#
+###########################################
+P_NAME_SOURCE = zCube | '_' | pPhase| '_' | pPeriod| '_Copie UM_Source_' |pUMSource;
+ViewDestroy( zCube, P_NAME_SOURCE );
+ViewCreate( zCube, P_NAME_SOURCE );
+
+#-- Affectation de la vue P_NAME_SOURCE à la source du processus
+DataSourceNameForServer = zCube;
+DataSourceCubeView = P_NAME_SOURCE;
+
+
+#-- Création du sous-ensemble Period
+IF( SubsetExists( 'Period' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_SOURCE );
+ENDIF;
+
+i=0;
+WHILE ( i < DIMSIZ( 'Period' ) +1);
+    ElemP = DIMNM ( 'Period' , i );
+    IF( ELLEV( 'Period' , ElemP) = 0 & ELISANC('Period', pPeriod, Elemp)=1);
+        SubsetElementInsert( 'Period' , P_NAME_SOURCE , ElemP , 1 ) ;
+    ENDIF;
+ i=i+1;
+END;
+  
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Period' , P_NAME_SOURCE );
+
+
+
+#-- Création du sous-ensemble Phase
+IF( SubsetExists( 'Phase' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_SOURCE );
+ENDIF;
+SubsetElementInsert( 'Phase' , P_NAME_SOURCE , pPhase , 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Phase' , P_NAME_SOURCE );
+
+
+#-- Création du sous-ensemble Activity
+IF( SubsetExists( 'Activity' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Activity' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Activity' , P_NAME_SOURCE );
+ENDIF;
+i=1;
+WHILE ( i < DIMSIZ( 'Activity' ) +1);
+    ElemP = DIMNM ( 'Activity' , i );
+    IF( ELLEV( 'Activity' , ElemP) = 0);
+        SubsetElementInsert( 'Activity' , P_NAME_SOURCE , ElemP , 1 ) ;
+    ENDIF;
+ i=i+1;
+END;
+
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Activity' , P_NAME_SOURCE );
+
+
+#-- Création du sous-ensemble Currency
+IF( SubsetExists( 'Currency' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Currency' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Currency' , P_NAME_SOURCE );
+ENDIF;
+SubsetElementInsert( 'Currency' , P_NAME_SOURCE , 'LCL' , 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Currency' , P_NAME_SOURCE );
+
+
+
+#-- Création du sous-ensemble Gaap
+IF( SubsetExists( 'Gaap' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Gaap' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Gaap' , P_NAME_SOURCE );
+ENDIF;
+i=1;
+WHILE( i < DIMSIZ( 'Gaap' ) + 1 ) ;
+    ElemP = DIMNM( 'Gaap' , i ) ;
+    IF( ELLEV( 'Gaap' , ElemP ) = 0);
+        SubsetElementInsert( 'Gaap' , P_NAME_SOURCE , ElemP , 1 ) ;
+    ENDIF;
+i=i+1;
+END;
+
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Gaap' , P_NAME_SOURCE );
+
+
+#-- Création du sous-ensemble Legal_Organization
+IF( SubsetExists( 'Legal_Organization' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Legal_Organization' , P_NAME_SOURCE );
+ENDIF;
+    SubsetElementInsert( 'Legal_Organization' , P_NAME_SOURCE , pEntity, 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Legal_Organization', P_NAME_SOURCE );
+
+
+#-- Création du sous-ensemble Management_Organization
+IF( SubsetExists( 'Management_Organization' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Management_Organization' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Management_Organization' , P_NAME_SOURCE );
+ENDIF;
+    SubsetElementInsert( 'Management_Organization' , P_NAME_SOURCE , pUMSource, 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Management_Organization', P_NAME_SOURCE );
+
+
+
+#-- Création du sous-ensemble Indicator
+IF( SubsetExists( 'Indicator' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Indicator' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Indicator' , P_NAME_SOURCE );
+ENDIF;
+i=1;
+WHILE( i < DIMSIZ( 'Indicator' ) + 1 ) ;
+    ElemP = DIMNM( 'Indicator' , i );
+    IF( ELLEV( 'Indicator' , ElemP ) = 0 & ATTRS('Indicator',ElemP, 'Source_indicator')  @<> 'calc'); 
+        SubsetElementInsert( 'Indicator' , P_NAME_SOURCE , ElemP , 1 ) ;
+    ENDIF;
+i=i+1;
+END;
+
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Indicator' , P_NAME_SOURCE );
+
+
+#-- Création du sous-ensemble Integration_Rate
+IF( SubsetExists( 'Integration_Rate' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Integration_Rate' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Integration_Rate' , P_NAME_SOURCE );
+ENDIF;
+SubsetElementInsert( 'Integration_Rate' , P_NAME_SOURCE , 'NO_APP' , 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Integration_Rate' , P_NAME_SOURCE );
+
+
+ViewSubsetAssign( zCube, P_NAME_SOURCE , 'Integration_Rate' , P_NAME_SOURCE );
+
+
+#-- Mise à jour des paramètres de la vue
+ViewExtractSkipZeroesSet ( zCube, P_NAME_SOURCE , 1 );
+ViewExtractSkipRuleValuesSet ( zCube, P_NAME_SOURCE , 1 );
+ViewExtractSkipCalcsSet ( zCube, P_NAME_SOURCE , 1 );
+
+
+###########################################
+#--------------------------- Création de la vue Cible --------------------------#
+###########################################
+
+P_NAME_CIBLE = zCube | '_' | pPhase| '_' | pPeriod| '_Copie UM_Cible_' |pUMCible;
+ViewDestroy( zCube, P_NAME_CIBLE );
+ViewCreate( zCube, P_NAME_CIBLE );
+
+
+#-- Création du sous-ensemble Period
+IF( SubsetExists( 'Period' , P_NAME_CIBLE ) =1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_CIBLE );
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_CIBLE );
+ENDIF;
+
+i=0;
+WHILE ( i < DIMSIZ( 'Period' ) +1);
+    ElemP = DIMNM ( 'Period' , i );
+    IF( ELLEV( 'Period' , ElemP) = 0 & ELISANC('Period', pPeriod, Elemp)=1);
+        SubsetElementInsert( 'Period' , P_NAME_CIBLE, ElemP , 1 ) ;
+    ENDIF;
+ i=i+1;
+END;
+  
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Period' , P_NAME_CIBLE);
+
+
+
+#-- Création du sous-ensemble Phase
+IF( SubsetExists( 'Phase' , P_NAME_CIBLE) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_CIBLE);
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_CIBLE);
+ENDIF;
+SubsetElementInsert( 'Phase' , P_NAME_CIBLE, pPhase , 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Phase' , P_NAME_CIBLE);
+
+
+#-- Création du sous-ensemble Activity
+IF( SubsetExists( 'Activity' , P_NAME_CIBLE) =1 );
+    SubsetDeleteAllElements( 'Activity' , P_NAME_CIBLE);
+ELSE;
+    SubsetCreate( 'Activity' , P_NAME_CIBLE);
+ENDIF;
+i=1;
+WHILE ( i < DIMSIZ( 'Activity' ) +1);
+    ElemP = DIMNM ( 'Activity' , i );
+    IF( ELLEV( 'Activity' , ElemP) = 0);
+        SubsetElementInsert( 'Activity' , P_NAME_CIBLE, ElemP, 1 ) ;
+    ENDIF;
+ i=i+1;
+END;
+
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Activity' , P_NAME_CIBLE);
+
+
+#-- Création du sous-ensemble Currency
+IF( SubsetExists( 'Currency' , P_NAME_CIBLE) =1 );
+    SubsetDeleteAllElements( 'Currency' , P_NAME_CIBLE);
+ELSE;
+    SubsetCreate( 'Currency' , P_NAME_CIBLE);
+ENDIF;
+SubsetElementInsert( 'Currency' , P_NAME_CIBLE, 'LCL' , 1 );
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Currency' , P_NAME_CIBLE);
+
+
+
+#-- Création du sous-ensemble Gaap
+IF( SubsetExists( 'Gaap' , P_NAME_CIBLE) =1 );
+    SubsetDeleteAllElements( 'Gaap' , P_NAME_CIBLE);
+ELSE;
+    SubsetCreate( 'Gaap' , P_NAME_CIBLE);
+ENDIF;
+i=1;
+WHILE( i < DIMSIZ( 'Gaap' ) + 1 ) ;
+    ElemP = DIMNM( 'Gaap' , i ) ;
+    IF( ELLEV( 'Gaap' , ElemP ) = 0);
+        SubsetElementInsert( 'Gaap' , P_NAME_CIBLE, ElemP , 1 ) ;
+    ENDIF;
+i=i+1;
+END;
+
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Gaap' , P_NAME_CIBLE);
+
+
+#-- Création du sous-ensemble Legal_Organization
+IF( SubsetExists( 'Legal_Organization' , P_NAME_CIBLE) =1 );
+    SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_CIBLE);
+ELSE;
+    SubsetCreate( 'Legal_Organization' , P_NAME_CIBLE);
+ENDIF;
+    SubsetElementInsert( 'Legal_Organization' , P_NAME_CIBLE, pEntity, 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Legal_Organization', P_NAME_CIBLE);
+
+
+#-- Création du sous-ensemble Management_Organization
+IF( SubsetExists( 'Management_Organization' , P_NAME_CIBLE) =1 );
+    SubsetDeleteAllElements( 'Management_Organization' , P_NAME_CIBLE);
+ELSE;
+    SubsetCreate( 'Management_Organization' , P_NAME_CIBLE );
+ENDIF;
+    SubsetElementInsert( 'Management_Organization' , P_NAME_CIBLE, pUMCible, 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Management_Organization', P_NAME_CIBLE);
+
+
+
+#-- Création du sous-ensemble Indicator
+IF( SubsetExists( 'Indicator' , P_NAME_CIBLE) =1 );
+    SubsetDeleteAllElements( 'Indicator' , P_NAME_CIBLE);
+ELSE;
+    SubsetCreate( 'Indicator' , P_NAME_CIBLE);
+ENDIF;
+i=1;
+WHILE( i < DIMSIZ( 'Indicator' ) + 1 ) ;
+    ElemP = DIMNM( 'Indicator' , i ) ;
+    IF( ELLEV( 'Indicator' , ElemP ) = 0 & ATTRS('Indicator',ElemP, 'Source_indicator')  @<> 'calc'); 
+        SubsetElementInsert( 'Indicator' , P_NAME_CIBLE, ElemP , 1 ) ;
+    ENDIF;
+i=i+1;
+END;
+
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Indicator' , P_NAME_CIBLE);
+
+
+#-- Création du sous-ensemble Integration_Rate
+IF( SubsetExists( 'Integration_Rate' , P_NAME_CIBLE) =1 );
+    SubsetDeleteAllElements( 'Integration_Rate' , P_NAME_CIBLE);
+ELSE;
+    SubsetCreate( 'Integration_Rate' , P_NAME_CIBLE);
+ENDIF;
+SubsetElementInsert( 'Integration_Rate' , P_NAME_CIBLE, 'NO_APP' , 1 ) ;
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Integration_Rate' , P_NAME_CIBLE);
+
+
+ViewSubsetAssign( zCube, P_NAME_CIBLE, 'Integration_Rate' , P_NAME_CIBLE);
+
+
+#-- Mise à jour des paramètres de la vue
+ViewExtractSkipZeroesSet ( zCube, P_NAME_CIBLE, 1 );
+ViewExtractSkipRuleValuesSet ( zCube, P_NAME_CIBLE, 1 );
+ViewExtractSkipCalcsSet ( zCube, P_NAME_CIBLE, 1 );
+
+IF (PCumul = 0);
+ViewZeroOut (zCube, P_NAME_Cible);
+ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+IF (PCumul = 0);
+
+#Copie données
+CellputN(Valeur, zcube, Activity, Currency, Gaap, Integration_Rate, Legal_Organization, pUMCible, Period, Phase, Indicator);
+
+#Mise à 0 de l'UM source
+CellputN(0, zcube, Activity, Currency, Gaap, Integration_Rate, Legal_Organization, pUMSource, Period, Phase, Indicator);
+
+
+ELSE;
+
+#Copie données
+  cumul = CellGetN(zcube, Activity, Currency, Gaap, Integration_Rate, Legal_Organization, pUMCible, Period, Phase, Indicator);
+  CellputN(Valeur+cumul, zcube, Activity, Currency, Gaap, Integration_Rate, Legal_Organization, pUMCible, Period, Phase, Indicator);
+
+#Mise à 0 de l'UM source 
+ CellputN(0, zcube, Activity, Currency, Gaap, Integration_Rate, Legal_Organization, pUMSource, Period, Phase, Indicator);
+
+ENDIF;
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#-- Suppression de la Consignation dans la log
+CubeSetLogChanges( zCube, 1);
+
+
+#Destruction de la vue source
+ViewDestroy( zCube , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Period
+SubsetDeleteAllElements( 'Period' , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Phase
+SubsetDeleteAllElements( 'Phase' , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Activity
+SubsetDeleteAllElements( 'Activity' , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Currency
+SubsetDeleteAllElements( 'Currency' , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Gaap
+SubsetDeleteAllElements( 'Gaap' , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Legal_Organization
+SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Management_Organization
+SubsetDeleteAllElements( 'Management_Organization' , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Integration_Rate
+SubsetDeleteAllElements( 'Integration_Rate' , P_NAME_SOURCE );
+
+#Destruction du sous-ensemble Indicator
+SubsetDeleteAllElements( 'Indicator' , P_NAME_SOURCE );
+
+
+
+
+
+#Destruction de la vue cible
+ViewDestroy( zCube, P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Period
+SubsetDeleteAllElements( 'Period' , P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Phase
+SubsetDeleteAllElements( 'Phase' , P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Activity
+SubsetDeleteAllElements( 'Activity' , P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Currency
+SubsetDeleteAllElements( 'Currency' , P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Gaap
+SubsetDeleteAllElements( 'Gaap' , P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Legal_Organization
+SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Management_Organization
+SubsetDeleteAllElements( 'Management_Organization' , P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Integration_Rate
+SubsetDeleteAllElements( 'Integration_Rate' , P_NAME_CIBLE);
+
+#Destruction du sous-ensemble Indicator
+SubsetDeleteAllElements( 'Indicator' , P_NAME_CIBLE);
+#endregion

@@ -1,0 +1,276 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Modified by : ANONE - BTA
+# Modified at : 19/11/2013
+# Modify reason : Control Parameters 
+
+# -- Bruno Taboument 
+# Modified at : 26/09/2016
+# Modify reason : Optimization due to data volume : Do not copy and paste the rules
+
+
+# -- MTA - Datatilt -
+# Modified at :  04/07/2022
+# Modify reason : add process to calcul taxes
+#########################################
+
+
+# BTA 19/11/2013 : Add Coherence Control 
+## --  Coherence Control on Phase 
+IF( Dimix( 'Phase', pPhase_Source ) = 0 & ELLEV('Phase', pPhase_Source) = 0 );
+  ItemReject('The variable pPhase_Source ' | pPhase_Source | ' does not exist in the dimension or it is a consolidation / La variable pPhase_Source ' 
+| pPhase_Source | ' n''existe pas dans la dimension ou il s''agit d''une consolidation');
+  ProcessQuit;
+ENDIF;
+
+IF( Dimix( 'Phase', pPhase_Target) = 0 & ELLEV('Phase', pPhase_Target) = 0 );
+  ItemReject('The variable pPhase_Target ' | pPhase_Target | ' does not exist in the dimension or it is a consolidation / La variable pPhase_Target ' 
+| pPhase_Target | ' n''existe pas dans la dimension ou il s''agit d''une consolidation');
+  ProcessQuit;
+ENDIF;
+
+IF( pPhase_Target @= pPhase_Source ); 
+  ItemReject('The variable Phase Source is equal to Phase Target! / La variable Phase Source est égale à la variable Phase Cible!');
+  ProcessQuit;
+ENDIF;
+
+## --  Coherence Control on Legal Organization 
+IF( Dimix( 'Legal_Organization', pLegal_Source ) = 0 );
+  ItemReject('The variable pLegal_Source ' | pLegal_Source | ' does not exist in the dimension / La variable pLegal_Source ' 
+| pLegal_Source | ' n''existe pas dans la dimension');
+  ProcessQuit;
+ENDIF;
+
+## --  Coherence Control on Activity 
+IF( Dimix( 'Activity', pActivity_Source ) = 0 );
+  ItemReject('The variable pActivity_Source ' | pActivity_Source | ' does not exist in the dimension / La variable pActivity_Source ' 
+| pActivity_Source | ' n''existe pas dans la dimension');
+  ProcessQuit;
+ENDIF;
+
+## --  Coherence Control on Period 
+IF( Dimix( 'Period', pPeriod_Source ) = 0 );
+  ItemReject('The variable pPeriod_Source ' | pPeriod_Source | ' does not exist in the dimension / La variable pPeriod_Source ' 
+| pPeriod_Source | ' n''existe pas dans la dimension');
+  ProcessQuit;
+ENDIF;
+
+
+## --  Coherence Control on Period Start
+IF( Dimix( 'Period', pPeriod_Source ) = 0 );
+  ItemReject('The variable pPeriod_Source ' | pPeriod_Source | ' does not exist in the dimension / La variable pPeriod_Source ' 
+| pPeriod_Source | ' n''existe pas dans la dimension');
+  ProcessQuit;
+ENDIF;
+
+## --  Coherence Control on Period End
+IF( Dimix( 'Period', pPeriod_End ) = 0 );
+  ItemReject('The variable pPeriod_End ' | pPeriod_End | ' does not exist in the dimension / La variable pPeriod_End ' 
+| pPeriod_End | ' n''existe pas dans la dimension');
+  ProcessQuit;
+ENDIF;
+
+## -- Control Coherence Start > Stop
+IF( StringToNumber(SUBST(pPeriod_Source, 8,4)) > StringToNumber(SUBST( pPeriod_End, 8,4)) );
+ItemReject('The start period is later than the End Period / La période de début est postérieure à la période de fin.');
+ProcessQuit;
+ENDIF;
+
+
+## --  Coherence Control on Indicator 
+IF( Dimix( 'Indicator_LTP', pType_Indicator ) = 0 & pType_Indicator @<> 'Saisie'  & pType_Indicator @<> 'ALL');
+  ItemReject('The variable pType_Indicator ' | pType_Indicator | ' does not exist in the dimension / La variable pType_Indicator ' 
+| pType_Indicator | ' n''existe pas dans la dimension');
+  ProcessQuit;
+ENDIF;
+
+#-- Variables
+zProcess = 'DL_Copy_LTP';
+zDateLoadingStart = TIMST( NOW , '\Y-\M-\D' );
+zDateTimeLoadingStart = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+
+zCube_Reject = 'ZZ_PROCESS_REJECT';
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+
+#################################################################################
+#                                                               Clear Reject Cube
+#################################################################################
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+P_NAME_RAZ = zCube_Reject | '_RAZ';
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+ViewCreate( zCube_Reject , P_NAME_RAZ );
+
+#-- Create subset in zz_Date_Time_loading and }Processes
+IF( SubsetExists( 'zz_Date_Time_loading' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ENDIF;
+
+IF( SubsetExists( '}Processes' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( '}Processes' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( '}Processes' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'zz_Date_Time_loading' , P_NAME_RAZ ,zDateLoadingStart , 1 );
+SubsetElementInsert( '}Processes' , P_NAME_RAZ , zProcess , 1 );
+
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Date_Time_loading' , P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , '}Processes', P_NAME_RAZ);
+
+#-- Clear cube
+ViewZeroOut( zCube_Reject , P_NAME_RAZ );
+
+#-- Delete subset
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+SubsetDestroy( 'zz_Date_Time_loading' , P_NAME_RAZ );
+SubsetDestroy( '}Processes' , P_NAME_RAZ );
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+#-- If the period does not exist in Period dimension, this process is rejected
+#IF( DIMIX( 'Period' , pPeriod_Source ) = 0);
+#   zError_message = 'Rejected Data : ' | pPeriod_Source | ' does not exist in dimension Period' ;
+#   CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+#   CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+#   CellPutS( 'KO' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+#   CellPutS( zError_message , zCube_Reject, zProcess , zDateLoadingStart , 'l1', 'Error_Message' );
+#  ItemSkip;
+#ELSE;
+#   CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+#   CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+#  CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+#ENDIF;
+
+#-- If the Phase does not exist in Phase dimension, this process is rejected
+IF( DIMIX( 'Phase' , pPhase_Source ) = 0 );
+   zError_message = 'Rejected Process : ' | pPhase_Source | ' does not exist in dimension Phase' ;
+   CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+   CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+   CellPutS( 'KO' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+   CellPutS( zError_message , zCube_Reject, zProcess , zDateLoadingStart , 'l1', 'Error_Message' );
+   ItemSkip;
+ELSE;
+   CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+   CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+   CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+ENDIF;
+
+#-- If the Phase does not exist in Phase dimension, this process is rejected
+IF( DIMIX( 'Phase' , pPhase_Target ) = 0 );
+   zError_message = 'Rejected Process : ' | pPhase_Target | ' does not exist in dimension Phase' ;
+   CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+   CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+   CellPutS( 'KO' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+   CellPutS( zError_message , zCube_Reject, zProcess , zDateLoadingStart , 'l1', 'Error_Message' );
+   ItemSkip;
+ELSE;
+   CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+   CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+   CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+ENDIF;
+
+#-- If the Activity does not exist in Activity dimension, this process is rejected
+IF( DIMIX( 'Activity' , pActivity_Source) = 0 );
+   zError_message = 'Rejected Process : ' | pActivity_Source | ' does not exist in dimension Activity' ;
+   CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+   CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+   CellPutS( 'KO' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+   CellPutS( zError_message , zCube_Reject, zProcess , zDateLoadingStart , 'l1', 'Error_Message' );
+   ItemSkip;
+ELSE;
+   CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+   CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+   CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+ENDIF;
+
+
+
+########################################
+########################################
+########################################
+
+## -- BTA 26/09/2016 - Optimization : Do not copy / paste the rules 
+## ExecuteProcess( 'z_Rules_Copy_LTP' );
+
+#-- BTA - Delete pPeriod_Source parameter
+ExecuteProcess( 'DL_Copy_LTP_RP_COMMENTS_CONTRACT_LTP', 'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Sou
+rce, 'pActivity_Source' , pActivity_Source);
+
+#-- BTA - Include pPeriod_End parameter
+ExecuteProcess( 'DL_Copy_LTP_RP_Comments_LTP' , 'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Source, 'pA
+ctivity_Source' , pActivity_Source, 'pPeriod_Source', pPeriod_Source, 'pPeriod_End', pPeriod_End, 'pType_Indicator', pType_Indicator);
+
+ExecuteProcess( 'DL_Copy_LTP_RP_CONTRACT_LTP' ,  'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Source, '
+pActivity_Source' , pActivity_Source, 'pPeriod_Source', pPeriod_Source);
+
+## -- BTA 26/09/2016 - Optimization : Do not copy / paste the rules 
+## ExecuteProcess('z_Rules_Paste_RP_CONTRACT_LTP');
+
+#-- BTA - Include pPeriod_End parameter
+ExecuteProcess( 'DL_Copy_LTP_RP_LTP' ,  'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Source, 'pActivity
+_Source' , pActivity_Source, 'pPeriod_Source', pPeriod_Source, 'pPeriod_End', pPeriod_End, 'pType_Indicator',pType_Indicator );
+
+## -- BTA 26/09/2016 - Optimization : Do not copy / paste the rules 
+## ExecuteProcess( 'z_Rules_Paste_RP_LTP' );
+
+#-- BTA - Include pPeriod_End parameter
+ExecuteProcess( 'DL_Copy_LTP_Report_LTP' ,  'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Source, 'pActiv
+ity_Source' , pActivity_Source, 'pPeriod_Source', pPeriod_Source, 'pPeriod_End', pPeriod_End, 'pType_Indicator',pType_Indicator );
+
+## -- BTA 26/09/2016 - Optimization : Do not copy / paste the rules 
+## ExecuteProcess( 'z_Rules_Paste_Report_LTP' );
+
+ExecuteProcess( 'DL_Copy_LTP_Z_Update_LTP' , 'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Source, 'pAct
+ivity_Source' , pActivity_Source, 'pPeriod_Source', pPeriod_Source );
+
+
+#Mantis 1847
+#-- BTA - Include pPeriod_End parameter
+ExecuteProcess( 'DL_Copy_LTP_ST_Breakdown_Rate' , 'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Source, 
+'pActivity_Source' , pActivity_Source, 'pPeriod_Source', pPeriod_Source, 'pPeriod_End', pPeriod_End );
+
+#-- BTA - Include pPeriod_End parameter
+ExecuteProcess( 'DL_Copy_LTP_ST_Weighting_Rate' , 'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Source, 
+'pActivity_Source' , pActivity_Source, 'pPeriod_Source', pPeriod_Source, 'pPeriod_End', pPeriod_End );
+
+## -- BTA 26/09/2016 - Optimization : Do not copy / paste the rules 
+## ExecuteProcess( 'z_Rules_Paste_ST_Weighting_Rate' );
+
+#-- BTA - Include pPeriod_End parameter
+ExecuteProcess( 'DL_Copy_LTP_ST_Currency' , 'pPhase_Source' , pPhase_Source ,'pPhase_Target' , pPhase_Target , 'pLegal_Source', pLegal_Source, 'pActi
+vity_Source' , pActivity_Source, 'pPeriod_Source', pPeriod_Source, 'pPeriod_End', pPeriod_End );
+
+## -- BTA 26/09/2016 - Optimization : Do not copy / paste the rules 
+## ExecuteProcess( 'z_Rules_Paste_ST_Currency' );
+
+
+# -- MTA 04/07/2022
+ExecuteProcess( 'DL_Copy_LTP_ST_LTP_TAXES_INTERESTS_RATES', 'pPhase_Source', pPhase_Source, 'pPhase_Target', pPhase_Target , 'pPeriod_Source', pPeriod_Source , 'pPeriod_End', pPeriod_End); 
+#endregion

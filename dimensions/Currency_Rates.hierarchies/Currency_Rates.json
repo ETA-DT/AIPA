@@ -1,0 +1,21 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Currency_Rates",
+	"ElementsSortType":"ByHierarchy",
+	"Elements":
+	[
+		{
+			"Name":"TX_CLOTURE",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"TX_MOYEN",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"TX_OUVERTURE",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

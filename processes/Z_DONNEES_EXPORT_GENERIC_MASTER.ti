@@ -1,0 +1,114 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#$$
+#$$ Processus
+#$$ - MASTER EXPORT_GENERIQUE_DATA_CSV
+#$$
+#$$ Description
+#$$ - Export au format CSV toutes les valeurs (numerique et chaine) level 0 des éléments définis (aggrégés ou niveau fin) en parametre
+#$$ - Valable pour tout cube ayant au max 20 dimensions
+#$$ - /!\ Attention le process n'extrait pas les valeurs consolidées
+#$$
+#$$ Date révision & motif
+#$$ 
+#$$
+#$$ Date création
+#$$ - 04/07/2018
+#$$
+#$$ Fait par
+#$$ - Laurent Mariotte
+#$$
+#$$ Paramètres
+#$$ - pConfirmer
+#$$ - pCube
+#$$ - pScenario
+#$$ - pVersion
+#$$ - pAnnee
+#$$ - pMois
+#$$ - pPrestation
+#$$ - pOrga
+#$$ - pIndicateur
+#$$ - pDecimalSeparator
+#$$
+#$$ Process appelé par
+#$$ 
+#$$
+#$$ Commentaires
+#$$ -
+
+sDimAnnee = 'T_ANNEES';
+sDimScenario = 'T_PHASES';
+sDimPrestation = 'A_PRESTATIONS';
+sDimOrga = 'A_IMMEUBLES';
+
+
+pAnnee = DIMNM(sDimAnnee,DIMIX(sDimAnnee, pAnnee));
+pScenario = DIMNM(sDimScenario,DIMIX(sDimScenario, pScenario));
+pPrestation = DIMNM(sDimPrestation,DIMIX(sDimPrestation, pPrestation));
+pOrga = DIMNM(sDimOrga,DIMIX(sDimOrga, pOrga));
+
+
+IF(pCube @<>'' & pCube @<>'ALL');
+
+
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube',pCube,'pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+
+
+ELSEIF(pCube @='' % pCube @<>'ALL');
+
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_OP_AUTRES','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_OP_TAXES','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_OP_COMMANDES','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_OP_CONSO','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_OP_CONTRATS','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_PARAM','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_PARAM_COMPTES','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_PARAM_QP_REGROUP','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_PARAM_RECUP','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_PARAM_TAXES_EXO','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CHARGES_TRANSCO_IMM_REGROUP_PRESTA','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CONSO_COMPTE_IMMEUBLE','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','CONSO_GROUPE','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','ETUD_OP_LOYERS_MENSU','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','ETUD_PARAM','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','ETUD_SITUATION_LOCATIVE','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','GECI_INDICES','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','GECI_SYNTHESE_LOYER','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','RESI_OP_CA_VENTES','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','RESI_OP_LOYERS','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','RESI_OP_LOYERS_MENSU','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','RESI_SITUATION_LOCATIVE','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','RESI_PARAM','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','STATUS_IMMEUBLE','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TERT_LOYERS','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TERT_LOYERS_MOUVEMENTS_MENSU','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TERT_LOYERS_MOUVEMENTS_SAISIE','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TERT_LOYERS_PROLONGEMENT','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TERT_SITUATION_LOCATIVE','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TRV_OP_RESI','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TRV_OP_TPES','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TRV_OP_TRP','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TRV_OP_TRX','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+ExecuteProcess ('Z_DONNEES_EXPORT_GENERIC','pConfirmer','OUI','pCube','TRV_PARAM_TRX','pScenario',pScenario,'pVersion',pVersion,'pAnnee',pAnnee,'pMois',pMois,'pPrestation',pPrestation,'pOrga',pOrga,'pIndicateur',pIndicateur,'pDecimalSeparator',',');
+
+ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

@@ -1,0 +1,45 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Documented this process
+#GENERALCOMMENT This process packages up Logfiles and optionally sends them to QUBEdocs Cloud
+#DATASOURCECOMMENT Not Applicable
+#PROLOGCOMMENT Runs an external file, UploadLogs.ps1 to package and send metadata
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Not Applicable
+#EPILOGCOMMENT Not Applicable
+
+
+IF(pLogFliesFolder @= '');
+ ITEMREJECT('Logfiles directory not found.  Please run the QUBEdocs Package Logfiles process with a logfiles directory specified.');
+ PROCESSERROR;
+ENDIF;
+
+sTokenString ='';
+IF(scan('-TOKEN',UPPER(pParameters)) <>0);
+ sTokenString =' -sendToAPI -name ''' | TM1User() | '''';
+ENDIF;
+
+sPackageCreatorPath = 'PowerShell.exe Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; .\QUBEdocsFiles\QDPackageLogs.ps1 ';
+sExecuteStr =  sPackageCreatorPath | pParameters |  ' -logpath ''' | pLogFliesFolder | '''' | sTokenString;
+
+EXECUTECOMMAND(sExecuteStr,0);
+ASCIIOUTPUT('.\QUBEdocsFiles\QUBEdocsExecuteStr.txt',sExecuteStr);
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

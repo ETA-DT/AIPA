@@ -1,0 +1,24 @@
+{
+	"@type":"Cube",
+	"Name":"TC_PMM_BM_WU",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Activity')"
+		},
+		{
+			"@id":"Dimensions('Management_Organization')"
+		},
+		{
+			"@id":"Dimensions('z_PMM_WU')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"TC_PMM_BM_WU.views/Default.json",
+		"TC_PMM_BM_WU.views/Par défaut.json"
+	]
+}

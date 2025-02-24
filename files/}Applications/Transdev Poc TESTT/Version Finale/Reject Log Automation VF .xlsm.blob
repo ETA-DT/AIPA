@@ -1,0 +1,5 @@
+﻿FILE_FORMAT=100
+ENTRYNAME=Reject Log Automation VF .xlsm
+ENTRYTYPE=blob
+ENTRYREFERENCE=TM1:///blob/PUBLIC/.\}externals\Reject Log Automation VF _20240904150253.xlsm
+REMOVEBLOBONDELETE=No

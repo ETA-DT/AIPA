@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Phase_Corporate",
+	"Hierarchies@Code.links":
+	[
+		"z_Phase_Corporate.hierarchies/z_Phase_Corporate.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Phase_Corporate')/Hierarchies('z_Phase_Corporate')"
+	}
+}

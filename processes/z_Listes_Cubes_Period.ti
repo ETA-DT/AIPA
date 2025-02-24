@@ -1,0 +1,93 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#################################################
+# -- Processus permettant de lister les cubes ayant pour dimension Period et Period_YTD
+# -- MTA - Datatilt - 05/10/2022
+# -- 
+#################################################
+
+
+# -- Définition du sous ensemble source
+vDim = '}Cubes';
+vSubsetName = 'CubesDimTech';
+vMdx = '{ Except ({TM1FILTERBYLEVEL( {TM1SUBSETALL( [' | vDim | '] )}, 0)}, {TM1FILTERBYPATTERN( {TM1SUBSETALL( [' | vDim | '] )}, ' | char(34) | '}*' | char(34) | ')} ) }'; 
+
+SubsetDestroy( vDim, vSubsetName);
+SubsetCreateByMdx( vSubsetName, vMdx);
+DataSourceNameForServer = vDim;
+DataSourceDimensionSubset = vSubsetName;
+
+
+# -- Définition de la cible
+zDimCube = 'z_Cubes';
+
+IF( DimensionExists( zDimCube) = 0);
+	DimensionCreate( zDimCube);
+ELSE; 
+	DimensionDeleteAllElements(zDimCube);
+ENDIF;
+
+# -- Création de la cible de stockage 
+AttrDelete( zDimCube, 'Temps'); 
+AttrInsert( zDimCube, '', 'Temps', 'S'); 
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+# -- Insertion de tous les éléments dans la dimension
+
+IF( Dimix( zDimCube, Cube) =0);
+	DimensionElementInsert( zDimCube, '', Cube, 'S');
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#  -- Affectation de l'attribut permettant de savoir si la version est une dimension
+
+# -- Tester chaque cube parcourue pour vérifier s'il possède une dimension de temps (Period et Period_YTD)
+
+i = 1;
+nNbDim = 20;
+
+# -- Boucle pour parcourir les dimensions des cubes parcourues
+While (i<= nNbDim);
+
+	# -- Récupérer la dimension
+	sDim = TabDim ( cube, i);
+
+	# -- Tester s'il s'gait de la dimension 
+  	if( sDim @= 'Period' );
+		sDimAnnee = TabDim ( Cube, i);
+		AttrPutS( sDimAnnee, zDimCube, Cube, 'Temps' ); 
+	endif;
+
+	if( sDim @= 'Period_YTD' );
+		sDimAnnee = TabDim ( Cube, i);
+		AttrPutS( sDimAnnee, zDimCube, Cube, 'Temps' ); 
+	endif;
+i = i + 1;
+End;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+SubsetDestroy( vDim, vSubsetName);
+#endregion

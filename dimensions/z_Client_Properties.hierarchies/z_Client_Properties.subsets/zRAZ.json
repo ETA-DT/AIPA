@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"zRAZ",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('z_Client_Properties')/Hierarchies('z_Client_Properties')/Elements('DateMAJ')"
+		}
+	]
+}

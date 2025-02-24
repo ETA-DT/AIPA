@@ -1,0 +1,104 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#################################################################################
+# Projet : Tango - Màj de la hiérarchie EstCourant de la dimension z_Utilisateur
+# Créé par : FBU ANONE
+# Créé le : 02/03/2015
+# Modifié par : YAD & VNN
+# Modifié le : 20/05/2016
+# Modification apportée : Traitement des }Clients qui disparaissent du Fichier en modifiant la rattachement hiérachique
+# Modification apportée : Création du Subset }Utilisateurs_Courants dans la dim z_Stat_Utilisateur
+#################################################################################
+
+
+#-- Dimension utilisateur source et cible
+sDimSrc = 'z_Stat_Utilisateur' ;
+zSubUtilisateur = '}Utilisateurs_Courants' ;
+
+
+#-- Création des sous-ensembles utilisés dans les report
+SubsetDestroy( sDimSrc , '}Niveau1_Report' ) ;
+SubsetCreate( sDimSrc , '}Niveau1_Report' ) ;
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vAnoPos = SCAN('/', z_Stat_Utilisateur);
+IF(vAnoPos > 0);
+  z_Sub = SUBST(z_Stat_Utilisateur, 1, vAnoPos-1) | '_' | SUBST(z_Stat_Utilisateur, vAnoPos+1, Long(z_Stat_Utilisateur) - vAnoPos);
+ENDIF;
+
+###############-- Hiérarchie Parallèle // Total_Utilisateurs [Hierarchie Principale]-###############
+
+EstCourant = ATTRS( sDimSrc , z_Stat_Utilisateur , 'EstCourant' ) ;
+
+IF( EstCourant @<> '' ) ;
+
+#-- Rattachement de l'enfant au parent
+#-- Si le }Client a disparu du fichier des Users ont le rattache à Utilisateurs_Histo et on le Supprime de Utilisateurs_Courants
+
+     IF( ELPAR( sDimSrc , z_Stat_Utilisateur , 1 ) @= 'Utilisateurs_Courants'
+     & EstCourant @= 'N' ) ;
+          DimensionElementComponentDelete( sDimSrc , 'Utilisateurs_Courants' , z_Stat_Utilisateur ) ;
+          DimensionElementComponentAdd( sDimSrc , 'Utilisateurs_Histo' , z_Stat_Utilisateur , 1 ) ;
+     ELSEIF( EstCourant @= 'Y' ) ;
+          DimensionElementComponentAdd( sDimSrc , 'Utilisateurs_Courants' , z_Stat_Utilisateur , 1 ) ;
+     ENDIF ;
+
+ENDIF ;
+
+
+
+# IF( ELLEV( sDimSrc , z_Stat_Utilisateur ) = 1 ) ;
+#      SubsetElementInsert( sDimSrc , '}Niveau1_Report' , z_Stat_Utilisateur , 1 ) ;
+#      zSubUtilisateur = '}' | z_Sub | '_Report' ;
+#      IF( SubsetExists( sDimSrc , zSubUtilisateur ) = 1 ) ;
+#          SubsetDestroy( sDimSrc , zSubUtilisateur ) ;
+#          SubsetCreateByMDX( zSubUtilisateur ,
+#          '{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [z_Stat_Utilisateur] )}, "' | z_Stat_Utilisateur | '")}, ALL, RECURSIVE )}' );
+#      ELSE ;
+#           SubsetCreateByMDX( zSubUtilisateur ,
+#           '{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [z_Stat_Utilisateur] )}, "' | z_Stat_Utilisateur | '")}, ALL, RECURSIVE )}' );
+#      ENDIF;
+# ENDIF ;
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+## -- On crée le Subset :  }Utilisateurs_Courants dans la Dim z_Stat_Utilisateur
+
+IF( SubsetExists( sDimSrc , zSubUtilisateur ) = 1 ) ;
+    SubsetDestroy( sDimSrc , zSubUtilisateur ) ;
+    SubsetCreateByMDX( zSubUtilisateur ,
+    '{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [z_Stat_Utilisateur] )}, "Utilisateurs_Courants")}, ALL, RECURSIVE )}' );
+ELSE ;
+    SubsetCreateByMDX( zSubUtilisateur ,
+    '{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [z_Stat_Utilisateur] )}, "Utilisateurs_Courants")}, ALL, RECURSIVE )}' );
+ENDIF;
+
+
+
+
+#endregion

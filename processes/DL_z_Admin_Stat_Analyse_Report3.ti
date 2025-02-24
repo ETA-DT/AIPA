@@ -1,0 +1,173 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+########################################################################################
+# Projet : Tango - Alimentation des Flags permettant de tracer les utilisateurs Actifs / Inactifs dans le Cube z_Admin_Audit_Analyse
+# Créé par : TIN ANONE
+# Créé le : 
+# Modifié par :  YAD
+# Modifié le : 05/07/2016 
+# Modification apportée :Passage de 6 à 12 mois pour évaluer l'activité la non activité & Modif des codes Indicateurs
+# Modification apportée :Période de départ = z_Admin_Param CURRENT_PERIOD et non plus MONTH_ACTUAL
+# LANCEMENT DU CALCUL 6 MOIS EN EPILOGUE
+# Nb_Active_Users_12_Months = 1  utilisateurs actifs sur les 12 derniers mois stocké sur le mois CURRENT_PERIOD (ex Nb_Connexion_Report3_Tech)
+# Nb_Inactive_Users_12_Months = 1  utilisateurs INactifs sur les 12 derniers mois stocké sur le mois CURRENT_PERIOD (ex Nb_Connexion_Report3_Tech2)
+# Nb_Active_Users_6_Months = 1  utilisateurs actifs sur les 6 derniers mois stocké sur le mois CURRENT_PERIOD (ex Nb_Connexion_Report3_Tech6M)
+# Nb_Active_Users_6_Months = 1  utilisateurs INactifs sur les 6 derniers mois stocké sur le mois CURRENT_PERIOD (ex Nb_Connexion_Report3_Tech26M)
+########################################################################################
+
+#Désactivation de la journalisation des données chargées via processus TI
+#OldCubeLogChanges = CUBEGETLOGCHANGES('z_Admin_Audit_Analyse');
+#CUBESETLOGCHANGES('z_Admin_Audit_Analyse', 0);
+
+###################################################
+##############  Création de la vue source  ##################
+###################################################
+
+# Construction de la vue
+### 12 mois
+vCubeSource='z_Admin_Audit_Analyse';
+vSubSource='}Subset_SRC_Audit_Analyse_' | GetProcessName() ;
+vVueSource='}Subset_SRC_Audit_Analyse_' | GetProcessName() ;
+ViewDestroy(vCubeSource,vVueSource);
+ViewCreate(vCubeSource,vVueSource);
+
+####### Définition du périmètre de Source #######
+#-- z_Stat_Date
+vDim='z_Stat_Date';
+### 12 mois
+SubsetDestroy(vDim,vSubSource);
+SubsetCreate(vDim,vSubSource);
+
+
+#------------------------- Modification de la durée de test de connexion possible ici - 12 Mois
+
+pPeriode = CellGetS( 'z_Admin_Param' , 'CURRENT_PERIOD' , 'STR_VAR1' ) ;
+Per_Prec1 = ATTRS( 'z_Stat_Date' , pPeriode , 'Periode_Precedente' ) ;
+Per_Prec2 = ATTRS( 'z_Stat_Date' , Per_Prec1 , 'Periode_Precedente' ) ;
+Per_Prec3 = ATTRS( 'z_Stat_Date' , Per_Prec2 , 'Periode_Precedente' ) ;
+Per_Prec4 = ATTRS( 'z_Stat_Date' , Per_Prec3 , 'Periode_Precedente' ) ;
+Per_Prec5 = ATTRS( 'z_Stat_Date' , Per_Prec4 , 'Periode_Precedente' ) ;
+Per_Prec6 = ATTRS( 'z_Stat_Date' , Per_Prec5 , 'Periode_Precedente' ) ;
+Per_Prec7 = ATTRS( 'z_Stat_Date' , Per_Prec6 , 'Periode_Precedente' ) ;
+Per_Prec8 = ATTRS( 'z_Stat_Date' , Per_Prec7 , 'Periode_Precedente' ) ;
+Per_Prec9 = ATTRS( 'z_Stat_Date' , Per_Prec8 , 'Periode_Precedente' ) ;
+Per_Prec10 = ATTRS( 'z_Stat_Date' , Per_Prec9 , 'Periode_Precedente' ) ;
+Per_Prec11 = ATTRS( 'z_Stat_Date' , Per_Prec10 , 'Periode_Precedente' ) ;
+Per_Prec12 = ATTRS( 'z_Stat_Date' , Per_Prec11 , 'Periode_Precedente' ) ;
+SubsetElementInsert( vDim , vSubSource , pPeriode , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec1 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec2 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec3 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec4 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec5 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec6 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec7 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec8 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec9 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec10 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec11 , 1 ) ;
+SubsetElementInsert( vDim , vSubSource , Per_Prec12 , 1 ) ;
+
+
+#-------------------------- Modification de la durée de test de connexion possible ici - 12 Mois
+
+ViewSubsetAssign(vCubeSource,vVueSource,vDim,vSubSource);
+
+
+#-- z_Stat_Utilisateur
+vDim='z_Stat_Utilisateur';
+SubsetDestroy(vDim,vSubSource);
+vMDXExpression = '{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [z_Stat_Utilisateur] )}, ALL, RECURSIVE )}, 0)}';
+SubsetCreatebyMDX(vSubSource, vMDXExpression);
+ViewSubsetAssign(vCubeSource,vVueSource,vDim,vSubSource);
+
+
+#-- z_Stat_Indicateur // Trigger Nb_connexion
+vDim='z_Stat_Indicateur';
+SubsetDestroy(vDim,vSubSource);
+SubsetCreate(vDim,vSubSource);
+SubsetElementInsert(vDim,vSubSource,'Nb_connexion',1);
+ViewSubsetAssign(vCubeSource,vVueSource,vDim,vSubSource);
+
+
+
+####### Périmètre supplémentaire à exclure si vue de source utilisée #######
+#Exclure les valeurs calculées par règle/ Pas de règles
+ViewExtractSkipRuleValuesSet (vCubeSource,vVueSource,1);
+
+#Exclure les valeurs consolidées
+ViewExtractSkipCalcsSet(vCubeSource,vVueSource,0);
+
+#Exclure les valeurs 0
+ViewExtractSkipZeroesSet(vCubeSource,vVueSource,1);
+
+
+####### Associer le cube et la vue source au process TI #######
+# Récuperation du nom du fichier source dans le cube du paramètre
+DataSourceNameForServer = vCubeSource;
+DataSourceCubeView = vVueSource;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#-- Periode de saisie
+vPeriodeInput = SUBST( pPeriode , 1 , 4 ) | '-' | SUBST( pPeriode , 6 , 2 ) | '-' | '01' ;
+
+
+#-- Au moins 1 cellule est renseignée dans le cube sur les 12 derniers mois par utilisateur alors on met 1 sur l'utilisateur pour Nb_Active_Users_12_Months
+#-- Afin qu'il ne s'affiche pas dans le masque
+CellPutN( 1 , vCubeSource , vPeriodeInput , z_Stat_Utilisateur , 'Nb_Active_Users_12_Months' ) ;
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#-- Au moins 1 cellule est renseignée dans le cube sur les 12 derniers mois par utilisateur alors on met 1 sur l'utilisateur pour Nb_Active_Users_12_Months
+#-- Afin qu'il ne s'affiche pas dans le masque
+i = 1 ;
+WHILE( i <= DIMSIZ( 'z_Stat_Utilisateur' ) ) ;
+     ElemStat = DIMNM( 'z_Stat_Utilisateur' , i ) ;
+     IF( ELLEV( 'z_Stat_Utilisateur' , ElemStat ) = 0 & ElemStat @<> 'Non affecté' ) ;
+
+          IF( CellGetN( vCubeSource , vPeriodeInput , ElemStat , 'Nb_Active_Users_12_Months' ) = 0 ) ;
+               CellPutN( 1 , vCubeSource , vPeriodeInput , ElemStat , 'Nb_InActive_Users_12_Months' ) ;
+          ELSE ;
+               CellPutN( 0 , vCubeSource , vPeriodeInput , ElemStat , 'Nb_InActive_Users_12_Months' ) ;
+          ENDIF;
+
+     ENDIF ;
+     i = i + 1 ;
+END ;
+
+
+#-- Activation des Logs
+#CUBESETLOGCHANGES( 'z_Admin_Audit_Analyse' , 1 ) ;
+
+
+ViewDestroy( vCubeSource , vVueSource ) ;
+
+vDim = 'z_Stat_Date' ;
+SubsetDestroy(vDim,vSubSource);
+
+vDim='z_Stat_Utilisateur';
+SubsetDestroy(vDim,vSubSource);
+
+vDim='z_Stat_Indicateur';
+SubsetDestroy(vDim,vSubSource);
+
+
+#endregion

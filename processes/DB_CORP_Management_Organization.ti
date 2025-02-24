@@ -1,0 +1,80 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango Corporate - build dimension  Management_Organization Corp
+# Created by : MBO
+# Created at : 09/01/20112
+# Modified by : BTA
+# Modified at : 23/09/2016
+# Modify reason : Modify structure source files to simplify the administration
+#########################################
+
+zDim = 'Management_Organization_Corp';
+zFile='Organisation_manageriale';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zFile | '.csv';
+
+DataSourceNameForServer = Source_File;
+
+#DIMENSIONDELETEALLELEMENTS( zDim );
+
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+
+ATTRDELETE( zDim , 'Français' );
+ATTRINSERT( zDim , '' , 'Français' , 'A' );
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- Traitement des cas particuliers pour les enfants avec des codes numériques commencant par 0.
+IF( Enfant @= '400' % Enfant @= '500' % Enfant @= '660' % Enfant @= '700' % Enfant @= '800' ); 
+	Enfant = '0' | Enfant ;
+ENDIF; 
+
+# -- Metadata input
+DIMENSIONELEMENTINSERT( zDim , '' , Enfant ,'n' );
+
+IF( Parent @<> '' ); 
+
+	DIMENSIONELEMENTINSERT( zDim , '' , Parent , 'n' );
+
+	# -- Child x Parent 
+	DIMENSIONELEMENTCOMPONENTADD( zDim , Parent , Enfant , 1.000000 );
+
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- Traitement des cas particuliers pour les enfants avec des codes numériques commencant par 0.
+IF( Enfant @= '400' % Enfant @= '500' % Enfant @= '660' % Enfant @= '700' % Enfant @= '800' ); 
+	Enfant = '0' | Enfant ;
+ENDIF; 
+
+# -- Atribute input 
+ATTRPUTS( Libelle , zDim , Enfant , 'Français' );
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zFile );
+
+SecurityRefresh;
+#endregion

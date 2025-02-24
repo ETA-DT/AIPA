@@ -1,0 +1,225 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - build dimension Indicator
+# Created by : FBU
+# Created at : 11/07/2011
+# Modified by : BTA
+# Modified at : 21/11/2016
+# Modify reason : Suppression des langues German, Dutch et Portuguese
+# Modified by : RSJC
+# Modified at : 03/06/2021
+# Modify reason : Ajout attribut Vector_Reconciliation_RP_PL
+#########################################
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+ExecuteProcess('DB_zz_Date_Time_loading');
+pCountry=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+zDim = 'Indicator_Vector';
+
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+DataSourceNameForServer = Source_File;
+
+
+#-- Dimension Indicator_Vector
+#DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+#ATTRDELETE( zDim , 'Deutsch' );
+#ATTRINSERT( zDim , '' , 'Deutsch' , 'A' );
+
+#ATTRDELETE( zDim , 'Dutch' );
+#ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+#ATTRDELETE( zDim , 'Portuguese' );
+#ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+
+ATTRDELETE( zDim , 'Vector_Reconciliation_RP_PL' );
+ATTRINSERT( zDim , '' , 'Vector_Reconciliation_RP_PL' , 'S' );
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( Ponderation = -1 );
+      Ponderation = Ponderation;
+ELSE;
+      Ponderation = 1;
+ENDIF;
+
+IF( Level_5 @= '' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'n' );
+ELSEIF( Level_4 @= '' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'n' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+ELSEIF( Level_3 @= '' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'n' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+ELSEIF( Level_2 @= '' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'n' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , Ponderation );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+ELSEIF( Level_1 @= '' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'n' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+ELSEIF( Level_0 @= '' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_1 , 'n' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_2 , Level_1 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+ELSE;
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_0 , 'n' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_1 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+      DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_1 , Level_0 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_2 , Level_1 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+      DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+ENDIF;
+
+
+          
+          
+
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( Level_6 @<> '' );
+
+          ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+          ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+          ATTRPUTS( Vector_Reconciliation_RP_PL, zDim , Level_6 , 'Vector_Reconciliation_RP_PL' );
+
+ENDIF;
+
+IF( Level_5 @<> '' );
+
+          ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+          ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+          ATTRPUTS( Vector_Reconciliation_RP_PL, zDim , Level_5 , 'Vector_Reconciliation_RP_PL' );
+
+ENDIF;
+
+IF( Level_4 @<> '' );
+
+          ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+          ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+          ATTRPUTS( Vector_Reconciliation_RP_PL, zDim , Level_4 , 'Vector_Reconciliation_RP_PL' );
+
+ENDIF;
+
+IF( Level_3 @<> '' );
+
+          ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+          ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+          ATTRPUTS( Vector_Reconciliation_RP_PL, zDim , Level_3 , 'Vector_Reconciliation_RP_PL' );
+
+ENDIF;
+
+IF( Level_2 @<> '' );
+
+          ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+          ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+          ATTRPUTS( Vector_Reconciliation_RP_PL, zDim , Level_2 , 'Vector_Reconciliation_RP_PL' );
+
+ENDIF;
+
+ IF( Level_1 @<> '' );
+
+          ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+          ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+          ATTRPUTS( Vector_Reconciliation_RP_PL, zDim , Level_1 , 'Vector_Reconciliation_RP_PL' );
+
+ENDIF;
+
+ IF( Level_0 @<> '' );
+
+          ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+          ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+          ATTRPUTS( Vector_Reconciliation_RP_PL, zDim , Level_0 , 'Vector_Reconciliation_RP_PL' );
+
+ENDIF;
+
+
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indicator_Vector' );
+
+if (pCountry @<>'CM');
+  zProcess = 'DB_' | zDim;
+  zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+  zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+  pChore='Task2_CO_Load_Common_Dimension_' | pCountry;
+  pProcess_source='CORE_MODEL';
+
+  CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry,pProcess_source ,  'Start_date'); 
+  CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,pProcess_source, 'End_date');
+  CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,pProcess_source,   'Status');
+endif;
+#endregion

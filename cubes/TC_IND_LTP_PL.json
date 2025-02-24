@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"TC_IND_LTP_PL",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_Ind_PL')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"Views@Code.links":[]
+}

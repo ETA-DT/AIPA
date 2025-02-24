@@ -1,0 +1,21 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Completion",
+	"ElementsSortType":"ByHierarchy",
+	"Elements":
+	[
+		{
+			"Name":"Nb_mgmt_fill",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Tot_nb_mgmt",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Perc_complet",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

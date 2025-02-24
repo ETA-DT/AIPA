@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"TC_IND_PL_US_JDE",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_indicator_PL_US_JDE')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"Views@Code.links":[]
+}

@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"Par défaut",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Currency')/Hierarchies('Currency')/Elements('eur')"
+		}
+	]
+}

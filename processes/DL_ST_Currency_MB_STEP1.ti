@@ -1,0 +1,116 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - Data Load -> Cube ST_CURRENCY
+# Created by : MBO
+# Created at : 07/12/2011
+# Modified by : BTA
+# Modified at : 29/09/2016
+# Modify reason : New Extractor Vector : The name of the file changes 
+#########################################
+
+zCubeTC = 'TC_PHASE_VTD_VECTOR';
+zCube = 'ST_CURRENCY';
+
+
+P_NAME_RAZ =  zCube | '_RAZ';
+
+zSource = 'VTD_Vector';
+
+# -- BTA 29/09/2016 : Modification due to the migration of Vector 
+vBudget = 'Budget' ; 
+vForecast1 = 'Forecast_1' ; 
+vForecast2 = 'Forecast_2' ; 
+
+# -- Check the name of the phase input in parameter 
+IF( pPhase @<> vBudget & pPhase @<> vForecast1 & pPhase @<> vForecast2 ); 
+
+	#-- The Phase specified is not valid
+	ItemReject( 'The value ' | pPhase | ' is invalid for pPhase parameter. Must be ' | vBudget  | ', ' | vForecast1  | ' or ' |  vForecast2 );
+	ProcessQuit;
+
+ENDIF;
+
+
+# -- BTA 13/12/2016 : Modification du repertoire source : REP_DATA_VECTOR
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_DATA_VECTOR' , 'STR_VAR1') | '\Currency_Rates_MB_' | pPhase | '.csv';
+
+DataSourceNameForServer = Source_File;
+
+
+
+######################### SUBSET ST_CURRENCY #########################
+
+
+#-- Create subset in Phase
+
+IF( SubsetExists( 'Phase' , P_NAME_RAZ ) = 1 );
+   
+     SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ );
+
+ELSE;
+
+    SubsetCreate( 'Phase' , P_NAME_RAZ );
+
+ENDIF;
+
+
+
+#-- Create subset in Period
+
+IF( SubsetExists( 'Period' , P_NAME_RAZ ) = 1 );   
+
+     SubsetDeleteAllElements( 'Period' , P_NAME_RAZ );
+
+ELSE;
+
+    SubsetCreate( 'Period' , P_NAME_RAZ );
+
+ENDIF;
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+vPhase = CellGetS( zCubeTC, vector_phase, vector_exercice , vector_period, 'STR_VAR1' );
+vPeriod = CellGetS( zCubeTC, vector_phase, vector_exercice , vector_period, 'STR_VAR2' );
+
+
+######### Insert element in subset Phase
+
+SubsetElementInsert( 'Phase' , P_NAME_RAZ ,vPhase , 1 );
+
+
+
+
+######### Insert element in subset Period_YTD
+
+SubsetElementInsert( 'Period' , P_NAME_RAZ ,vPeriod, 1 );
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+ExecuteProcess('DL_ST_Currency_MB_STEP2' , 'pPhase', pPhase );
+#endregion

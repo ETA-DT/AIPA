@@ -1,0 +1,29 @@
+{
+	"@type":"Process",
+	"Name":"DL_TC_CONTRACT_ECO_MO_TYP_CLI_STEP1",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"DL_TC_CONTRACT_ECO_MO_TYP_CLI_STEP1.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"TM1DimensionSubset",
+		"dataSourceNameForClient":"Management_Organization",
+		"dataSourceNameForServer":"Management_Organization",
+		"subset":"L0"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"V_Management_Organization",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

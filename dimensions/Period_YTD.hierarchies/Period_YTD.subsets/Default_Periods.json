@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"Default_Periods",
+	"Expression":"{TM1FILTERBYPATTERN( {TM1SUBSETALL( [Period_YTD] )}, \r[z_Admin_Param].( [z_Admin_Param].[YEAR_ACTUAL] , [z_Str_Var].[STR_VAR1] ) + \"*YTD\" )}\r+{TM1FILTERBYPATTERN( {TM1SUBSETALL( [Period_YTD] )}, \"*total_\"+[z_Admin_Param].( [z_Admin_Param].[YEAR_BUDGET_FORECAST] , [z_Str_Var].[STR_VAR1] ))}\r"
+}

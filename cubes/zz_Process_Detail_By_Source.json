@@ -1,0 +1,25 @@
+{
+	"@type":"Cube",
+	"Name":"zz_Process_Detail_By_Source",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('zz_Process_Source')"
+		},
+		{
+			"@id":"Dimensions('}Processes')"
+		},
+		{
+			"@id":"Dimensions('zz_Date_Time_loading')"
+		},
+		{
+			"@id":"Dimensions('zz_Process_Detail')"
+		}
+	],
+	"Views@Code.links":
+	[
+		"zz_Process_Detail_By_Source.views/Default.json",
+		"zz_Process_Detail_By_Source.views/Par défaut.json",
+		"zz_Process_Detail_By_Source.views/Process_By_Source.json"
+	]
+}

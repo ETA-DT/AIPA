@@ -1,0 +1,21 @@
+{
+	"@type":"Process",
+	"Name":"}QUBEdocs Export Applications",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"}QUBEdocs Export Applications.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pFile",
+			"Prompt":"File to Export",
+			"Value":"2_QUBEdocsApplications.qson",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

@@ -1,0 +1,20 @@
+{
+	"@type":"Hierarchy",
+	"Name":"zAIPrompt",
+	"Elements":
+	[
+		{
+			"Name":"Prompt01",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Prompt02",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Prompt03",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

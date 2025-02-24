@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_indicator_PL_NL_TM1",
+	"Hierarchies@Code.links":
+	[
+		"z_indicator_PL_NL_TM1.hierarchies/z_indicator_PL_NL_TM1.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_indicator_PL_NL_TM1')/Hierarchies('z_indicator_PL_NL_TM1')"
+	}
+}

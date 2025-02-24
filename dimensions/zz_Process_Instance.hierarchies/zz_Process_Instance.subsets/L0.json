@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"L0",
+	"Expression":"{TM1SUBSETALL( [zz_Process_Instance] )}"
+}

@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"ST_GIE_Transdev_Formation_RAZ",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('Period_YTD')/Hierarchies('Period_YTD')/Elements('2023.05')"
+		}
+	]
+}

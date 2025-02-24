@@ -1,0 +1,6 @@
+{
+	"@type":"Subset",
+	"Name":"Année - Mois",
+	"Alias":"LIBELLE",
+	"Expression":"{TM1DRILLDOWNMEMBER( {TM1SubsetBasis()}, FILTER({TM1SUBSETALL( [T_Periode] )}, LEN([T_Periode].CurrentMember.Name) = 4), RECURSIVE) }"
+}

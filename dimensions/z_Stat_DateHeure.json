@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_Stat_DateHeure",
+	"Hierarchies@Code.links":
+	[
+		"z_Stat_DateHeure.hierarchies/z_Stat_DateHeure.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_Stat_DateHeure')/Hierarchies('z_Stat_DateHeure')"
+	}
+}

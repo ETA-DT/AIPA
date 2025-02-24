@@ -1,0 +1,99 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#######################################################
+# -- Processus de suppression direct du client de la base
+# --
+# -- Datatilt - MTA - 19/10/2021
+# -- 
+# -- 
+# -- 
+#######################################################
+
+#######################################################
+# -- Déclarations des variables
+
+vDim= '}Clients'; 
+vSubsetName = GetProcessName();
+
+#######################################################
+
+vDim= '}Clients'; 
+vMdx = '{ HIERARCHIZE( {TM1SORT( {TM1SUBSETALL( [ ' | vDim | ' ] )}, ASC)} ) }'; 
+SubsetDestroy( vDim, vSubsetName);
+SubsetCreateByMdx( vSubsetName, vMdx);
+
+#######################################################
+# -- Définition de la source de données 
+
+DataSourceNameForServer = vDim;
+DataSourceDimensionSubset = vSubsetName;
+DatasourceASCIIQuoteCharacter='';
+DatasourceASCIIDelimiter=';' ;
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- On exclu les clients Admin
+# -- On vérifie que le client a bien un group, sinon on le supprime directement avec la fonction deleteclient.
+# -- Si à l'avenir on ne veut pas utiliser la focntion deleteclient, on peut toujours utiliser l'ajout dans le subset et executer le process Z_User_Delete qui va venir lire le subset et supprimer les user.
+
+vDim= '}Groups'; 
+
+IF(Scan('admin',Client)=0);
+
+	GroupOk=0;
+
+	i=1;
+	iMax = DimSiz(vDim);
+          	While(i<= iMax); 
+               		vCurrentElement=DimNm(vDim, i);
+
+		# -- On parcours que les groups différent de admin
+               		IF(Scan('admin',vCurrentElement)=0);
+
+			Group= CellGetS('}ClientGroups',Client,vCurrentElement);
+                    		IF( Group @= vCurrentElement);
+				
+                         			GroupOk=1;
+                        			i=DimSiz(vDim);
+                    		ENDIF;
+               		ENDIF;
+               		i=i+1;
+          	END;
+
+          	If(GroupOK=0);
+               		Deleteclient (Client); 
+		
+		#SubsetElementInsert( '}Clients', 'Users_to_delete' , Client, 1); 
+		
+          	ENDIF;
+ENDIF;
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#######################################################
+# -- Suppression du subset
+
+vDim= '}Clients'; 
+vSubsetName = GetProcessName();
+SubsetDestroy(vDim, vSubsetName);
+#endregion

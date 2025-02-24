@@ -1,0 +1,94 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Updated process to use insert direct commands
+#GENERALCOMMENT This process retrieves files within a folder from the file system and adds the files and folder structure to the QUBEdocs Definition dimension 
+#DATASOURCECOMMENT Not Applicable
+#PROLOGCOMMENT Examines the file system based on a a file spec and adds files to the QUBEdocs Definition dimension
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Not Applicable
+#EPILOGCOMMENT Populates the type attribute for the parent folder
+
+sFilenew='';
+sDim ='QUBEdocs Definition';
+sFile = 'Null';
+
+#Add Parent elements
+#EXECUTEPROCESS('}QUBEdocs Add Element','pDim',sDim,'pElement',pParent,'pParent','','pType','C');
+  DimensionElementInsertDirect(sDim, '', pParent,'C');
+
+
+#Iterate through directory
+WHILE(sFile@<>'');
+
+ #Set as the next file in the directory
+ sFile = WILDCARDFILESEARCH( pFolderPath | '\' | '*',sFilenew) ;
+ IF(sFile@<>'');
+
+  #Check to see if a directory is found  
+  sFileTestPath= pFolderPath | '\' | sFile;
+  sFileTestFolder =WILDCARDFILESEARCH(sFileTestPath | '\*','') ;
+
+  #Add element to the dimension if it is a file with the given wildcard or a folder
+   IF(WILDCARDFILESEARCH(pFolderPath | '\*' | pExtension,sFilenew) @= sFile % sFileTestFolder @<>'');
+
+  sFilenew=sFile;
+
+
+IF(sFileTestFolder @= '');
+    i=0; nPos =0;
+    WHILE(i < long(sFile));
+     nPos =  IF(scan('.',subst(sFile,i,i)) > 0,i,nPos);
+     i=i+1;
+    END;
+   IF(nPos>0); sFile = subst(sFile,1,nPos-1) | ' [' | CAPIT(subst(sFile,nPos+1,long(sFile))) | ']'; ENDIF;
+#   IF(nPos>0); sFile = subst(sFile,1,nPos-1); ENDIF;
+ENDIF;
+
+    sElement=pPrefix | ':' | pParent | '>' | sFile;
+    sElement=pParent | '>' | sFile;
+    IF(SUBST(sFile,1,1) @<> '}');
+     #EXECUTEPROCESS('}QUBEdocs Add Element','pDim',sDim,'pElement',sElement,'pParent',pParent,'pType','N');
+     DimensionElementInsertDirect(sDim, '', sElement,'N');
+     DimensionElementComponentAddDirect(sDim, pParent,sElement, 1);
+    ATTRPUTS(sFile,sDim,sElement,'Object');
+    ATTRPUTS('Folder',sDim,sElement,'Type');
+    ENDIF;
+   ENDIF;
+
+
+  #Add the entire folder (recursively)
+  IF(sFileTestFolder @<>'');
+   sParent =pParent | '>' | sFile;
+    #EXECUTEPROCESS('}QUBEdocs Add Element','pDim',sDim,'pElement',sParent,'pParent','','pType','C');
+     DimensionElementInsertDirect(sDim, '', sParent,'C');
+    ATTRPUTS(sFile,sDim,sElement,'Object');
+    ATTRPUTS('Folder',sDim,sElement,'Type');
+   sParent = pParent | '>' | sFile;
+   EXECUTEPROCESS('}QUBEdocs Add Folder','pFolderPath',sFileTestPath,'pExtension',pExtension,'pParent',sParent,'pPrefix',pPrefix);
+  ENDIF;
+
+ ENDIF;
+
+END;
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+ATTRPUTS('Folder',sDim,pParent,'Type');
+#endregion

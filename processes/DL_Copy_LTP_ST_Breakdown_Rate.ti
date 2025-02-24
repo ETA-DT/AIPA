@@ -1,0 +1,349 @@
+#region Prolog
+#########################################
+# Project : Tango - Version copying process LTP
+# Created by : MAN
+# Created at : 30/07/2012
+# Modified by : MAN
+# Modified by : BTA
+# Modified at : 20/11/2013
+# Modify reason : Include pPeriod End parameter new business rules
+#########################################
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#############
+
+
+pCountry = CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+pYear = CellGetS('z_Admin_param','YEAR_LTP','STR_Var1');
+
+zCube_Source = 'ST_Breakdown_Rate';
+zCube_Target = 'ST_Breakdown_Rate';
+pLegal_Target = pLegal_Source;
+pActivity_Target = pActivity_Source;
+pPeriod_Target = pPeriod_Source;
+
+zCube_Reject = 'ZZ_PROCESS_REJECT';
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+
+Nb_Lign = 0;
+Nb_Reject = 0;
+Nb_Load = 0;
+
+zProcess = 'DL_Copy_LTP_ST_Breakdown_Rate';
+
+zDateLoadingStart = TIMST( NOW , '\Y-\M-\D' );
+zDateTimeLoadingStart = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+
+
+#################################################################################
+#                                                               Clear Reject Cube
+#################################################################################
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess( 'DB_zz_Date_Time_loading' );
+######
+
+P_NAME_RAZ = zCube_Reject | '_RAZ';
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+ViewCreate( zCube_Reject , P_NAME_RAZ );
+
+#-- Create subset in zz_Date_Time_loading and }Processes
+IF( SubsetExists( 'zz_Date_Time_loading' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ENDIF;
+
+IF( SubsetExists( '}Processes' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( '}Processes' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( '}Processes' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'zz_Date_Time_loading' , P_NAME_RAZ ,zDateLoadingStart , 1 );
+SubsetElementInsert( '}Processes' , P_NAME_RAZ , zProcess , 1 );
+
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Date_Time_loading' , P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , '}Processes', P_NAME_RAZ);
+
+#-- Clear cube
+ViewZeroOut( zCube_Reject , P_NAME_RAZ );
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipCalcsSet ( zCube_Reject , P_NAME_RAZ , 1 );
+
+#-- Delete subset
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+SubsetDestroy( 'zz_Date_Time_loading' , P_NAME_RAZ );
+SubsetDestroy( '}Processes' , P_NAME_RAZ );
+
+
+#################################################################################
+#                                                               Clear CUBE ST_BREAKDOWN_RATE Target
+#################################################################################
+P_NAME_RAZ = zCube_Target | '_Copy_Version_RAZ';
+ViewDestroy( zCube_Target , P_NAME_RAZ );
+ViewCreate( zCube_Target , P_NAME_RAZ );
+
+
+#############-- Create subset in Activity #############
+IF( SubsetExists( 'Activity' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Activity' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Activity' , P_NAME_RAZ );
+ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Activity' ) + 1 );
+    ElemA = DIMNM( 'Activity' , i );
+#    IF( ELLEV( 'Activity' , ElemA ) = 0     & ( ELISANC( 'Activity' , pActivity_Target , ElemA ) > 0 
+    IF( ( ELISANC( 'Activity' , pActivity_Target , ElemA ) > 0 % pActivity_Target @= ElemA ));
+        SubsetElementInsert( 'Activity' , P_NAME_RAZ , ElemA , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Activity' , P_NAME_RAZ );
+
+
+#############-- Create subset in Legal_Organization #############
+IF( SubsetExists( 'Legal_Organization' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Legal_Organization' , P_NAME_RAZ );
+ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' ) + 1 );
+    ElemLO = DIMNM( 'Legal_Organization' , i );
+   # IF( ELLEV( 'Legal_Organization' , ElemLO ) = 0     & ( ELISANC( 'Legal_Organization' , pLegal_Target , ElemLO ) > 0     % pLegal_Target @= ElemLO ));
+ IF( ( ELISANC( 'Legal_Organization' , pLegal_Target , ElemLO ) > 0     % pLegal_Target @= ElemLO ));
+        SubsetElementInsert( 'Legal_Organization' , P_NAME_RAZ , ElemLO , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Legal_Organization' , P_NAME_RAZ );
+
+
+#############-- Create subset in Phase ############# 
+IF( SubsetExists( 'Phase' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_RAZ );
+ENDIF;
+SubsetElementInsert( 'Phase' , P_NAME_RAZ , pPhase_Target , 1 );
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Phase' , P_NAME_RAZ );
+
+
+#############-- Create subset in Period #############
+IF( SubsetExists( 'Period' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_RAZ );
+ENDIF;
+
+#Year_N = STRINGTONUMBER(pYear);
+#j = YEAR_N-1;
+#k = YEAR_N+ 17;
+#WHILE( j < k);
+#           SubsetElementInsert( 'Period' , P_NAME_RAZ , 'F_Year_'|numbertoString(j) , 1 );
+#           j = j +1;
+#END;
+
+
+#BTA 20112013 - Modification 
+IF( pPeriod_Source @= pPeriod_End );
+          SubsetElementInsert( 'Period', P_NAME_RAZ, pPeriod_Source,1 );
+ELSE;
+  
+  vYearStart = SUBST(pPeriod_Source, 8,4);
+  vYearStop = SUBST(pPeriod_End, 8,4);
+  vNbYears = ABS( StringToNumber(vYearStop ) - StringToNumber(vYearStart) );
+  i = 0;
+  WHILE( i <= vNbYears ) ; 
+      vPeriodCourante = 'F_YEAR_' | NumberToString( StringToNumber(vYearStart) + i);
+      SubsetElementInsert( 'Period', P_NAME_RAZ, vPeriodCourante,1 );
+      i = i + 1;
+  END;
+ENDIF;
+
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Period' , P_NAME_RAZ );
+
+#############-- Create subset in z_STR_VAR #############
+IF( SubsetExists( 'z_STR_VAR' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'z_STR_VAR' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'z_STR_VAR' , P_NAME_RAZ );
+ENDIF;
+           SubsetElementInsert( 'z_STR_VAR' , P_NAME_RAZ , 'STR_VAR1' , 1 );
+
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'z_STR_VAR' , P_NAME_RAZ );
+
+
+
+
+##############-- Clear cube #############
+ViewZeroOut( zCube_Target , P_NAME_RAZ );
+
+##############-- Delete subset #############
+ViewDestroy( zCube_Target , P_NAME_RAZ );
+SubsetDestroy( 'Activity' , P_NAME_RAZ );
+SubsetDestroy( 'Legal_Organization' , P_NAME_RAZ );
+SubsetDestroy( 'Phase' , P_NAME_RAZ );
+SubsetDestroy( 'Period' , P_NAME_RAZ );
+SubsetDestroy('z_STR_VAR', P_NAME_RAZ);
+
+
+#################################################################################
+#                                                               Source Cube : ST_Breakdown_Rate
+#################################################################################
+P_NAME_SOURCE = zCube_Source | '_Vue';
+ViewDestroy( zCube_Source , P_NAME_SOURCE );
+ViewCreate( zCube_Source , P_NAME_SOURCE );
+
+
+#############-- Create subset in Activity #############
+IF( SubsetExists( 'Activity' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Activity' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Activity' , P_NAME_SOURCE );
+ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Activity' ) + 1 );
+    ElemA = DIMNM( 'Activity' , i );
+   # IF( ELLEV( 'Activity' , ElemA ) = 0  & ( ELISANC( 'Activity' , pActivity_Source , ElemA ) > 0 % pActivity_Source @= ElemA ));
+   IF( ( ELISANC( 'Activity' , pActivity_Source , ElemA ) > 0     % pActivity_Source @= ElemA ));
+        SubsetElementInsert( 'Activity' , P_NAME_SOURCE , ElemA , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Activity' , P_NAME_SOURCE );
+
+
+
+#############-- Create subset in Legal_Organization #############
+IF( SubsetExists( 'Legal_Organization' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Legal_Organization' , P_NAME_SOURCE );
+ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' ) + 1 );
+    ElemLO = DIMNM( 'Legal_Organization' , i );
+   # IF( ELLEV( 'Legal_Organization' , ElemLO ) = 0     & ( ELISANC( 'Legal_Organization' , pLegal_Source , ElemLO ) > 0     % pLegal_Source @= ElemLO
+# ));
+   IF(ELISANC( 'Legal_Organization' , pLegal_Source , ElemLO ) > 0     % pLegal_Source @= ElemLO );
+        SubsetElementInsert( 'Legal_Organization' , P_NAME_SOURCE , ElemLO , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Legal_Organization' , P_NAME_SOURCE );
+
+
+#############-- Create subset in Phase #############
+IF( SubsetExists( 'Phase' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_SOURCE );
+ENDIF;
+SubsetElementInsert( 'Phase' , P_NAME_SOURCE , pPhase_Source , 1 );
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Phase' , P_NAME_SOURCE );
+
+
+#############-- Create subset in Period #############
+IF( SubsetExists( 'Period' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_SOURCE );
+ENDIF;
+
+#Year_N = STRINGTONUMBER(pYear);
+#j =YEAR_N-1;
+#k = YEAR_N+ 17;
+#WHILE( j < k);
+#           SubsetElementInsert( 'Period' , P_NAME_SOURCE , 'F_Year_'|numbertoString(j) , 1 );
+#           j = j +1;
+#END;
+
+#BTA 20112013 - Modification 
+IF( pPeriod_Source @= pPeriod_End );
+  SubsetElementInsert( 'Period', P_NAME_SOURCE, pPeriod_Source,1 );
+ELSE;
+  vYearStart = SUBST(pPeriod_Source, 8,4);
+  vYearStop = SUBST(pPeriod_End, 8,4);
+  vNbYears = ABS( StringToNumber(vYearStop ) - StringToNumber(vYearStart) );
+  i = 0;
+  WHILE( i <= vNbYears ) ; 
+      vPeriodCourante = 'F_YEAR_' | NumberToString( StringToNumber(vYearStart) + i);
+      SubsetElementInsert( 'Period', P_NAME_SOURCE, vPeriodCourante,1 );
+      i = i + 1;
+  END;
+ENDIF;
+
+ViewSubsetAssign( zCube_Target , P_NAME_SOURCE , 'Period' , P_NAME_SOURCE );
+
+
+#############-- Create subset in z_STR_VAR #############
+IF( SubsetExists( 'z_STR_VAR' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'z_STR_VAR' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'z_STR_VAR' , P_NAME_SOURCE );
+ENDIF;
+
+           SubsetElementInsert( 'z_STR_VAR' , P_NAME_SOURCE , 'STR_VAR1' , 1 );
+
+
+ViewSubsetAssign( zCube_Target , P_NAME_SOURCE , 'z_STR_VAR' , P_NAME_SOURCE );
+
+
+##############-- Update subset #############
+ViewExtractSkipZeroesSet ( zCube_Source , P_NAME_SOURCE , 1 );
+ViewExtractSkipRuleValuesSet ( zCube_Source , P_NAME_SOURCE , 1 );
+ViewExtractSkipCalcsSet ( zCube_Source , P_NAME_SOURCE , 0 );
+
+
+DatasourceNameForServer = zCube_Source ;
+DatasourceCubeview = P_NAME_SOURCE ;
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF( CellIsUpdateable( zCube_Target , Activity , Legal_Organization , pPhase_Target , Period, 'STR_VAR1' ) <> 0 );
+
+       CellPutS( Value, zCube_Target , Activity , Legal_Organization , pPhase_Target ,Period, 'STR_VAR1');
+
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+##############-- Delete view and subsets #############
+ViewDestroy( zCube_Source , P_NAME_SOURCE );
+SubsetDestroy( 'Activity' , P_NAME_SOURCE );
+SubsetDestroy( 'Legal_Organization' , P_NAME_SOURCE );
+SubsetDestroy( 'Phase' , P_NAME_SOURCE );
+SubsetDestroy( 'Period' , P_NAME_SOURCE );
+SubsetDestroy( 'z_STR_VAR' , P_NAME_SOURCE );
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+#endregion

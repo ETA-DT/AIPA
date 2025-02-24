@@ -1,0 +1,135 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Set Forecast data on period YYYY.12_YTD
+# Created by : RSJC
+# Created at : 13/10/2015
+# Modified by : BTA
+# Modified at : 29/09/2016
+# Modify reason : New Extractor Vector : The name of the file changes 
+#########################################
+
+zCubeTC = 'TC_PHASE_VTD_VECTOR';
+zCube = 'ST_Vector_YTD';
+zCubePar = 'ST_PARTNER_VECTOR_YTD';
+
+P_NAME_RAZ =  zCube | '_XXXX.12_YTD_RAZ';
+P_NAME_RAZ2 = zCubePar | '_XXXX.12_YTD_RAZ';
+
+zSource = 'VTD_Vector';
+
+# -- BTA 29/09/2016 : Modification due to the migration of Vector 
+vBudget = 'Budget' ; 
+vForecast1 = 'Forecast_1' ; 
+vForecast2 = 'Forecast_2' ; 
+
+# -- Check the name of the phase input in parameter 
+IF( pPhase @<> vBudget & pPhase @<> vForecast1 & pPhase @<> vForecast2 ); 
+
+	#-- The Phase specified is not valid
+	ItemReject( 'The value ' | pPhase | ' is invalid for pPhase parameter. Must be ' | vBudget  | ', ' | vForecast1  | ' or ' |  vForecast2 );
+	ProcessQuit;
+
+ENDIF;
+
+# -- BTA 13/12/2016 : Modification du repertoire source : REP_DATA_VECTOR
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_DATA_VECTOR' , 'STR_VAR1') | '\Data_P&L_F_YEAR_' | pPhase | '_' |  zSource | '.csv';
+
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+######################### SUBSET ST_Vector_YTD #########################
+#-- Create subset in Phase
+IF( SubsetExists( 'Phase' , P_NAME_RAZ ) = 1 );
+     SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_RAZ );
+ENDIF;
+
+#-- Create subset in Period_YTD
+IF( SubsetExists( 'Period_YTD' , P_NAME_RAZ ) = 1 );   
+     SubsetDeleteAllElements( 'Period_YTD' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Period_YTD' , P_NAME_RAZ );
+ENDIF;
+
+
+######################### SUBSET ST_PARTNER_VECTOR_YTD #########################
+#-- Create subset in Phase
+IF( SubsetExists( 'Phase' , P_NAME_RAZ2 ) = 1 );
+     SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ2 );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_RAZ2 );
+ENDIF;
+
+
+#-- Create subset in Period_YTD
+IF( SubsetExists( 'Period_YTD' , P_NAME_RAZ2 ) = 1 );   
+     SubsetDeleteAllElements( 'Period_YTD' , P_NAME_RAZ2 );
+ELSE;
+    SubsetCreate( 'Period_YTD' , P_NAME_RAZ2 );
+ENDIF;
+
+#Optimisation Process MAN 26072012
+DIMENSIONDELETEALLELEMENTS( 'z_check_period' );
+DIMENSIONDELETEALLELEMENTS( 'z_check_phase' );
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vPhase = CellGetS( zCubeTC, vector_phase, vector_exercice , vector_period, 'STR_VAR1' );
+vPeriod = CellGetS( 'z_Admin_Param' , 'YEAR_BUDGET_FORECAST' , 'STR_VAR1') | '.12_YTD';
+
+
+TextOutput('Extract.txt',vPeriod, SUBST(vPeriod,1,6));
+
+######### Insert element in subset Phase
+
+IF (DIMIX ('z_check_phase', vPhase) = 0);
+DIMENSIONELEMENTINSERT('z_check_phase' ,'', vPhase,'S');
+
+SubsetElementInsert( 'Phase' , P_NAME_RAZ2 , vPhase , 1 );
+SubsetElementInsert( 'Phase' , P_NAME_RAZ , vPhase , 1 );
+
+ELSE;
+itemskip;
+ENDIF;
+
+
+
+######### Insert element in subset Period_YTD
+
+IF (DIMIX ('z_check_period', vPeriod) =0);
+DIMENSIONELEMENTINSERT('z_check_period' ,'', vPeriod,'S');
+
+       SubsetElementInsert( 'Period_YTD' , P_NAME_RAZ , vPeriod , 1 );
+       SubsetElementInsert( 'Period_YTD' , P_NAME_RAZ2 , vPeriod , 1 );
+
+ELSE;
+itemskip;
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+TextOutput('Extract.txt',vPeriod, SUBST(vPeriod,1,6));
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+ExecuteProcess('DL_ST_VECTOR_YTD_Forecast_sur_XXXX.12_YTD_PL_STEP2', 'pPhase' , pPhase );
+#endregion

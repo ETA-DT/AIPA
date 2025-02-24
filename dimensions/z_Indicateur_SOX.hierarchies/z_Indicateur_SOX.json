@@ -1,0 +1,12 @@
+{
+	"@type":"Hierarchy",
+	"Name":"z_Indicateur_SOX",
+	"Elements":
+	[
+		{
+			"Name":"Statut",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":[]
+}

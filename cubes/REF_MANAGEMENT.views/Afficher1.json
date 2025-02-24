@@ -1,0 +1,32 @@
+{
+	"@type":"NativeView",
+	"Name":"Afficher1",
+	"Columns":[],
+	"Rows":
+	[
+		{
+			"Subset":
+			{
+				"Hierarchy":
+				{
+					"@id":"Dimensions('}Dimensions')/Hierarchies('}Dimensions')"
+				},
+				"Expression":"TM1SubsetAll([}Dimensions])"
+			}
+		},
+		{
+			"Subset":
+			{
+				"Hierarchy":
+				{
+					"@id":"Dimensions('Ref_Management_Info')/Hierarchies('Ref_Management_Info')"
+				},
+				"Expression":"TM1SubsetAll([Ref_Management_Info])"
+			}
+		}
+	],
+	"Titles":[],
+	"SuppressEmptyColumns":false,
+	"SuppressEmptyRows":false,
+	"FormatString":"0.00"
+}

@@ -1,0 +1,26 @@
+{
+	"@type":"Chore",
+	"Name":"DB_UPDATE_BM_HIERARCHY",
+	"StartTime":"2015-09-30T11:00Z",
+	"DSTSensitive":false,
+	"Active":true,
+	"ExecutionMode":"SingleCommit",
+	"Frequency":"P1DT00H00M00S",
+	"Tasks":
+	[
+		{
+			"Step":0,
+			"Parameters":
+			[
+				{
+					"Name":"P_N_DEBUG",
+					"Value":0
+				}
+			],
+			"Process":
+			{
+				"@id":"Processes('DB_REBUILD_BM_HIERARCHY')"
+			}
+		}
+	]
+}

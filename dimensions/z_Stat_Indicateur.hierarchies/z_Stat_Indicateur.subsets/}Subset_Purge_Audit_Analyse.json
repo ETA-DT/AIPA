@@ -1,0 +1,22 @@
+{
+	"@type":"Subset",
+	"Name":"}Subset_Purge_Audit_Analyse",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('z_Stat_Indicateur')/Hierarchies('z_Stat_Indicateur')/Elements('Nb_Shutdown')"
+		},
+		{
+			"@id":"Dimensions('z_Stat_Indicateur')/Hierarchies('z_Stat_Indicateur')/Elements('Nb_StartUp')"
+		},
+		{
+			"@id":"Dimensions('z_Stat_Indicateur')/Hierarchies('z_Stat_Indicateur')/Elements('Nb_Connexion')"
+		},
+		{
+			"@id":"Dimensions('z_Stat_Indicateur')/Hierarchies('z_Stat_Indicateur')/Elements('Nb_Echec_Connexion')"
+		},
+		{
+			"@id":"Dimensions('z_Stat_Indicateur')/Hierarchies('z_Stat_Indicateur')/Elements('Nb_Succesfull_Login')"
+		}
+	]
+}

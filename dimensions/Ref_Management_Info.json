@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Ref_Management_Info",
+	"Hierarchies@Code.links":
+	[
+		"Ref_Management_Info.hierarchies/Ref_Management_Info.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Ref_Management_Info')/Hierarchies('Ref_Management_Info')"
+	}
+}

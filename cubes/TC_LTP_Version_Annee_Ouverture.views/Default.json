@@ -1,0 +1,22 @@
+{
+	"@type":"MDXView",
+	"Name":"Default",
+	"MDX@Code.link":"Default.mdx",
+	"Meta" : 
+	{
+		"Aliases" : {},
+		"ContextSets" : 
+		{
+			"[z_Str_Var].[z_Str_Var]" : 
+			{
+				"Expression" : "{[z_Str_Var].[z_Str_Var].[NUM_VAR1]}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Period].[Period]" : false,
+			"[Phase].[Phase]" : false,
+			"[z_Str_Var].[z_Str_Var]" : false
+		}
+	}
+}

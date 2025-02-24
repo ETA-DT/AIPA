@@ -1,0 +1,351 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - build dimension Indicator LTP
+# Created by : MAN
+# Created at : 21/03/2012
+# Modified by : MRE
+# Modified at : 12/04/2012
+# Modify reason : Mantis 1299 : add the archive instruction of the csv file
+# Modified by : BTA
+# Modified at : 25/09/2017
+# Modify reason : Add LTP Indicator technic for manual input in Operating Lease
+#########################################
+
+zDim = 'Indicator_LTP';
+
+zFile = 'Indicator_LTP';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zFile | '.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+#DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+############################################
+
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+
+#Mantis 1777
+ATTRDELETE( zDim , 'Flag_saisie' );
+ATTRINSERT( zDim , '' , 'Flag_saisie' , 'S' );
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+IF( Level_10 @= '' );		
+		
+	# -- BTA : Add Tech Indicator for LTP Operating Lease input	
+	IF( Level_12 @= 'TECH_IND' ); 	
+		
+		DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );
+		DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 's' );
+		
+	ELSE;	
+		
+		DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'n' );
+		DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );
+		DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération );
+		
+	ENDIF;	
+		
+		
+ELSEIF( Level_9 @= '' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 , Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération );		
+		
+ELSEIF( Level_8 @= '' );		
+		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_10 , Level_9 , Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 , Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération );		
+		
+ELSEIF( Level_7 @= '' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8, Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_10 , Level_9 , Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 , Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération );		
+		
+ELSEIF( Level_6 @= '' );		
+		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7, Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8, Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_10 , Level_9 , Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 , Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération);		
+		
+		
+ELSEIF( Level_5 @= '' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_10 , Level_9 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération);		
+		
+		
+ELSEIF( Level_4 @= '' );		
+		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5,Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7,Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_10 , Level_9 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération);		
+		
+ELSEIF( Level_3 @= '' );		
+		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5,Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_10 , Level_9 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 ,Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération);		
+		
+ELSEIF( Level_2 @= '' );		
+		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5,Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_10 , Level_9 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 ,Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération);		
+		
+ELSE; 		
+		
+		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'n' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_10 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_11 , 'c' );		
+        DIMENSIONELEMENTINSERT( zDim , '' , Level_12 , 'c' );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3, Level_2, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4, Pondération );		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8, Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_10 , Level_9 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_11 , Level_10 , Pondération);		
+        DIMENSIONELEMENTCOMPONENTADD( zDim , Level_12 , Level_11 , Pondération);		
+		
+		
+		
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+IF( Level_12 @<> '' ) ;      
+
+          ATTRPUTS( Desc_English_12 , zDim , Level_12 , 'English' );
+          ATTRPUTS( Desc_French_12 , zDim , Level_12 , 'French' );  
+          ATTRPUTS( Flag, zDim , Level_12 , 'Flag_saisie' );  
+      
+       
+ENDIF;
+
+
+IF( Level_11 @<> '' );
+         
+
+          ATTRPUTS( Desc_English_11 , zDim , Level_11 , 'English' );
+          ATTRPUTS( Desc_French_11 , zDim , Level_11 , 'French' );    
+          ATTRPUTS( Flag, zDim , Level_11 , 'Flag_saisie' );        
+       
+
+ENDIF;
+
+
+IF( Level_10 @<> '' );
+     
+          ATTRPUTS( Desc_English_10 , zDim , Level_10 , 'English' );
+          ATTRPUTS( Desc_French_10 , zDim , Level_10 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_10 , 'Flag_saisie' );   
+      
+ENDIF;
+
+IF( Level_9 @<> '' );
+          
+          ATTRPUTS( Desc_English_9 , zDim , Level_9 , 'English' );
+          ATTRPUTS( Desc_French_9 , zDim , Level_9 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_9 , 'Flag_saisie' );   
+         
+ENDIF;
+
+ IF( Level_8 @<> '' );
+    
+
+          ATTRPUTS( Desc_English_8 , zDim , Level_8 , 'English' );
+          ATTRPUTS( Desc_French_8 , zDim , Level_8 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_8 , 'Flag_saisie' );   
+         
+ENDIF;
+
+ IF( Level_7 @<> '' );
+
+         
+          ATTRPUTS( Desc_English_7 , zDim , Level_7 , 'English' );
+          ATTRPUTS( Desc_French_7 , zDim , Level_7 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_7 , 'Flag_saisie' );   
+     
+ENDIF;
+
+
+ IF( Level_6 @<> '' );
+
+         
+          ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+          ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_6 , 'Flag_saisie' );   
+     
+ENDIF;
+
+
+
+
+ IF( Level_5 @<> '' );
+
+         
+          ATTRPUTS( Desc_English_5 , zDim , Level_5, 'English' );
+          ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_5, 'Flag_saisie' );   
+     
+ENDIF;
+
+
+IF( Level_4 @<> '' );
+
+         
+          ATTRPUTS( Desc_English_4 , zDim , Level_4, 'English' );
+          ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_4 , 'Flag_saisie' );   
+ENDIF;
+
+IF( Level_3 @<> '' );
+
+         
+          ATTRPUTS( Desc_English_3 , zDim , Level_3, 'English' );
+          ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_3 , 'Flag_saisie' );   
+     
+ENDIF;
+
+IF( Level_2 @<> '' );
+
+         
+          ATTRPUTS( Desc_English_2 , zDim , Level_2, 'English' );
+          ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+          ATTRPUTS( Flag, zDim , Level_2 , 'Flag_saisie' );   
+     
+ENDIF;
+
+
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# MRE - 12/04/2012 : Mantis 1299 : add the archive instruction of the csv file
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zFile );
+#endregion

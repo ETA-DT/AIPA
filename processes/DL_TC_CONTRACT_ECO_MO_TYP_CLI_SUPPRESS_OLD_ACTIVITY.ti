@@ -1,0 +1,87 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+###########################################################
+# -- DL_TC_CONTRACT_ECO_MO_TYP_CLI_SUPPRESS_OLD_ACTIVITY
+# -- Suppression des lignes si STR_VAR3 égale à 'To suppress'
+# -- Créateur : BBO Datatilt 
+# -- Date : 28/06/2021
+# -- Modification : 
+###########################################################
+
+
+# -- Declaration des variables
+
+vCube = 'TC_CONTRACT_ECO_MO_TYP_CLI';
+
+vProcess = GetProcessName();
+
+vSourceView = vProcess |'_Source' ;
+
+############################################################
+
+# -- Cube Log désactiver
+
+Oldcubegetlogchanges = CubeGetLogChanges(vCube);
+CubeSetLogChanges ( vCube, 0 );
+
+############################################################
+# -- Destruction et Création vue Source 
+
+ViewDestroy( vCube, vSourceView );
+ViewCreate( vCube, vSourceView,1);
+
+# -- Création du sous-ensemble Activity Source
+vDim = 'z_Str_Var';
+
+SubsetDestroy( vDim , vSourceView);
+SubsetCreate( vDim , vSourceView,1);
+
+SubsetElementInsert( vDim , vSourceView  , 'STR_VAR3', 1 );
+ViewSubsetAssign( vCube, vSourceView , vDim , vSourceView );
+
+
+###########################################################
+#-- Affectation des paramètres de la vue		
+ViewExtractSkipCalcsSet ( vCube, vSourceView, 1 ) ;		
+ViewExtractSkipRuleValuesSet ( vCube, vSourceView, 0 );		
+ViewExtractSkipZeroesSet ( vCube, vSourceView, 1 ) ;		
+		
+#-- Affectation de la vue zName en tant que source du processus		
+DatasourceCubeview = vSourceView ;		
+DataSourceType='VIEW';
+
+###########################################################
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- Supprimer les lignes si la valeur dans le cube est égale à 'To suppress'
+# TextOutput( GetProcessname()  | '.txt', Legal_Organization , Management_Organization , Activity , z_Str_Var , Valeur ); 
+
+IF( Valeur @= 'To suppress' );
+
+	CellPutS( '', vCube, Activity, Legal_Organization, Management_Organization, 'STR_VAR1');
+	CellPutS( '', vCube, Activity, Legal_Organization, Management_Organization, 'STR_VAR2');
+	CellPutS( '', vCube, Activity, Legal_Organization, Management_Organization, 'STR_VAR3');
+
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+CubeSetLogChanges ( vCube, 1 );
+#endregion

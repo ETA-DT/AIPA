@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"TC_IND_PL_NL_TM1",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('z_indicator_PL_NL_TM1')"
+		},
+		{
+			"@id":"Dimensions('z_Str_Var')"
+		}
+	],
+	"Views@Code.links":[]
+}

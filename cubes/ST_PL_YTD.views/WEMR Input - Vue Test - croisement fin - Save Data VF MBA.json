@@ -1,0 +1,49 @@
+{
+	"@type":"MDXView",
+	"Name":"WEMR Input - Vue Test - croisement fin - Save Data VF MBA",
+	"MDX@Code.link":"WEMR Input - Vue Test - croisement fin - Save Data VF MBA.mdx",
+	"Meta" : 
+	{
+		"Aliases" : 
+		{
+			"[Management_Organization].[Management_Organization]" : "MEMBER_NAME",
+			"[Period_YTD].[Period_YTD]" : "MEMBER_NAME"
+		},
+		"ContextSets" : 
+		{
+			"[Activity].[Activity]" : 
+			{
+				"IsPublic" : true,
+				"SubsetName" : "Default"
+			},
+			"[Currency].[Currency]" : 
+			{
+				"IsPublic" : true,
+				"SubsetName" : "Default"
+			},
+			"[Gaap].[Gaap]" : 
+			{
+				"Expression" : "{[Gaap].[Gaap].[Local_Gaap_Mgmt_tool]}"
+			},
+			"[Legal_Organization].[Legal_Organization]" : 
+			{
+				"Expression" : "{[Legal_Organization].[Legal_Organization].[SU3018]}"
+			},
+			"[Management_Organization].[Management_Organization]" : 
+			{
+				"Expression" : "{[Management_Organization].[Management_Organization].[FR_3018]}"
+			}
+		},
+		"ExpandAboves" : 
+		{
+			"[Activity].[Activity]" : false,
+			"[Currency].[Currency]" : false,
+			"[Gaap].[Gaap]" : false,
+			"[Indicator].[Indicator]" : false,
+			"[Legal_Organization].[Legal_Organization]" : false,
+			"[Management_Organization].[Management_Organization]" : false,
+			"[Period_YTD].[Period_YTD]" : false,
+			"[Phase].[Phase]" : false
+		}
+	}
+}

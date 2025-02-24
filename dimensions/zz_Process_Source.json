@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"zz_Process_Source",
+	"Hierarchies@Code.links":
+	[
+		"zz_Process_Source.hierarchies/zz_Process_Source.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('zz_Process_Source')/Hierarchies('zz_Process_Source')"
+	}
+}

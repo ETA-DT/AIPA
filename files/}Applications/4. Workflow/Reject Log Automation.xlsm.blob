@@ -1,0 +1,5 @@
+﻿FILE_FORMAT=100
+ENTRYNAME=Reject Log Automation.xlsm
+ENTRYTYPE=blob
+ENTRYREFERENCE=TM1:///blob/PUBLIC/.\}externals\Reject Log Automation_20220908 RSJC.xlsm_20220908131841.xlsm
+REMOVEBLOBONDELETE=Yes

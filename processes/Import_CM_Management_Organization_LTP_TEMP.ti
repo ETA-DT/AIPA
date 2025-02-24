@@ -1,0 +1,192 @@
+#region Prolog
+#########################################
+# Project : Tango - Multi-instance
+# Created by : MBO
+# Created at : 25/10/2011
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+Nb_Lign = 0;
+Nb_Reject = 0;
+Nb_Load = 0;
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+zDim = 'Management_Organization_LTP';
+zPrefixe = pCountry | '_Mapping_';
+
+zProcess = 'Import_CM_Management_Organization_LTP_TEMP';
+
+Source_File = '\\'|CellGetS( 'z_Admin_Param_Instance' , 'SERVER_NAME' ,'CM', 'STR_VAR1')  | CellGetS( 'z_Admin_Param_Instance' , 'REP_CO_STRU
+C_EXPORT' ,'CM', 'STR_VAR1')  |  zPrefixe | zDim | '.csv';
+
+DataSourceNameForServer = Source_File;
+
+
+IF (FileExists (Source_File) =0);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+
+zDim = 'Management_Organization_LTP_TEMP';
+
+IF (FileExists (Source_File) =0);
+
+#################################################################################
+#                                                                             Reject section in case of not existing file
+#################################################################################
+
+# zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+
+# pChore = 'Task5_CM_Import_CM_Data_Export_CO_Data';
+
+# pSource = CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+
+# pPeriod = CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+
+# zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+# CellPutS( zDateTimeLoadingStart , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart,  pSource, pCountry ,'Start_date' );
+# CellPutS( zDateTimeLoadingEnd , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry , 'End_date' );
+# CellPutS( '0' , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry , 'Nb_Input_records' );
+# CellPutS( 'KO' , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry , 'Status' );
+# CellPutS( NumberToString( Nb_Lign ) , zCube_Process_PP, pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry , 'Nb_Input_Records' );
+# CellPutS( NumberToString( Nb_Reject ) , zCube_Process_PP , pChore, zProcess , pPeriod , zDateLoadingStart,  pSource, pCountry , 'Nb_Reject_Records' 
+#);
+# CellPutS( NumberToString( Nb_Load ) , zCube_Process_PP, pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry ,'Nb_Load_Records' );
+
+
+#  ItemReject(  DataSourceNameForServer | ' is not find' );
+#     ProcessQuit;
+ ENDIF;
+
+
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+
+DIMENSIONSORTORDER( zDim , 'ByInput' , 'ASCENDING' , 'ByHierarchy' , 'ASCENDING' );
+
+#ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+#ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+#ATTRDELETE( zDim , 'German' );
+ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+#ATTRDELETE( zDim , 'Dutch' );
+ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+
+
+ATTRINSERT( zDim , '' , 'LTP Component Flag' , 'S' );
+
+ATTRINSERT( zDim , 'LTP Component Flag' , 'Project status' , 'S' );
+
+ATTRINSERT( zDim , 'Project status' , 'Legal Parent' , 'S' );
+
+ATTRINSERT( zDim , 'Legal Parent' , 'End of current contract year' , 'S' );
+
+ATTRINSERT( zDim , 'End of current contract year' , 'Status Renewal' , 'S' );
+
+ATTRINSERT( zDim , 'Status Renewal' , 'New contract end year' , 'S' );
+
+ATTRINSERT( zDim , 'New contract end year' , 'Growth Type' , 'S' );
+
+ATTRINSERT( zDim , 'Growth Type' , 'Current operator' , 'S' );
+
+ATTRINSERT( zDim , 'Current operator' , 'Assumed CAFOP' , 'S' );
+
+ATTRINSERT( zDim , 'Assumed CAFOP' , 'Status Growth' , 'S' );
+
+ATTRINSERT( zDim ,  'Status Growth' , 'Starting Date' , 'S' );
+
+ATTRINSERT( zDim , 'Starting Date' , 'Contract duration' , 'S' );
+
+ATTRINSERT( zDim , 'Contract duration' , 'Included LTP' , 'S' );
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+Nb_Lign = Nb_Lign + 1;
+
+zDim = 'Management_Organization_LTP_TEMP';
+
+DIMENSIONELEMENTINSERT( zDim , '' , Level_0 , 'n' );
+
+Nb_Load = Nb_Load + 1;
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+zDim = 'Management_Organization_LTP_TEMP';
+
+
+ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+ATTRPUTS( Desc_Dutch_0 , zDim , Level_0 , 'Dutch' );
+ATTRPUTS( Desc_German_0 , zDim , Level_0 , 'German' );
+ATTRPUTS( LTP_Component_Flag, zDim , Level_0 , 'LTP Component Flag' );
+ATTRPUTS( Project_status , zDim , Level_0 , 'Project status' );
+ATTRPUTS( Legal_Parent, zDim , Level_0 , 'Legal Parent' );
+ATTRPUTS( End_of_current_contract_year , zDim , Level_0 , 'End of current contract year' );
+ATTRPUTS( Status_Renewal , zDim , Level_0 , 'Status Renewal' );
+ATTRPUTS( New_contract_end_year , zDim , Level_0 , 'New contract end year' );
+ATTRPUTS( Growth_Type , zDim , Level_0 , 'Growth Type' );
+ATTRPUTS( Current_operator , zDim , Level_0 , 'Current operator' );
+ATTRPUTS( Assumed_CAFOP , zDim , Level_0 , 'Assumed CAFOP' );
+ATTRPUTS( Status_Growth , zDim , Level_0 , 'Status Growth' );
+ATTRPUTS( Starting_Date, zDim , Level_0 , 'Starting Date' );
+ATTRPUTS( Contract_duration , zDim , Level_0 , 'Contract duration' );
+ATTRPUTS( Included_LTP , zDim , Level_0 , 'Included LTP' );
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+
+pChore = 'LTP_Task5_CM_Import_CM_Data_Export_CO_Data';
+
+pSource = CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+
+pPeriod = CellGetS( 'z_Admin_Param' , 'PERIOD_LTP' , 'STR_VAR1');
+
+CellPutS( zDateTimeLoadingStart , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart,  pSource, pCountry ,'Start_date' );
+CellPutS( zDateTimeLoadingEnd , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry , 'End_date' );
+CellPutS( 'OK' , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry , 'Status' );
+CellPutS( NumberToString( Nb_Lign ) , zCube_Process_PP, pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry , 'Nb_Input_Records' );
+CellPutS( NumberToString( Nb_Reject ) , zCube_Process_PP , pChore, zProcess , pPeriod , zDateLoadingStart,  pSource, pCountry , 'Nb_Reject_Records' );
+CellPutS( NumberToString( Nb_Load ) , zCube_Process_PP, pChore , zProcess , pPeriod , zDateLoadingStart ,  pSource, pCountry ,'Nb_Load_Records' );
+#endregion

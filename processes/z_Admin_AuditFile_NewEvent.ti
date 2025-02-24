@@ -1,0 +1,35 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vCube = '}Audit_Evenement';
+vDim = '}Audit_NumEvent';
+
+IF (DIMIX(vDim,  pNewEvent) = 0);
+   DimensionElementInsertDirect(vDim, '', pNewEvent, 'N');
+
+   CellPutS(pObjType, vCube, pNewEvent, 'Param_Event_ObjType');
+   CellPutS(pObjName, vCube, pNewEvent, 'Param_Event_ObjName');
+   CellPutS(pDescription, vCube, pNewEvent, 'Param_Event_Description');
+   CellPutS(pNumEvent, vCube, pNewEvent, 'Param_Event_NumEvent');
+ELSE;
+   ItemReject('Evènement ' | pNewEvent | ' déjà présent.');
+ENDIF;
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

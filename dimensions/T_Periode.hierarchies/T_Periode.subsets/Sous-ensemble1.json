@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"Sous-ensemble1",
+	"Expression":"{TM1SubsetBasis()}"
+}

@@ -1,0 +1,213 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango
+# Created by : NEK
+# Created at : 18/07/2011
+# Modified by : MRE
+# Modified at : 12/04/2012
+# Modify reason : Mantis 1299 : add the archive instruction of the csv file
+#########################################
+
+zCube='TC_CONTRACT';
+CubeSetLogChanges(zCube, 0);
+zCube_Reject = 'ZZ_PROCESS_REJECT_BY_SOURCE';
+zCube_Process = 'ZZ_PROCESS_DETAIL_BY_SOURCE';
+nb_lign=0;
+nb_reject=0;
+nb_load=0;
+zSource = 'NL_EXACT';
+zProcess='DL_TC_CONTRACT_NL_EXACT_DIM4';
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\DIM4_Transco_' |  zsource  | '.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     CubeSetLogChanges(zCube, 1);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+#################################################################################
+#                                                               Clear CUBE
+#################################################################################
+
+
+P_NAME_RAZ = zCube | '_RAZ';
+ViewDestroy( zCube , P_NAME_RAZ );
+ViewCreate( zCube , P_NAME_RAZ );
+
+#-- Create subset in legal_Organization
+SubsetDestroy( 'Legal_Organization' , P_NAME_RAZ );
+SubsetCreate( 'Legal_Organization' , P_NAME_RAZ );
+i=1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' )+1 );
+   ElemE = DIMNM( 'Legal_Organization' , i );
+      IF ( ATTRS ( 'Legal_Organization' , ElemE,'Source_entity' ) @= zSource ) ;
+           SubsetElementInsert( 'Legal_Organization' , P_NAME_RAZ , ElemE , 1 );
+      ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , P_NAME_RAZ , 'Legal_Organization' , P_NAME_RAZ );
+
+#-- Create subset in z_str_var
+SubsetDestroy( 'z_str_var' , P_NAME_RAZ );
+SubsetCreate( 'z_str_var' , P_NAME_RAZ );
+SubsetElementInsert( 'z_str_var' , P_NAME_RAZ , 'STR_VAR3' , 1 );
+ViewSubsetAssign( zCube , P_NAME_RAZ , 'z_str_var' , P_NAME_RAZ );
+
+#-- clear cube
+ViewZeroOut( zCube , P_NAME_RAZ );
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube , P_NAME_RAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zCube , P_NAME_RAZ , 1 );
+ViewExtractSkipCalcsSet ( zCube , P_NAME_RAZ , 1 );
+
+#-- Delete subset
+ViewDestroy( zCube , P_NAME_RAZ );
+SubsetDestroy( 'Legal_Organization' , P_NAME_RAZ );
+SubsetDestroy( 'z_str_var' , P_NAME_RAZ );
+
+#################################################################################
+#                                                               Clear Reject Cube
+#################################################################################
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+P_NAME_RAZ = zCube_Reject | '_RAZ';
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+ViewCreate( zCube_Reject , P_NAME_RAZ );
+
+#-- Create subset in zz_Date_Time_loading and }Processes
+IF( SubsetExists( 'zz_Date_Time_loading' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( 'zz_Date_Time_loading' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ENDIF;
+
+IF( SubsetExists( '}Processes' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( '}Processes' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( '}Processes' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'zz_Date_Time_loading' , P_NAME_RAZ ,zDateLoadingStart , 1 );
+SubsetElementInsert( '}Processes' , P_NAME_RAZ , zProcess , 1 );
+
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Date_Time_loading' , P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , '}Processes', P_NAME_RAZ);
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipCalcsSet ( zCube_Reject , P_NAME_RAZ , 1 );
+
+#-- clear cube
+ViewZeroOut( zCube_Reject , P_NAME_RAZ );
+
+#-- Delete subset
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+SubsetDestroy( 'zz_Date_Time_loading' , P_NAME_RAZ );
+SubsetDestroy( '}Processes' , P_NAME_RAZ );
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+nb_lign=nb_lign+1;
+zrecord=Management_unit | ';' | Entity | ';' | dim_4;
+#################################################################################
+#                                                                             REJECT SECTION
+#################################################################################
+# if the management unit is empty, this record is reject
+IF(Management_unit @='' );
+   zerror_message='The management unit is empty in the file at line ' |  numbertostring(nb_lign) ;
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , pSource, zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , pSource, zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+#-- if the Entity is empty, this record is reject
+IF( Entity @= '' );
+   zerror_message='The entity is empty in the file at line ' |  numbertostring(nb_lign) ;
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , pSource, zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , pSource, zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+#-- if the Entity is not exists in legal_organization dimension, this record is reject
+IF(Dimix('Legal_Organization', Entity) = 0 );
+   zerror_message='The entity ' | Entity | '  does not exist in dimension Legal_Organization at line ' |  numbertostring(nb_lign) ;
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , pSource, zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , pSource, zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+
+#####################################################################################"
+#                                                                             INPUT SECTION
+#################################################################################
+
+#-- Input dans le cube TC_CONTRACT
+IF( Dimix('Legal_Organization', Entity) <> 0 & Entity @<> '' & Management_unit @<>'');
+     CellPutS( DIM_4 , zCube , Management_unit,  Entity, 'STR_VAR3' );
+     nb_load=nb_load+1;
+ENDIF;
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+CubeSetLogChanges(zCube, 1);
+# MRE - 12/04/2012 : Mantis 1299 : add the archive instruction of the csv file
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'DIM4_Transco_' |  zsource );
+
+
+#################################################################################
+#                                                                             DETAIL PROCESS SECTION
+#################################################################################
+
+CellPutS(zDateTimeLoadingStart , zCube_Process, pSource, zProcess ,zDateLoadingStart , 'Start_date');
+CellPutS(zDateTimeLoadingEnd , zCube_Process, pSource, zProcess ,zDateLoadingStart  , 'End_date');
+CellPutS(numbertostring(nb_lign) , zCube_Process, pSource, zProcess ,zDateLoadingStart  , 'Nb_Input_records');
+CellPutS(numbertostring(nb_reject) , zCube_Process, pSource, zProcess ,zDateLoadingStart  , 'Nb_reject_records');
+CellPutS(numbertostring(nb_load) , zCube_Process, pSource, zProcess ,zDateLoadingStart , 'Nb_load_records');
+
+
+IF(nb_lign = nb_load);
+    CellPutS('OK' , zCube_Process, pSource, zProcess ,zDateLoadingStart , 'Status');
+else;
+    CellPutS('KO' , zCube_Process, pSource, zProcess ,zDateLoadingStart , 'Status');
+    ItemReject( ' Process exited with errors at ' | TIME |  ' on ' | TODAY | '=> Check cubes : zz_Process_Detail_By_Source and  zz_Process_Reject_By_Source' );
+endif;
+
+#################################################################################
+#                                                                             END PROCESS
+#################################################################################
+#endregion

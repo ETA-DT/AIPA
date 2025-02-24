@@ -1,0 +1,81 @@
+#region Prolog
+#########################################
+# Project : Tango - build dimension Legal_Organization
+# Created by : FBU
+# Created at : 28/10/2011
+# Modified by : AEV
+# Modified at : 12/01/2012
+# Modify reason :
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+zDim = 'Legal_Organization';
+
+zDimP = 'Partner';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_DATA_VECTOR' , 'STR_VAR1') |  '\'|  zDim | '_AND_' | zDimP | '.csv';
+
+DataSourceNameForServer = Source_File;
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+If(ElisPar(zDim, 'To_classify', Entity) = 1);
+     DimensionElementComponentDelete(zDim, 'To_classify', Entity);
+ENDIF;
+
+If(ElisPar(zDimP, 'To_classify', Entity) = 1);
+     DimensionElementComponentDelete(zDimP, 'To_classify', Entity);
+ENDIF;
+
+
+#-- Insert in To classify if the entity not exists
+IF( DIMIX( zDim , Entity ) = 0 );
+     DIMENSIONELEMENTINSERT( zDim , '' , Entity , 'n' );
+     DIMENSIONELEMENTINSERT( zDim , '' , 'To_classify' , 'c' );
+     DIMENSIONELEMENTCOMPONENTADD( zDim , 'To_classify' , Entity , 1 );
+ENDIF;
+
+
+IF( DIMIX( zDimP , Entity ) = 0 );
+     DIMENSIONELEMENTINSERT( zDimP , '' , Entity , 'n' );
+     DIMENSIONELEMENTINSERT( zDimP , '' , 'To_classify' , 'c' );
+     DIMENSIONELEMENTCOMPONENTADD( zDimP , 'To_classify' , Entity , 1 );
+     DIMENSIONELEMENTCOMPONENTADD( zDimP , 'VTD_Group' , 'To_classify' , 1 );
+ENDIF;
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#-- Insert Alias
+ATTRPUTS( Code_ISO , zDim , Entity , 'Code_ISO' );
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zDim | '_AND_' | zDimP);
+
+
+#RSJC 25/02/2016 Suppression du SecurityRefresh inutile dans ce process
+#SecurityRefresh;
+#endregion

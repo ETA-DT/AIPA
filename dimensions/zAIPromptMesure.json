@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"zAIPromptMesure",
+	"Hierarchies@Code.links":
+	[
+		"zAIPromptMesure.hierarchies/zAIPromptMesure.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('zAIPromptMesure')/Hierarchies('zAIPromptMesure')"
+	}
+}

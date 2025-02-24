@@ -1,0 +1,45 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Documented this process
+#GENERALCOMMENT Unravels a given hierarchy for an element that stores children that have no parent(s)
+#GENERALCOMMENT It then proceeds to put all elements that have no parents into this consolidation.
+#DATASOURCECOMMENT N/A
+#PROLOGCOMMENT Disconnects all children of a given consolidation and then adds them back if they have no parent.
+#METADATACOMMENT N/A
+#DATACOMMENT N/A
+#EPILOGCOMMENT N/A
+
+IF(DIMIX(pDimName,pConsolidation)=0);
+	DimensionElementInsertDirect(pDimname,'',pConsolidation,'C');
+ENDIF;
+
+ExecuteProcess('}QUBEdocs_DisconnectConsolidations','pDimName',pDimName,'pConsolidation',pConsolidation);
+
+i=1;
+vDimSiz=DimSiz(pDimName);
+WHILE(i <= vDimSiz);
+  vElement = DIMNM(pDimName,i);
+  IF(DTYPE(pDimName,vElement) @='N' & ELPAR(pDimName,vElement,1) @='');
+    DimensionElementComponentAdd(pDimName, pConsolidation,vElement, 1);
+  ENDIF;
+ i= i +1;
+END;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

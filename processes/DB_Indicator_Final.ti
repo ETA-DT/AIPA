@@ -1,0 +1,248 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - build dimension Indicator
+# Created by : FBU
+# Created at : 04/08/2011
+# Modified by : MRE
+# Modified at : 31/08/2011
+# Modify reason : Ajout de code permettant le rattachement d'un troisième parent
+# Modified by : FBU
+# Modified at : 01/12/2011
+# Modify reason : Ajout de la création d'une dimension avec tous les éléments au niveau 0
+#########################################
+
+zDim = 'Indicator';
+zDimTech = '}Indicator';
+Ponderation = 1;
+
+DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+#ATTRDELETE( zDim , 'German' );
+#ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+#ATTRDELETE( zDim , 'Dutch' );
+#ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+#ATTRDELETE( zDim , 'Portuguese' );
+#ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+
+ATTRDELETE( zDim , 'Comment_English' );
+ATTRINSERT( zDim , '' , 'Comment_English' , 'S' );
+
+ATTRDELETE( zDim , 'Comment_French' );
+ATTRINSERT( zDim , '' , 'Comment_French' , 'S' );
+
+ATTRDELETE( zDim , 'Comment_US' );
+ATTRINSERT( zDim , '' , 'Comment_US' , 'S' );
+
+ATTRDELETE( zDim , 'Source_Indicator' );
+ATTRINSERT( zDim , '' , 'Source_Indicator' , 'S' );
+
+
+#-- Other translation for each language
+ATTRDELETE( zDim , 'Attribut English' );
+ATTRINSERT( zDim , '' , 'Attribut English' , 'S' );
+
+ATTRDELETE( zDim , 'Attribut French' );
+ATTRINSERT( zDim , '' , 'Attribut French' , 'S' );
+
+#ATTRDELETE( zDim , 'Attribut German' );
+#ATTRINSERT( zDim , '' , 'Attribut German' , 'S' );
+
+#ATTRDELETE( zDim , 'Attribut Dutch' );
+#ATTRINSERT( zDim , '' , 'Attribut Dutch' , 'S' );
+
+#ATTRDELETE( zDim , 'Attribut Portuguese' );
+#ATTRINSERT( zDim , '' , 'Attribut Portuguese' , 'S' );
+
+
+
+
+
+#endregion
+#region Metadata
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( ELLEV( zDimTech , Elem_Indic ) = 0 );
+    IF( SUBST( Elem_Indic , LONG( Elem_Indic ) - 4 , 5 ) @= '_comp ' );
+         TYPE = 's';
+         DIMENSIONELEMENTINSERT( zDim , '' , Elem_Indic , TYPE );
+    ELSE;
+         TYPE = 'n';
+          DIMENSIONELEMENTINSERT( zDim , '' , Elem_Indic , TYPE );
+    ENDIF;
+ELSE;
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Indic , 'c' );
+ENDIF;
+
+
+Elem_Parent = ELPAR( zDimTech , Elem_Indic , 1 );
+IF( Elem_Parent @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent , Elem_Indic , Ponderation );
+ENDIF;
+
+Elem_Parent2 = ELPAR( zDimTech , Elem_Indic , 2 );
+IF( Elem_Parent2 @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent2 , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent2, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent2 , Elem_Indic , Ponderation );
+ENDIF;
+
+# MRE - 31/08/2011 : ajout d'un troisième parent
+Elem_Parent3 = ELPAR( zDimTech , Elem_Indic , 3 );
+IF( Elem_Parent3 @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent3 , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent3, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent3 , Elem_Indic , Ponderation );
+ENDIF;
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+Source_Indicator = ATTRS( zDimTech , Elem_Indic , 'Source_Indicator ' );
+IF( Source_Indicator @<> '' );
+    ATTRPUTS( Source_Indicator , zDim , Elem_Indic , 'Source_Indicator' );
+ENDIF;
+
+IF( ELLEV( zDimTech , Elem_Indic ) = 0 );
+    Desc_English = ATTRS( zDimTech , Elem_Indic , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Indic , 'French' );
+    Desc_German = ATTRS( zDimTech , Elem_Indic , 'German' );
+    Desc_Dutch = ATTRS( zDimTech , Elem_Indic , 'Dutch' );
+    Desc_Portuguese = ATTRS( zDimTech , Elem_Indic , 'Portuguese' );
+    ATTRPUTS( Desc_English , zDim , Elem_Indic , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Indic , 'French' );
+    #ATTRPUTS( Desc_German , zDim , Elem_Indic , 'German' );
+    #ATTRPUTS( Desc_Dutch , zDim , Elem_Indic , 'Dutch' );
+    #ATTRPUTS( Desc_Portuguese , zDim , Elem_Indic , 'Portuguese' );
+ENDIF;
+
+
+Elem_Parent = ELPAR( zDimTech , Elem_Indic , 1 );
+IF( Elem_Parent @<> '' );
+    Desc_English = ATTRS( zDimTech , Elem_Parent , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent , 'French' );
+    Desc_German = ATTRS( zDimTech , Elem_Parent , 'German' );
+    Desc_Dutch = ATTRS( zDimTech , Elem_Parent , 'Dutch' );
+    Desc_Portuguese = ATTRS( zDimTech , Elem_Parent , 'Portuguese' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent , 'French' );
+    #ATTRPUTS( Desc_German , zDim , Elem_Parent , 'German' );
+    #ATTRPUTS( Desc_Dutch , zDim , Elem_Parent , 'Dutch' );
+    #ATTRPUTS( Desc_Portuguese , zDim , Elem_Parent , 'Portuguese' );
+ENDIF;
+
+
+Elem_Parent2 = ELPAR( zDimTech , Elem_Indic , 2 );
+IF( Elem_Parent2 @<> '' );
+    Desc_English = ATTRS( zDimTech , Elem_Parent2 , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent2 , 'French' );
+    Desc_German = ATTRS( zDimTech , Elem_Parent2 , 'German' );
+    Desc_Dutch = ATTRS( zDimTech , Elem_Parent2 , 'Dutch' );
+    Desc_Portuguese = ATTRS( zDimTech , Elem_Parent2 , 'Portuguese' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent2 , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent2 , 'French' );
+    #ATTRPUTS( Desc_German , zDim , Elem_Parent2 , 'German' );
+    #ATTRPUTS( Desc_Dutch , zDim , Elem_Parent2 , 'Dutch' );
+    #ATTRPUTS( Desc_Portuguese , zDim , Elem_Parent2 , 'Portuguese' );
+ENDIF;
+
+# MRE - 31/08/2011 : ajout d'un troisième parent
+Elem_Parent3 = ELPAR( zDimTech , Elem_Indic , 3 );
+IF( Elem_Parent3 @<> '' );
+    Desc_English = ATTRS( zDimTech , Elem_Parent3 , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent3 , 'French' );
+    Desc_German = ATTRS( zDimTech , Elem_Parent3 , 'German' );
+    Desc_Dutch = ATTRS( zDimTech , Elem_Parent3 , 'Dutch' );
+    Desc_Portuguese = ATTRS( zDimTech , Elem_Parent3 , 'Portuguese' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent3 , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent3 , 'French' );
+    #ATTRPUTS( Desc_German , zDim , Elem_Parent3 , 'German' );
+    #ATTRPUTS( Desc_Dutch , zDim , Elem_Parent3 , 'Dutch' );
+    #ATTRPUTS( Desc_Portuguese , zDim , Elem_Parent3 , 'Portuguese' );
+ENDIF;
+
+
+Comment_English = ATTRS( zDimTech , Elem_Indic , 'Comment_English' );
+Comment_French = ATTRS( zDimTech , Elem_Indic , 'Comment_French' );
+Comment_US = ATTRS( zDimTech , Elem_Indic , 'Comment_US' );
+IF( Comment_English @<> '' );
+     ATTRPUTS( Comment_English , zDim , Elem_Indic , 'Comment_English' );
+ENDIF;
+IF( Comment_French @<> '' );
+     ATTRPUTS( Comment_French , zDim , Elem_Indic , 'Comment_French' );
+ENDIF;
+IF( Comment_US @<> '' );
+     ATTRPUTS( Comment_US , zDim , Elem_Indic , 'Comment_US' );
+ENDIF;
+
+Attribut_English = ATTRS( zDimTech , Elem_Indic , 'Attribut English' );
+Attribut_French = ATTRS( zDimTech , Elem_Indic , 'Attribut French' );
+Attribut_German = ATTRS( zDimTech , Elem_Indic , 'Attribut German' );
+Attribut_Dutch = ATTRS( zDimTech , Elem_Indic , 'Attribut Dutch' );
+Attribut_Portuguese = ATTRS( zDimTech , Elem_Indic , 'Attribut Portuguese' );
+
+IF( Attribut_English @<> '' );
+     ATTRPUTS( Attribut_English , zDim , Elem_Indic , 'Attribut English' );
+ENDIF;
+IF( Attribut_French @<> '' );
+     ATTRPUTS( Attribut_French , zDim , Elem_Indic , 'Attribut French' );
+ENDIF;
+
+IF( Attribut_German @<> '' );
+     ATTRPUTS( Attribut_German , zDim , Elem_Indic , 'Attribut German' );
+ENDIF;
+IF( Attribut_Dutch @<> '' );
+     ATTRPUTS( Attribut_Dutch , zDim , Elem_Indic , 'Attribut Dutch' );
+ENDIF;
+
+IF( Attribut_Portuguese @<> '' );
+     ATTRPUTS( Attribut_Portuguese , zDim , Elem_Indic , 'Attribut English' );
+ENDIF;
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indic_BR' );
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indic_BS' );
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indic_CAFOP' );
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indic_Destination' );
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indic_Nature' );
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indic_Ope' );
+#endregion

@@ -1,0 +1,4 @@
+#region Prolog
+
+CubeClearData(pCube );
+#endregion

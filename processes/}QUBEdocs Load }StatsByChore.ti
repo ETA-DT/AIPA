@@ -1,0 +1,51 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Changed the process so that it creates a view if one does not exist.
+#GENERALCOMMENT This process loads stats from the appropriate TM1 stats cube into the consolidated }QUBEdocs Stats cube
+#DATASOURCECOMMENT 
+#PROLOGCOMMENT Set base Variables
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Load data
+#EPILOGCOMMENT Not Applicable
+
+sStatPrefix = 'CHORE:';
+sObjectPrefix = 'CHO:';
+sCube = '}QUBEdocs Stats';
+sClient = 'Server';
+sMeasure = 'Value';
+
+sStatsCube = '}StatsByChore'; sViewName = '}QUBEdocs All';
+IF(ViewExists(sStatsCube, sViewName) = 0);
+ViewCreate(sStatsCube, sViewName);
+ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF(subst(vObject,1,1) @='}'); ITEMSKIP; ENDIF;
+
+sStat = sStatPrefix | 'Run';
+
+sObject = sObjectPrefix | vObject;
+
+IF(VALUE_IS_STRING =1);
+ CELLPUTN(1,sCube,pStatVersion,vTimeInterval,sStat,sClient,sObject,sMeasure);
+ELSE;
+ CELLPUTN(1,sCube,pStatVersion,vTimeInterval,sStat,sClient,sObject,sMeasure);
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

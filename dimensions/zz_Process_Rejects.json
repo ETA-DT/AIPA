@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"zz_Process_Rejects",
+	"Hierarchies@Code.links":
+	[
+		"zz_Process_Rejects.hierarchies/zz_Process_Rejects.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('zz_Process_Rejects')/Hierarchies('zz_Process_Rejects')"
+	}
+}

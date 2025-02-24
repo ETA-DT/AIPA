@@ -1,0 +1,127 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#############################################################################
+# Project : Tango - Update technical dimension }Clients + Cube z_Client_Properties
+# Created by : AEV
+# Created at : 03/08/2011
+# Modified by : VNN & YAD
+# Modified at : 20/05/2016 et 26/05/2016
+# Modify reason : YAD Création des nouveaux ]Clients du fichier de Str dans z_Stat_Utilisateur (L0 : hors hiérachie)
+# Modify reason : YAD Ajout du bloc d'archivage du fichier Chargé dans l'épilogue
+# Modify reason : YAD modif des dates et mises a jour d'attributs du Cube z_Client_Properties
+#############################################################################
+
+
+zDim = '}Clients';
+
+zFile = 'Tango_Users_Groups_Securities';
+sDimTgt = 'z_Stat_Utilisateur' ;
+vCube =  'z_Client_Properties';
+vVue = 'zRAZ';
+ViewDestroy(vCube, vVue);
+ViewCreate(vCube, vVue);
+vDim = 'z_Client_Properties';
+vSub = 'zRAZ';
+SubsetDestroy(vDim, vSub);
+SubsetCreate(vDim, vSub);
+SubsetElementInsert(vDim, vSub, 'DateMAJ', 0);
+ViewSubsetAssign(vCube, vVue, vDim, vSub);
+ViewZeroOut(vCube, vVue);
+
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\' | zFile | '.csv';
+DataSourceNameForServer = Source_File;
+
+
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByName','ASCENDING');
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF( vLogin@<>'' );
+  AddClient(vLogin);
+        IF (DIMIX( 'z_Stat_Utilisateur' , vLogin ) = 0 );
+           #-- Création de l'utilisateur
+          DimensionElementInsert ( sDimTgt , '' , vLogin , 'n' ) ; 
+        ENDIF;
+
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# New Users ou Users archivés a réactiver  #### 
+
+# Orphelins ou New elements // On renseigne les dates de Création et MAJ + on modifie de le flag est courant
+
+IF (ELPARN('z_Stat_Utilisateur', vLogin)=0) ;
+
+       DateCreation = TIMST( NOW , '\Y\m\d' ) ;
+       CellPutS( DateCreation , 'z_Client_Properties', 'DateCreation' , vLogin ) ;
+       DateMAJ = TIMST( NOW , '\Y\m\d' ) ;
+       CellPutS( DateMAJ , 'z_Client_Properties', 'DateMAJ' , vLogin ) ;
+       CellPutS( 'Y' , 'z_Client_Properties' , 'EstCourant', vLogin) ;
+
+
+ENDIF ;
+
+# Users archivés a réactiver // On renseigne les dates de Création et MAJ + on modifie de le flag est courant et on clean la date de suppression
+# Ceci afin d'éviter des Pb lorsque la dim }Clients sera comparée à la dim z_Stat_Utilisateur des les processus suivants
+
+
+IF( ELISPAR('z_Stat_Utilisateur', 'Utilisateurs_Histo', vLogin)=1) ;
+       DateCreation = TIMST( NOW , '\Y\m\d' ) ;
+       CellPutS( DateCreation , 'z_Client_Properties', 'DateCreation' , vLogin ) ;
+       DateMAJ = TIMST( NOW , '\Y\m\d' ) ;
+       CellPutS( DateMAJ , 'z_Client_Properties', 'DateMAJ' , vLogin ) ;
+       ATTRPUTS( '' , 'z_Stat_Utilisateur', vLogin, 'DateSuppression' ) ;
+       CellPutS( 'Y' , 'z_Client_Properties' , 'EstCourant', vLogin) ;
+
+ENDIF ;
+
+# Tous les users déja présents  / On renseigne les attributs, les dates  + on modifie de le flag est courant
+# La date de MAJ ess également mise à jour dans la dim historique des Clients z_Stat_Utilisateur
+
+IF(vLogin@<>'');
+   CellPutS(vLogin, 'z_Client_Properties', 'Login', vLogin);
+   CellPutS(vLastName, 'z_Client_Properties', 'LastName', vLogin);
+   CellPutS(vFirstName, 'z_Client_Properties', 'FirstName', vLogin);
+   CellPutS(vLanguage, 'z_Client_Properties', 'Language', vLogin);
+   CellPutS(vEmail, 'z_Client_Properties', 'eMail', vLogin);
+   CellPutS(vLegal_Organization, 'z_Client_Properties', 'Default_Legal_Organization', vLogin);
+   CellPutS(vManagement_Organization, 'z_Client_Properties', 'Default_Management_Organization', vLogin);
+   CellPutS(vLegal_Organization_corp, 'z_Client_Properties', 'Default_Legal_Organization_Corp', vLogin);
+   CellPutS(vManagement_Organization_corp, 'z_Client_Properties', 'Default_Management_Organization_Corp', vLogin);
+   CellPutS(vLTP_Corp_Security, 'z_Client_Properties', 'LTP_Corp_Security', vLogin);
+   CellPutS(vPoste, 'z_Client_Properties', 'Poste', vLogin);
+   CellPutS(vZone, 'z_Client_Properties', 'Zone', vLogin);
+   CellPutS(vDetailZone, 'z_Client_Properties', 'Zone Detail', vLogin);
+   DateMAJ = TIMST( NOW , '\Y\m\d' ) ;
+   CellPutS( DateMAJ , 'z_Client_Properties' , 'DateMAJ', vLogin) ;
+  ATTRPUTS( DateMAJ , 'z_Stat_Utilisateur', vLogin, 'DateMAJ' ) ;
+   CellPutS( 'Y' , 'z_Client_Properties' , 'EstCourant', vLogin) ;
+
+
+ENDIF;
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#-- Copy the file structure in historical directory (Archives/Structure )
+
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zFile );
+#endregion

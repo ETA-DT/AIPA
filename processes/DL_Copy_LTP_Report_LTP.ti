@@ -1,0 +1,578 @@
+#region Prolog
+#########################################
+# Project : Tango - Version copying process LTP
+# Created by : FBU
+# Created at : 29/03/2012
+# Modified by : MAN
+# Modified at : 25/04/2012
+# Modify reason :
+# Modified by : BTA
+# Modified at : 20/11/2013
+# Modify reason : Include pPeriod End parameter and Indicators new business rules
+
+# -- Bruno Taboument 
+# Modified at : 26/09/2016
+# Modify reason : Optimization due to data volume : Do not copy and paste the rules
+
+# Modified by : BTA
+# Modified at : 29/09/2017
+# Modify reason : Ajout de la condition pour copier les indicateurs techniques de l'opérating lease
+
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#############
+
+TM1Path= CellGetS( 'z_Admin_Param' , 'REP_TM1DATA' ,'STR_VAR1') |'\';
+
+# BTA 26/09/2016 - Optimization due to data volume : Do not copy and paste the rules
+#RuleLoadFromFile('Report_LTP', TM1Path|'NE_PAS_SUPPRIMER_EMPTY_RULES_RP_LTP.TXT');
+
+#############
+
+pCountry = CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+pYear = CellGetS('z_Admin_param','YEAR_LTP','STR_Var1');
+
+zCube_Source = 'Report_LTP';
+zCube_Target = 'Report_LTP';
+
+CubeSetLogChanges(zCube_Target, 0);
+
+pLegal_Target = pLegal_Source;
+pActivity_Target = pActivity_Source;
+#IF ( pType_Indicator@='S' % pType_Indicator@='O');
+pPeriod_Target = pPeriod_Source;
+
+zCube_Reject = 'ZZ_PROCESS_REJECT';
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+
+Nb_Lign = 0;
+Nb_Reject = 0;
+Nb_Load = 0;
+
+zProcess = 'DL_Copy_LTP_Report_LTP';
+
+zDateLoadingStart = TIMST( NOW , '\Y-\M-\D' );
+zDateTimeLoadingStart = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+
+
+#################################################################################
+#                                                               Clear Reject Cube
+#################################################################################
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess( 'DB_zz_Date_Time_loading' );
+######
+
+P_NAME_RAZ = zCube_Reject | '_RAZ';
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+ViewCreate( zCube_Reject , P_NAME_RAZ );
+
+#-- Create subset in zz_Date_Time_loading and }Processes
+IF( SubsetExists( 'zz_Date_Time_loading' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ENDIF;
+
+IF( SubsetExists( '}Processes' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( '}Processes' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( '}Processes' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'zz_Date_Time_loading' , P_NAME_RAZ ,zDateLoadingStart , 1 );
+SubsetElementInsert( '}Processes' , P_NAME_RAZ , zProcess , 1 );
+
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Date_Time_loading' , P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , '}Processes', P_NAME_RAZ);
+
+#-- Clear cube
+ViewZeroOut( zCube_Reject , P_NAME_RAZ );
+
+#-- Update subset
+ViewExtractSkipZeroesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zCube_Reject , P_NAME_RAZ , 1 );
+ViewExtractSkipCalcsSet ( zCube_Reject , P_NAME_RAZ , 1 );
+
+#-- Delete subset
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+SubsetDestroy( 'zz_Date_Time_loading' , P_NAME_RAZ );
+SubsetDestroy( '}Processes' , P_NAME_RAZ );
+
+
+#################################################################################
+#                                                               Clear CUBE RP_LTP Target
+#################################################################################
+P_NAME_RAZ = zCube_Target | '_Copy_Version_RAZ';
+ViewDestroy( zCube_Target , P_NAME_RAZ );
+ViewCreate( zCube_Target , P_NAME_RAZ );
+
+
+#############-- Create subset in Activity #############
+IF( SubsetExists( 'Activity' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Activity' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Activity' , P_NAME_RAZ );
+ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Activity' ) + 1 );
+    ElemA = DIMNM( 'Activity' , i );
+    IF( ELLEV( 'Activity' , ElemA ) = 0     & ( ELISANC( 'Activity' , pActivity_Target , ElemA ) > 0
+    % pActivity_Target @= ElemA ));
+        SubsetElementInsert( 'Activity' , P_NAME_RAZ , ElemA , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Activity' , P_NAME_RAZ );
+
+
+#############-- Create subset in LTP_Components #############
+IF( SubsetExists( 'LTP_Components' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'LTP_Components' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'LTP_Components' , P_NAME_RAZ );
+ENDIF;
+
+i = 1;
+WHILE( i < DIMSIZ ( 'LTP_Components' ) + 1 );
+    ElemC = DIMNM( 'LTP_Components' , i );
+    IF( ELLEV( 'LTP_Components' , ElemC ) = 0
+    & ( ELISANC( 'LTP_Components' , 'LTP' , ElemC ) > 0
+    % ELISANC( 'LTP_Components' , 'LTP_Country' , ElemC ) > 0  % ELISANC( 'LTP_Components' , 'TOT_LTP_bef_Corp_allocation' , ElemC ) > 0  ));
+        SubsetElementInsert( 'LTP_Components' , P_NAME_RAZ , ElemC , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'LTP_Components' , P_NAME_RAZ );
+
+
+#############-- Create subset in Weighting #############
+IF( SubsetExists( 'Weighting' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( 'Weighting' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Weighting' , P_NAME_RAZ );
+ENDIF;
+SubsetElementInsert( 'Weighting' , P_NAME_RAZ , 'W_NO_APP' , 1 );
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Weighting' , P_NAME_RAZ );
+
+
+#############-- Create subset in Legal_Organization #############
+IF( SubsetExists( 'Legal_Organization' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Legal_Organization' , P_NAME_RAZ );
+ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' ) + 1 );
+    ElemLO = DIMNM( 'Legal_Organization' , i );
+    IF( ELLEV( 'Legal_Organization' , ElemLO ) = 0
+    & ( ELISANC( 'Legal_Organization' , pLegal_Target , ElemLO ) > 0
+    % pLegal_Target @= ElemLO ));
+        SubsetElementInsert( 'Legal_Organization' , P_NAME_RAZ , ElemLO , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Legal_Organization' , P_NAME_RAZ );
+
+
+#############-- Create subset in Period #############
+IF( SubsetExists( 'Period' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_RAZ );
+ENDIF;
+
+#Mantis 1912
+#IF ( pType_Indicator@= 'S');
+#          SubsetElementInsert( 'Period' , P_NAME_RAZ , 'F_Year_'|pYear , 1 );
+#ELSEIF (pType_Indicator@= 'O');
+#          SubsetElementInsert( 'Period' , P_NAME_RAZ ,pPeriod_Source, 1 );
+#ELSE;
+#Year_N = STRINGTONUMBER(pYear);
+#j = YEAR_N-1;
+#k = YEAR_N+ 17;
+#WHILE( j < k);
+#           SubsetElementInsert( 'Period' , P_NAME_RAZ , 'F_Year_'|numbertoString(j) , 1 );
+#           j = j +1;
+#END;
+#ENDIF;
+
+#BTA 20112013 - Modification 
+IF( pPeriod_Source @= pPeriod_End );
+          SubsetElementInsert( 'Period', P_NAME_RAZ, pPeriod_Source,1 );
+ELSE;
+  
+  vYearStart = SUBST(pPeriod_Source, 8,4);
+  vYearStop = SUBST(pPeriod_End, 8,4);
+  vNbYears = ABS( StringToNumber(vYearStop ) - StringToNumber(vYearStart) );
+  i = 0;
+  WHILE( i <= vNbYears ) ; 
+      vPeriodCourante = 'F_YEAR_' | NumberToString( StringToNumber(vYearStart) + i);
+      SubsetElementInsert( 'Period', P_NAME_RAZ, vPeriodCourante,1 );
+      i = i + 1;
+  END;
+ENDIF;
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Period' , P_NAME_RAZ );
+
+#############-- Create subset in Phase #############
+IF( SubsetExists( 'Phase' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_RAZ );
+ENDIF;
+SubsetElementInsert( 'Phase' , P_NAME_RAZ , pPhase_Target , 1 );
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Phase' , P_NAME_RAZ );
+
+
+#############-- Create subset in Indicator_LTP #############
+IF( SubsetExists( 'Indicator_LTP' , P_NAME_RAZ ) = 1 );
+    SubsetDeleteAllElements( 'Indicator_LTP' , P_NAME_RAZ );
+ELSE;
+    SubsetCreate( 'Indicator_LTP' , P_NAME_RAZ );
+ENDIF;
+
+#Mantis 1912
+#IF ( pType_Indicator@= 'S');
+#i = 1;
+#WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+#    ElemIND = DIMNM( 'Indicator_LTP' , i );
+#    IF( ATTRS('Indicator_LTP', ElemIND, 'Flag_saisie')@='Saisie' );
+#        SubsetElementInsert( 'Indicator_LTP' , P_NAME_RAZ , ElemIND , 1 );
+#    ENDIF;
+#    i = i + 1;
+#END;
+#ELSEIF ( pType_Indicator@='O');
+#i = 1;
+#WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+#    ElemIND = DIMNM( 'Indicator_LTP' , i );
+#    IF( ELISANC( 'Indicator_LTP' , 'OP_IND' , ElemIND ) = 1 );
+#        SubsetElementInsert( 'Indicator_LTP' , P_NAME_RAZ , ElemIND , 1 );
+#    ENDIF;
+#    i = i + 1;
+#END;
+#ELSE;
+#
+#i = 1;
+#WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+#    ElemIND = DIMNM( 'Indicator_LTP' , i );
+##   IF( ELLEV( 'Indicator_LTP' , ElemA ) = 0  & ELISANC( 'Indicator_LTP' , 'Assumptions' , ElemI ) = 0 & ELISANC( 'Indicator_LTP' , 'Other_Assumption
+##s' , ElemI ) = 0  );
+## Mantis 1758
+##IF( ELLEV( 'Indicator_LTP' , ElemIND ) = 0);
+#        SubsetElementInsert( 'Indicator_LTP' , P_NAME_RAZ , ElemIND , 1 );
+#    #ENDIF;
+#    i = i + 1;
+#END;
+#ENDIF;
+
+#BTA 20112013 - Modification 
+## -- Indicateur Saisie : Prendre la totalité des indicateurs de saisie
+IF( pType_Indicator @= 'Saisie' ); 
+	i = 1;
+	WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+	ElemIND = DIMNM( 'Indicator_LTP' , i );
+	IF( ATTRS('Indicator_LTP', ElemIND, 'Flag_saisie')@='Saisie' );
+	    SubsetElementInsert( 'Indicator_LTP', P_NAME_RAZ, ElemIND , 1 );
+	ENDIF;
+	i = i + 1;
+	END;
+ELSE;
+	IF( pType_Indicator @= 'ALL' ); 
+		i = 1;
+		WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+		ElemIND = DIMNM( 'Indicator_LTP' , i );
+		IF( ELLEV('Indicator_LTP', ElemIND) = 0 );
+			SubsetElementInsert( 'Indicator_LTP', P_NAME_RAZ, ElemIND , 1 );
+		ENDIF;
+		i = i + 1;
+		END;	
+	ELSE;
+		## -- Indicateur Code 
+		IF( ELLEV('Indicator_LTP', pType_Indicator) = 0 );
+			SubsetElementInsert( 'Indicator_LTP' , P_NAME_RAZ, pType_Indicator, 1 );
+		ELSE;
+			## -- Indicateur Parent : Prendre la totalité des enfants du père
+			i = 1;
+			WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+			ElemIND = DIMNM( 'Indicator_LTP' , i );
+			IF( ELISANC( 'Indicator_LTP' , pType_Indicator, ElemIND ) = 1 % ElemIND @= pType_Indicator );
+			  SubsetElementInsert( 'Indicator_LTP', P_NAME_RAZ, ElemIND , 1 );
+			ENDIF;
+			i = i + 1;
+			END;
+		ENDIF;		
+	ENDIF;
+ENDIF;
+ViewSubsetAssign( zCube_Target , P_NAME_RAZ , 'Indicator_LTP' , P_NAME_RAZ );
+
+
+##############-- Clear cube #############
+ViewZeroOut( zCube_Target , P_NAME_RAZ );
+
+##############-- Delete subset #############
+ViewDestroy( zCube_Target , P_NAME_RAZ );
+SubsetDestroy( 'Activity' , P_NAME_RAZ );
+SubsetDestroy( 'LTP_Components' , P_NAME_RAZ );
+SubsetDestroy( 'Weighting' , P_NAME_RAZ );
+SubsetDestroy( 'Legal_Organization' , P_NAME_RAZ );
+SubsetDestroy( 'Period' , P_NAME_RAZ );
+SubsetDestroy( 'Phase' , P_NAME_RAZ );
+SubsetDestroy( 'Indicator_LTP' , P_NAME_RAZ );
+
+
+#################################################################################
+#                                                               Source Cube : RP_LTP
+#################################################################################
+P_NAME_SOURCE = zCube_Source | '_Vue';
+ViewDestroy( zCube_Source , P_NAME_SOURCE );
+ViewCreate( zCube_Source , P_NAME_SOURCE );
+
+
+#############-- Create subset in Activity #############
+IF( SubsetExists( 'Activity' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Activity' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Activity' , P_NAME_SOURCE );
+ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Activity' ) + 1 );
+    ElemA = DIMNM( 'Activity' , i );
+    IF( ELLEV( 'Activity' , ElemA ) = 0  & ( ELISANC( 'Activity' , pActivity_Source , ElemA ) > 0
+    % pActivity_Source @= ElemA ));
+        SubsetElementInsert( 'Activity' , P_NAME_SOURCE , ElemA , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Activity' , P_NAME_SOURCE );
+
+
+#############--  Create subset in Currency  #############
+IF( SubsetExists( 'Currency' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Currency' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Currency' , P_NAME_SOURCE );
+ENDIF;
+SubsetElementInsert( 'Currency' , P_NAME_SOURCE , 'LCL' , 1 );
+SubsetElementInsert( 'Currency' , P_NAME_SOURCE , 'EUR' , 2 );
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Currency' , P_NAME_SOURCE );
+
+
+#############-- Create subset in LTP_Components #############
+IF( SubsetExists( 'LTP_Components' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'LTP_Components' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'LTP_Components' , P_NAME_SOURCE );
+ENDIF;
+
+i = 1;
+WHILE( i < DIMSIZ ( 'LTP_Components' ) + 1 );
+    ElemC = DIMNM( 'LTP_Components' , i );
+    IF( ELLEV( 'LTP_Components' , ElemC ) = 0
+    & ( ELISANC( 'LTP_Components' , 'LTP' , ElemC ) > 0
+    % ELISANC( 'LTP_Components' , 'LTP_Country' , ElemC ) > 0  % ELISANC( 'LTP_Components' , 'TOT_LTP_bef_Corp_allocation' , ElemC ) > 0  ));
+        SubsetElementInsert( 'LTP_Components' , P_NAME_SOURCE , ElemC , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'LTP_Components' , P_NAME_SOURCE );
+
+
+#############-- Create subset in Weighting #############
+IF( SubsetExists( 'Weighting' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Weighting' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Weighting' , P_NAME_SOURCE );
+ENDIF;
+SubsetElementInsert( 'Weighting' , P_NAME_SOURCE , 'W_NO_APP' , 1 );
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Weighting' , P_NAME_SOURCE );
+
+
+#############-- Create subset in Legal_Organization #############
+IF( SubsetExists( 'Legal_Organization' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Legal_Organization' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Legal_Organization' , P_NAME_SOURCE );
+ENDIF;
+i = 1;
+WHILE( i < DIMSIZ ( 'Legal_Organization' ) + 1 );
+    ElemLO = DIMNM( 'Legal_Organization' , i );
+    IF( ELLEV( 'Legal_Organization' , ElemLO ) = 0
+    & ( ELISANC( 'Legal_Organization' , pLegal_Source , ElemLO ) > 0
+    % pLegal_Source @= ElemLO ));
+        SubsetElementInsert( 'Legal_Organization' , P_NAME_SOURCE , ElemLO , 1 );
+    ENDIF;
+    i = i + 1;
+END;
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Legal_Organization' , P_NAME_SOURCE );
+
+
+#############-- Create subset in Period #############
+IF( SubsetExists( 'Period' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Period' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Period' , P_NAME_SOURCE );
+ENDIF;
+
+##Mantis 1912
+#IF ( pType_Indicator@= 'S' );
+#            SubsetElementInsert( 'Period' , P_NAME_SOURCE , 'F_Year_'|pYear , 1 );
+#ELSEIF (pType_Indicator@= 'O');
+#                    SubsetElementInsert( 'Period' , P_NAME_SOURCE , pPeriod_Source, 1 );
+#ELSE;
+#Year_N = STRINGTONUMBER(pYear);
+#j =YEAR_N-1;
+#k = YEAR_N+ 17;
+#WHILE( j < k);
+#           SubsetElementInsert( 'Period' , P_NAME_SOURCE , 'F_Year_'|numbertoString(j) , 1 );
+#           j = j +1;
+#END;
+#ENDIF;
+
+#BTA 20112013 - Modification 
+IF( pPeriod_Source @= pPeriod_End );
+  SubsetElementInsert( 'Period', P_NAME_SOURCE, pPeriod_Source,1 );
+ELSE;
+  vYearStart = SUBST(pPeriod_Source, 8,4);
+  vYearStop = SUBST(pPeriod_End, 8,4);
+  vNbYears = ABS( StringToNumber(vYearStop ) - StringToNumber(vYearStart) );
+  i = 0;
+  WHILE( i <= vNbYears ) ; 
+      vPeriodCourante = 'F_YEAR_' | NumberToString( StringToNumber(vYearStart) + i);
+      SubsetElementInsert( 'Period', P_NAME_SOURCE, vPeriodCourante,1 );
+      i = i + 1;
+  END;
+ENDIF;
+
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Period' , P_NAME_SOURCE );
+
+
+
+#############-- Create subset in Phase #############
+IF( SubsetExists( 'Phase' , P_NAME_SOURCE ) =1 );
+    SubsetDeleteAllElements( 'Phase' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Phase' , P_NAME_SOURCE );
+ENDIF;
+SubsetElementInsert( 'Phase' , P_NAME_SOURCE , pPhase_Source , 1 );
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Phase' , P_NAME_SOURCE );
+
+
+#############-- Create subset in Indicator_LTP #############
+IF( SubsetExists( 'Indicator_LTP' , P_NAME_SOURCE ) = 1 );
+    SubsetDeleteAllElements( 'Indicator_LTP' , P_NAME_SOURCE );
+ELSE;
+    SubsetCreate( 'Indicator_LTP' , P_NAME_SOURCE );
+ENDIF;
+
+#BTA 20112013 - Modification 
+## -- Indicateur Saisie : Prendre la totalité des indicateurs de saisie
+IF( pType_Indicator @= 'Saisie' ); 
+	i = 1;
+	WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+	ElemIND = DIMNM( 'Indicator_LTP' , i );
+	IF( ATTRS('Indicator_LTP', ElemIND, 'Flag_saisie')@='Saisie' );
+	    SubsetElementInsert( 'Indicator_LTP', P_NAME_SOURCE, ElemIND , 1 );
+	ENDIF;
+	i = i + 1;
+	END;
+	
+ELSE;
+	IF( pType_Indicator @= 'ALL' );
+		i = 1;
+		WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+		ElemIND = DIMNM( 'Indicator_LTP' , i );
+		IF( ELLEV('Indicator_LTP', ElemIND) = 0  );
+			SubsetElementInsert( 'Indicator_LTP', P_NAME_SOURCE, ElemIND , 1 );
+		ENDIF;
+		i = i + 1;
+		END;
+	ELSE;
+		## -- Indicateur Code 
+		IF( ELLEV('Indicator_LTP', pType_Indicator) = 0 );
+			SubsetElementInsert( 'Indicator_LTP' , P_NAME_SOURCE, pType_Indicator, 1 );
+		ELSE;
+			## -- Indicateur Parent : Prendre la totalité des enfants du père
+			i = 1;
+			WHILE( i < DIMSIZ ( 'Indicator_LTP' ) + 1 );
+			ElemIND = DIMNM( 'Indicator_LTP' , i );
+			IF( ELISANC( 'Indicator_LTP' , pType_Indicator, ElemIND ) = 1 % ElemIND @= pType_Indicator );
+			  SubsetElementInsert( 'Indicator_LTP', P_NAME_SOURCE, ElemIND , 1 );
+			ENDIF;
+			i = i + 1;
+			END;
+		ENDIF;	
+	ENDIF;
+ENDIF;
+	
+
+ViewSubsetAssign( zCube_Source , P_NAME_SOURCE , 'Indicator_LTP' , P_NAME_SOURCE );
+
+
+##############-- Update subset #############
+ViewExtractSkipZeroesSet ( zCube_Source , P_NAME_SOURCE , 1 );
+ViewExtractSkipRuleValuesSet ( zCube_Source , P_NAME_SOURCE , 1 );
+ViewExtractSkipCalcsSet ( zCube_Source , P_NAME_SOURCE , 1 );
+
+
+DatasourceNameForServer = zCube_Source ;
+DatasourceCubeview = P_NAME_SOURCE ;
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( CellIsUpdateable( zCube_Target , Activity , Currency , LTP_Components , Weighting , Legal_Organization , Period , pPhase_Target , Indicator_LTP )<> 0 );
+
+	# -- BTA 29/09/2017 : Ajout de la condition pour copier les indicateurs techniques de l'opérating lease
+	IF( DTYPE( 'Indicator_LTP', Indicator_LTP ) @= 'S' ); 
+		CellPutS( Value , zCube_Target , Activity , Currency , LTP_Components , Weighting , Legal_Organization , Period , pPhase_Target , Indicator_LTP);
+	ELSE;
+		CellPutN( StringtoNumber( Value ) , zCube_Target , Activity , Currency , LTP_Components , Weighting , Legal_Organization , Period , pPhase_Target , Indicator_LTP);
+	ENDIF;
+
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+##############-- Delete view and subsets #############
+ViewDestroy( zCube_Source , P_NAME_SOURCE );
+SubsetDestroy( 'Activity' , P_NAME_SOURCE );
+SubsetDestroy( 'Currency' , P_NAME_SOURCE );
+SubsetDestroy( 'LTP_Components' , P_NAME_SOURCE );
+SubsetDestroy( 'Weighting' , P_NAME_SOURCE );
+SubsetDestroy( 'Legal_Organization' , P_NAME_SOURCE );
+SubsetDestroy( 'Period' , P_NAME_SOURCE );
+SubsetDestroy( 'Phase' , P_NAME_SOURCE );
+SubsetDestroy( 'Indicator_LTP' , P_NAME_SOURCE );
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+CellPutS( zDateTimeLoadingStart , zCube_Process , zProcess , zDateLoadingStart , 'Start_date' );
+CellPutS( zDateTimeLoadingEnd , zCube_Process , zProcess , zDateLoadingStart , 'End_date' );
+CellPutS( 'OK' , zCube_Process , zProcess , zDateLoadingStart , 'Status' );
+
+CubeSetLogChanges(zCube_Target, 1);
+#endregion

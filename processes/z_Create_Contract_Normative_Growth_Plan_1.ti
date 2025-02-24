@@ -1,0 +1,53 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - create a new contract (=management unit)
+# Created by : MRE
+# Created at : 16/09/2011
+# Modified by : BTA
+# Modified at : 21/11/2016
+# Modify reason : Suppression des langues German, Dutch et Portuguese
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+zDim = 'Management_Organization_LTP';
+
+ExistContract= DIMIX(zDim, 'pContractCode ');
+
+IF( pContractCode @<>'' );
+    IF(ExistContract = 0); 
+        DIMENSIONELEMENTINSERT( zDim , '', pContractCode , 'n' );
+    ENDIF;
+ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+    AttrPutS(pContractName, 'Management_Organization_LTP', pContractCode , 'English');
+    AttrPutS(pContractName, 'Management_Organization_LTP', pContractCode , 'French');
+    AttrPutS(pLegalParent, 'Management_Organization_LTP', pContractCode , 'Legal Parent');
+    AttrPutS(pGrowthType, 'Management_Organization_LTP', pContractCode , 'Growth Type');
+    AttrPutS(pCurrentOperator, 'Management_Organization_LTP', pContractCode , 'Current operator');
+    AttrPutS(pProjetcStatus, 'Management_Organization_LTP', pContractCode , 'Project status');
+    AttrPutS(pStartingDate, 'Management_Organization_LTP', pContractCode , 'Starting Date');
+    AttrPutS(pContractDuration, 'Management_Organization_LTP', pContractCode , 'Contract duration');
+    AttrPutS(pIncludedLTP, 'Management_Organization_LTP', pContractCode , 'Included LTP');
+    AttrPutS(pLTPComponent, 'Management_Organization_LTP', pContractCode , 'LTP Component Flag');
+#endregion

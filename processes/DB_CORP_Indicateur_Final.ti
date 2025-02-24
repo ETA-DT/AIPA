@@ -1,0 +1,128 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - build dimension Indicator
+# Created by : 
+# Created at : 
+# Modified by : 
+# Modified at :
+#########################################
+
+zDim = 'Indicator_Corp';
+zDimTech = '}Indicator_Corp';
+
+Ponderation = 1;
+
+
+#DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'Français' );
+ATTRINSERT( zDim , '' , 'Français' , 'A' );
+
+
+
+
+#endregion
+#region Metadata
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+Elem_Parent = ELPAR( zDimTech , Elem_Indic , 1 );
+IF( Elem_Parent @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent , Elem_Indic , Ponderation  );
+ENDIF;
+
+Elem_Parent2 = ELPAR( zDimTech , Elem_Indic , 2 );
+IF( Elem_Parent2 @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent2 , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent2, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent2 , Elem_Indic , Ponderation  );
+ENDIF;
+
+
+Elem_Parent3 = ELPAR( zDimTech , Elem_Indic , 3 );
+IF( Elem_Parent3 @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent3 , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent3, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent3 , Elem_Indic , Ponderation  );
+ENDIF;
+
+
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+IF( ELLEV( zDimTech , Elem_Indic ) = 0 );
+    Desc_English = ATTRS( zDimTech , Elem_Indic , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Indic , 'Français' );
+    ATTRPUTS( Desc_English , zDim , Elem_Indic , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Indic , 'Français' );
+ENDIF;
+
+
+Elem_Parent = ELPAR( zDimTech , Elem_Indic , 1 );
+IF( Elem_Parent @<> '' );
+    Desc_English = ATTRS( zDimTech , Elem_Parent , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent , 'Français' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent , 'Français' );
+
+ENDIF;
+
+Elem_Parent2 = ELPAR( zDimTech , Elem_Indic , 2 );
+IF( Elem_Parent2 @<> '' );
+    Desc_English = ATTRS( zDimTech , Elem_Parent2 , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent2 , 'Français' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent2 , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent2 , 'Français' );
+ENDIF;
+
+
+Elem_Parent3 = ELPAR( zDimTech , Elem_Indic , 3 );
+IF( Elem_Parent3 @<> '' );
+    Desc_English = ATTRS( zDimTech , Elem_Parent3 , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent3 , 'Français' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent3 , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent3 , 'Français' );
+ENDIF;
+
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indicateurs_Gallot' );
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , 'Indicateurs_Tango_Corporate' );
+
+
+#endregion

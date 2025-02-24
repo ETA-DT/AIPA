@@ -1,0 +1,37 @@
+{
+	"@type":"Subset",
+	"Name":"GIE - Antennes L0",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1801')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1817')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1811')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1815')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1803')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1813')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1805')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1804')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1818')"
+		},
+		{
+			"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')/Elements('1810')"
+		}
+	]
+}

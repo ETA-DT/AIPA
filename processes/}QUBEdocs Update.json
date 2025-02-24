@@ -1,0 +1,45 @@
+{
+	"@type":"Process",
+	"Name":"}QUBEdocs Update",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"}QUBEdocs Update.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pUpdate",
+			"Prompt":"Update Definitions?",
+			"Value":"Y",
+			"Type":"String"
+		},
+		{
+			"Name":"pGenerate",
+			"Prompt":"Generate documentation? (Y/N/API)",
+			"Value":"N",
+			"Type":"String"
+		},
+		{
+			"Name":"pServer",
+			"Prompt":"QUBEdocs Local Server Name?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pConnection",
+			"Prompt":"QUBEdocs Local Connection Name?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pClearStats",
+			"Prompt":"Clear Stats after update?",
+			"Value":"N",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

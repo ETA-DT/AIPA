@@ -1,0 +1,218 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+vApplyRules = 0;
+vAttachMeasuresDim = '}AttachmentMeasures';
+vAttachmentsDim = '}Attachments';
+vAttachmentObject = '}ElementAttachments_' | pObjectName;
+vSubset = 'Sorted Attachments';
+DATASOURCEASCIIQUOTECHARACTER='';
+IF (DIMENSIONEXISTS(pObjectName) = 0);
+PROCESSQUIT;
+ENDIF;
+ 
+IF (pAction @= 'ADD');
+IF (pType @= '' );
+PROCESSQUIT;
+ENDIF;
+ 
+vExecuteCreateProcess = 0;
+IF (CUBEEXISTS(vAttachmentObject) = 0);
+vExecuteCreateProcess = -1; 
+ELSE;
+IF (SUBSETEXISTS(vAttachmentsDim, vSubset) = 0);
+vExecuteCreateProcess = -1; 
+ENDIF;
+ENDIF;
+IF (vExecuteCreateProcess = -1);
+######
+# Execute object create procedure
+######
+EXECUTEPROCESS('}Attachments_Create_Object', 
+'pAction', 'CREATE',
+'pObjectType', 'DIMENSION',
+'pObjectName', pObjectName);
+ENDIF;
+vAttachSize = SUBSETGETSIZE(vAttachmentsDim, vSubset);
+IF (vAttachSize <= 0);
+EXECUTEPROCESS('}Attachments_Extender',
+'pMaxAttachments', 10);
+vAttachSize = SUBSETGETSIZE(vAttachmentsDim, vSubset);
+ENDIF;
+ 
+vInsertIndex = 0;
+vAttachIndex = 1;
+WHILE (vAttachIndex <= vAttachSize);
+vAttachment = 'Attachment ' | TRIM(STR(vAttachIndex, 2, 0));
+vType = CELLGETS(vAttachmentObject, pDimensionElement, vAttachment, 'Type');
+IF (vType @= '');
+vInsertIndex = vAttachIndex;
+vAttachIndex = vAttachSize + 1;
+ENDIF;
+vAttachIndex = vAttachIndex + 1;
+END;
+IF (vInsertIndex = 0);
+EXECUTEPROCESS('}Attachments_Extender',
+'pMaxAttachments', vAttachSize + 1);
+vInsertIndex = vAttachSize + 1;
+ENDIF;
+IF (vInsertIndex > 0);
+vAttachment = 'Attachment ' | TRIM(STR(vInsertIndex, 2, 0));
+
+CELLPUTS(pType, vAttachmentObject, pDimensionElement, vAttachment, 'Type');
+CELLPUTS(pName, vAttachmentObject, pDimensionElement, vAttachment, 'Name');
+CELLPUTS(pPath, vAttachmentObject, pDimensionElement, vAttachment, 'Path');
+CELLPUTS(pSize, vAttachmentObject, pDimensionElement, vAttachment, 'Size');
+CELLPUTS(pFileType, vAttachmentObject, pDimensionElement, vAttachment, 'File Type');
+CELLPUTS(pCreateUser, vAttachmentObject, pDimensionElement, vAttachment, 'Created By');
+CELLPUTS(pCreateDatetime, vAttachmentObject, pDimensionElement, vAttachment, 'Created Datetime');
+CELLPUTS('1', vAttachmentObject, pDimensionElement, vAttachment, 'Counts');
+IF (ELLEV(pObjectName, pDimensionElement) = 0);
+CELLPUTN(1, vAttachmentObject, pDimensionElement, vAttachment, 'Count');
+ENDIF;
+CELLPUTS(pDescription, vAttachmentObject, pDimensionElement, vAttachment, 'Description');
+ENDIF;
+ELSEIF (pAction @= 'REMOVE');
+ 
+IF (pAttachment @= '');
+PROCESSQUIT;
+ENDIF;
+ 
+IF (CUBEEXISTS(vAttachmentObject) = 0);
+PROCESSQUIT;
+ENDIF;
+IF (SUBSETEXISTS(vAttachmentsDim, vSubset) = 0);
+PROCESSQUIT;
+ENDIF;
+vAttachSize = SUBSETGETSIZE(vAttachmentsDim, vSubset);
+IF (vAttachSize <= 0);
+PROCESSQUIT;
+ENDIF;
+ 
+vInsertIndex = 0;
+vAttachIndex = 1;
+vMove = 0;
+WHILE (vAttachIndex <= vAttachSize);
+vAttachment = 'Attachment ' | TRIM(STR(vAttachIndex, 2, 0));
+IF (vAttachment @= pAttachment % vMove = -1);
+vMove = -1; 
+IF (vAttachIndex < vAttachSize);
+vNextAttachment = 'Attachment ' | TRIM(STR(vAttachIndex + 1, 2, 0));
+vPath = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'Path');
+vName = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'Name');
+vType = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'Type');
+vCount = CELLGETN(vAttachmentObject, pDimensionElement, vNextAttachment, 'Count');
+vCounts = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'Counts');
+vFileType = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'File Type');
+vCreateUser = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'Created By');
+vCreateDatetime = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'Created Datetime');
+vSize = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'Size');
+vDescription = CELLGETS(vAttachmentObject, pDimensionElement, vNextAttachment, 'Description');
+ELSE;
+vPath = '';
+vName = '';
+vType = '';
+vCounts = '';
+vCount = 0;
+ENDIF;
+CELLPUTS( vType, vAttachmentObject, pDimensionElement, vAttachment, 'Type');
+CELLPUTS(vName, vAttachmentObject, pDimensionElement, vAttachment, 'Name');
+CELLPUTS(vPath, vAttachmentObject, pDimensionElement, vAttachment, 'Path');
+CELLPUTS(vCounts, vAttachmentObject, pDimensionElement, vAttachment, 'Counts');
+CELLPUTS(vSize, vAttachmentObject, pDimensionElement, vAttachment, 'Size');
+CELLPUTS(vFileType, vAttachmentObject, pDimensionElement, vAttachment, 'File Type');
+CELLPUTS(vCreateUser, vAttachmentObject, pDimensionElement, vAttachment, 'Created By');
+CELLPUTS(vCreateDatetime, vAttachmentObject, pDimensionElement, vAttachment, 'Created Datetime');
+CELLPUTS(vDescription, vAttachmentObject, pDimensionElement, vAttachment, 'Description');
+IF (ELLEV(pObjectName, pDimensionElement) = 0);
+CELLPUTN(vCount, vAttachmentObject, pDimensionElement, vAttachment, 'Count');
+ENDIF;
+ 
+ENDIF;
+vAttachIndex = vAttachIndex + 1;
+END;
+ 
+ELSEIF (pAction @= 'UPDATE');
+ 
+IF (pAttachment @= '');
+PROCESSQUIT;
+ENDIF;
+ 
+IF (CUBEEXISTS(vAttachmentObject) = 0);
+PROCESSQUIT;
+ENDIF;
+IF (SUBSETEXISTS(vAttachmentsDim, vSubset) = 0);
+PROCESSQUIT;
+ENDIF;
+vAttachSize = SUBSETGETSIZE(vAttachmentsDim, vSubset);
+IF (vAttachSize <= 0);
+PROCESSQUIT;
+ENDIF;
+ 
+vInsertIndex = 0;
+vAttachIndex = 1;
+WHILE (vAttachIndex <= vAttachSize);
+vAttachment = 'Attachment ' | TRIM(STR(vAttachIndex, 2, 0));
+IF (vAttachment @= pAttachment);
+ 
+CELLPUTS(pType, vAttachmentObject, pDimensionElement, vAttachment, 'Type');
+CELLPUTS(pName, vAttachmentObject, pDimensionElement, vAttachment, 'Name');
+CELLPUTS(pPath, vAttachmentObject, pDimensionElement, vAttachment, 'Path');
+CELLPUTS(pSize, vAttachmentObject, pDimensionElement, vAttachment, 'Size');
+CELLPUTS(pFileType, vAttachmentObject, pDimensionElement, vAttachment, 'File Type');
+CELLPUTS(pCreateUser, vAttachmentObject, pDimensionElement, vAttachment, 'Created By');
+CELLPUTS(pCreateDatetime, vAttachmentObject, pDimensionElement, vAttachment, 'Created Datetime');
+CELLPUTS(pDescription, vAttachmentObject, pDimensionElement, vAttachment, 'Description');
+CELLPUTS('1', vAttachmentObject, pDimensionElement, vAttachment, 'Counts');
+IF (ELLEV(pObjectName, pDimensionElement) = 0);
+CELLPUTN(1, vAttachmentObject, pDimensionElement, vAttachment, 'Count');
+ENDIF;
+ 
+vAttachIndex = vAttachSize + 1;
+ENDIF;
+vAttachIndex = vAttachIndex + 1;
+END;
+ 
+ELSE;
+PROCESSQUIT;
+ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vAttachSize = ELCOMPN(vAttachmentsDim , 'All Attachments');
+IF (vAttachSize <= 0);
+PROCESSQUIT;
+ENDIF;
+
+vAllCtr = 0; 
+vInsertIndex = 0;
+vAttachIndex = 1;
+vMove = 0;
+WHILE (vAttachIndex <= vAttachSize);
+vAttachment = ELCOMP(vAttachmentsDim, 'All Attachments', vAttachIndex);
+IF (CELLGETS(vAttachmentObject, pDimensionElement, vAttachment, 'Counts') @= '1');
+vAllCtr = vAllCtr + 1;
+ENDIF;
+
+vAttachIndex = vAttachIndex + 1;
+END;
+
+CELLPUTS(TRIM(STR(vAllCtr, 15, 0)), vAttachmentObject, pDimensionElement, 'All Attachments', 'Counts');
+ 
+#endregion

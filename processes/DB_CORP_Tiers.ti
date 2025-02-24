@@ -1,0 +1,208 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango Corporate - Tiers
+# Created by : MBO
+# Created at : 09/01/2012
+# Modified by : BTA
+# Modified at : 19/07/2017
+# Modify reason : Migration des codes RFN 
+#########################################
+
+zDim = 'Tiers';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+
+DataSourceNameForServer = Source_File;
+
+#DIMENSIONDELETEALLELEMENTS( zDim );
+
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'Français' );
+ATTRINSERT( zDim , '' , 'Français' , 'A' );
+
+ATTRDELETE( zDim , 'Code_RFN' ); 
+ATTRINSERT( zDim, '' , 'Code_RFN' , 'S' ); 
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF( Niveau_2 @= '' );
+
+          DIMENSIONELEMENTINSERT( zDim ,'',Niveau_1,'n');
+          DIMENSIONELEMENTINSERT( zDim ,'',Code_RFN,'n');
+
+ELSEIF( Niveau_3 @= '' );
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_2,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_1,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_1,Niveau_2, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_1,Code_RFN, 1.000000 );
+
+ELSEIF( Niveau_4 @= '' );
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_3,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_2,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_1,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_1,Niveau_2, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_2,Niveau_3, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_2,Code_RFN, 1.000000 );
+
+ELSEIF( Niveau_5 @= '' );
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_4,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_3,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_2,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_1,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_1,Niveau_2, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_2,Niveau_3, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_3,Niveau_4, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_3,Code_RFN, 1.000000 );
+
+ELSE;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_5,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_3,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_2,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Niveau_1,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_1,Niveau_2, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_2,Niveau_3, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_3,Niveau_4, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_4,Niveau_5, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Niveau_4,Code_RFN, 1.000000 );
+
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF( Niveau_2 @= '' );
+
+	ATTRPUTS( English_1 , zDim , Niveau_1 , 'English' );
+
+	# -- si le niveau 1 est égal au nouveau code RFN alors pas de migration, donc pas de changement de libellé 
+	# -- sinon ajouter le suffixe "old" à la fin de l'ancien libellé 
+	IF( Niveau_1 @= Code_RFN ); 
+		ATTRPUTS( Français_1 , zDim , Niveau_1 , 'Français' );
+	ELSE;
+		ATTRPUTS( Français_1 | ' - old' , zDim , Niveau_1 , 'Français' );
+		ATTRPUTS( Français_1 , zDim , Code_RFN , 'Français' );
+	ENDIF;
+
+
+	ATTRPUTS( Code_RFN , zDim , Niveau_1 , 'Code_RFN' );
+	ATTRPUTS( Code_RFN , zDim , Code_RFN , 'Code_RFN' );
+
+	ELSEIF( Niveau_3 @= '' );
+
+		ATTRPUTS( English_1 , zDim , Niveau_1 , 'English' );
+		ATTRPUTS( Français_1 , zDim , Niveau_1 , 'Français' );
+		ATTRPUTS( English_2 , zDim , Niveau_2 , 'English' );
+
+		# -- si le niveau 2 est égal au nouveau code RFN alors pas de migration, donc pas de changement de libellé 
+		# -- sinon ajouter le suffixe "old" à la fin de l'ancien libellé 
+		IF( Niveau_2 @= Code_RFN );
+			ATTRPUTS( Français_2 , zDim , Niveau_2 , 'Français' );
+		ELSE;
+			ATTRPUTS( Français_2 | ' - old' , zDim , Niveau_2 , 'Français' );
+			ATTRPUTS( Français_2 , zDim , Code_RFN , 'Français' );
+		ENDIF;
+
+		ATTRPUTS( Code_RFN , zDim , Niveau_2 , 'Code_RFN' );
+		ATTRPUTS( Code_RFN , zDim , Code_RFN , 'Code_RFN' );
+
+
+	ELSEIF( Niveau_4 @= '' );
+
+		ATTRPUTS( English_1 , zDim , Niveau_1 , 'English' );
+		ATTRPUTS( Français_1 , zDim , Niveau_1 , 'Français' );
+		ATTRPUTS( English_2 , zDim , Niveau_2 , 'English' );
+		ATTRPUTS( Français_2 , zDim , Niveau_2 , 'Français' );
+		ATTRPUTS( English_3 , zDim , Niveau_3 , 'English' );
+
+		# -- si le niveau 3 est égal au nouveau code RFN alors pas de migration, donc pas de changement de libellé 
+		# -- sinon ajouter le suffixe "old" à la fin de l'ancien libellé 
+		IF( Niveau_3 @= Code_RFN ); 
+			ATTRPUTS( Français_3 , zDim , Niveau_3 , 'Français' );
+		ELSE;
+			ATTRPUTS( Français_3 | ' - old' , zDim , Niveau_3 , 'Français' );
+			ATTRPUTS( Français_3 , zDim , Code_RFN , 'Français' );
+		ENDIF;
+
+		ATTRPUTS( Code_RFN , zDim , Niveau_3 , 'Code_RFN' );
+		ATTRPUTS( Code_RFN , zDim , Code_RFN , 'Code_RFN' );
+
+	ELSEIF( Niveau_5 @= '' );
+	
+		ATTRPUTS( English_1 , zDim , Niveau_1 , 'English' );
+		ATTRPUTS( Français_1 , zDim , Niveau_1 , 'Français' );
+		ATTRPUTS( English_2 , zDim , Niveau_2 , 'English' );
+		ATTRPUTS( Français_2 , zDim , Niveau_2 , 'Français' );
+		ATTRPUTS( English_3 , zDim , Niveau_3 , 'English' );
+		ATTRPUTS( Français_3 , zDim , Niveau_3 , 'Français' );
+		ATTRPUTS( English_4 , zDim , Niveau_4 , 'English' );
+
+		# -- si le niveau 4 est égal au nouveau code RFN alors pas de migration, donc pas de changement de libellé 
+		# -- sinon ajouter le suffixe "old" à la fin de l'ancien libellé 
+		IF( Niveau_4 @= Code_RFN );
+			ATTRPUTS( Français_4 , zDim , Niveau_4 , 'Français' );
+		ELSE;
+			ATTRPUTS( Français_4 | ' - old' , zDim , Niveau_4 , 'Français' );
+			ATTRPUTS( Français_4 , zDim , Code_RFN , 'Français' );
+		ENDIF;
+
+		ATTRPUTS( Code_RFN , zDim , Niveau_4 , 'Code_RFN' );
+		ATTRPUTS( Code_RFN , zDim , Code_RFN , 'Code_RFN' );
+
+	ELSE;
+
+		ATTRPUTS( English_1 , zDim , Niveau_1 , 'English' );
+		ATTRPUTS( Français_1 , zDim , Niveau_1 , 'Français' );
+		ATTRPUTS( English_2 , zDim , Niveau_2 , 'English' );
+		ATTRPUTS( Français_2 , zDim , Niveau_2 , 'Français' );
+		ATTRPUTS( English_3 , zDim , Niveau_3 , 'English' );
+		ATTRPUTS( Français_3 , zDim , Niveau_3 , 'Français' );
+		ATTRPUTS( English_4 , zDim , Niveau_4 , 'English' );
+		ATTRPUTS( Français_4 , zDim , Niveau_4 , 'Français' );
+		ATTRPUTS( English_5 , zDim , Niveau_5 , 'English' );
+
+		# -- si le niveau 5 est égal au nouveau code RFN alors pas de migration, donc pas de changement de libellé 
+		# -- sinon ajouter le suffixe "old" à la fin de l'ancien libellé 
+		IF( Niveau_5 @= Code_RFN );
+			ATTRPUTS( Français_5 , zDim , Niveau_5 , 'Français' );
+		ELSE;
+			ATTRPUTS( Français_5 | ' - old' , zDim , Niveau_5 , 'Français' );
+			ATTRPUTS( Français_5 , zDim , Code_RFN , 'Français' );
+		ENDIF;
+
+		ATTRPUTS( Code_RFN , zDim , Niveau_5 , 'Code_RFN' );
+		ATTRPUTS( Code_RFN , zDim , Code_RFN , 'Code_RFN' );
+
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zDim );
+
+#-- Optimisation - Pas nécessaire dans ce processus
+#SecurityRefresh;
+#endregion

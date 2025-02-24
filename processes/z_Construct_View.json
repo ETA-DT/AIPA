@@ -1,0 +1,27 @@
+{
+	"@type":"Process",
+	"Name":"z_Construct_View",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"z_Construct_View.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"Cube_Name",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"Cube_View",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

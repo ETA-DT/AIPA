@@ -1,0 +1,641 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - Multi-instance
+# Created by :NEK
+# Created at : 24/10/2011
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+DatasourceASCIIDelimiter =';';
+
+
+# Parametre possible pour pPhase :
+# => All : toutes les phases
+# => ACTUAL : les phases ACT et MAN_AJUST seront prises
+# => BUDGET_FC : le parametre TYPE_PHASE de z_ADMIN_PARAM sera pris
+# => nom de phase : si la phase est consolidée, ses enfants level 0 seront pris, sinon si la phase est niveau feuille, elle sera prise
+
+# Parametre possible pour pPeriod :
+# => All : toutes les périodes
+# => default : lles périodes prises à partie des valeurs de z_admin_param (MONTH_ACTUAL pour phase ACTUAL, YEAR_BUDGET_FORECAST pour BUDGET_FC)
+# => nom de periode : si la periode est consolidée, ses enfants level 0 seront pris, sinon si la periode est niveau feuille, elle sera prise
+
+zCube = 'RP_PL';
+zProcess = 'DL_Report_PL_RP_PL';
+zCubeTarget='Report_PL';
+
+CubeSetLogChanges(zCubeTarget, 0);
+
+nb_lign = 0;
+nb_load = 0;
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+pCountry=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+IF(pPhase@='BUDGET_FC');
+   ParamPhase = CellGetS( 'z_Admin_Param' , 'TYPE_PHASE' , 'STR_VAR1');
+ENDIF;
+
+
+IF((pPhase @<>'ACTUAL' & pPhase@<>'BUDGET_FC' & pPhase @<>'all' ) & DIMIX('Phase',pPhase)=0);
+     ProcessQuit;
+ENDIF;
+IF((pPeriod @<>'default' & pPeriod@<>'all') & DIMIX('Period',pPeriod)=0);
+     ProcessQuit;
+ENDIF;
+
+######
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+#################################################################################
+#                                                               RAZ CUBE 
+#################################################################################
+vViewRAZ = zCubeTarget | '_RAZ';
+vSubRAZ = zCubeTarget | '_RAZ';
+
+ViewDestroy( zCubeTarget , vViewRAZ );
+vDim='Activity';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Currency';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Gaap';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Integration_Rate';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Legal_Organization';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Management_Organization';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Period';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Phase';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Indicator';
+SubsetDestroy(vDim,vSubRAZ);
+
+ViewCreate( zCubeTarget , vViewRAZ );
+ViewExtractSkipZeroesSet ( zCubeTarget , vViewRAZ , 1 );
+ViewExtractSkipRuleValuesSet ( zCubeTarget , vViewRAZ , 1 );
+ViewExtractSkipCalcsSet ( zCubeTarget , vViewRAZ , 1 );
+
+# Activity -> lev0
+vDim='Activity';
+SubsetCreate(vDim, vSubRAZ);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSubRAZ  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCubeTarget , vViewRAZ , vDim, vSubRAZ );
+
+# Currency -> lev0
+vDim='Currency';
+SubsetCreate(vDim, vSubRAZ);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSubRAZ  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCubeTarget , vViewRAZ , vDim, vSubRAZ );
+
+# Gaap -> lev0
+vDim='Gaap';
+SubsetCreate(vDim, vSubRAZ);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSubRAZ  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCubeTarget  , vViewRAZ , vDim, vSubRAZ );
+
+# Integration_Rate -> lev0
+vDim='Integration_Rate';
+SubsetCreate(vDim, vSubRAZ);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSubRAZ  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCubeTarget  , vViewRAZ , vDim, vSubRAZ );
+
+# Legal_Organization -> lev0
+vDim='Legal_Organization';
+SubsetCreate(vDim, vSubRAZ);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0  ) ;
+           SubsetElementInsert( vDim , vSubRAZ  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCubeTarget  , vViewRAZ , vDim, vSubRAZ );
+
+# Management_Organization -> lev0
+vDim='Management_Organization';
+SubsetCreate(vDim, vSubRAZ);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSubRAZ  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCubeTarget  , vViewRAZ , vDim, vSubRAZ );
+
+# Period -> lev0
+vDim='Period';
+SubsetCreate(vDim, vSubRAZ);
+IF( pPeriod @= 'default' );
+  IF(pPhase@='ACTUAL');
+     pPeriod_Cube = CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+     SubsetElementInsert( vDim , vSubRAZ  , pPeriod_Cube , 1 );
+  ELSEIF(pPhase@='BUDGET_FC');
+     pPeriod_Cube = CellGetS( 'z_Admin_Param' , 'YEAR_BUDGET_FORECAST' , 'STR_VAR1');
+     SubsetElementInsert( vDim , vSubRAZ  , pPeriod_Cube , 1 );
+  ENDIF;
+ELSEIF( pPeriod @= 'all' );
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0  );
+             SubsetElementInsert( vDim, vSubRAZ , ElemP , 1 );
+         ENDIF;
+         i=i+1;
+     END;
+ELSEIF(ELLEV(vDim,pPeriod)<>0);
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0 & ELISANC( vDim , pPeriod , ElemP) > 0 );
+             SubsetElementInsert( vDim, vSubRAZ , ElemP , 1);
+         ENDIF;
+         i=i+1;
+     END;
+ELSEIF(ELLEV(vDim,pPeriod)=0);
+      SubsetElementInsert( vDim, vSubRAZ , pPeriod , 1);
+ENDIF;
+ViewSubsetAssign( zCubeTarget , vViewRAZ , vDim, vSubRAZ );
+
+# Phase -> lev0
+vDim='Phase';
+SubsetCreate(vDim, vSubRAZ);
+IF(pPhase @= 'ACTUAL');
+      SubsetElementInsert( vDim , vSubRAZ , 'ACT' , 1 );
+      SubsetElementInsert( vDim , vSubRAZ , 'MAN_AJUST' , 2 );
+ELSEIF(pPhase @= 'BUDGET_FC');
+ IF(ParamPhase @= 'Budget');
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0 & ELISANC( vDim , 'BUDG_ALL' , ElemP) > 0 );
+             SubsetElementInsert( vDim, vSubRAZ , ElemP , 1);
+         ENDIF;
+         i=i+1;
+     END;
+ ELSEIF(ParamPhase @= 'Forecast1');
+   i= 0;
+   While (i <=1 );
+      #pPhase = 'FC_1_V'|NumberToString(i);
+      #pPhase2 = 'MAN_FC_1_V'|NumberToString(i);   
+      #SubsetElementInsert( vDim , vSubRAZ , pPhase , i );
+      #SubsetElementInsert( vDim , vSubRAZ , pPhase2 , i );
+      vPhase = 'FC_1_V'|NumberToString(i);
+      vPhase2 = 'MAN_FC_1_V'|NumberToString(i);   
+      SubsetElementInsert( vDim , vSubRAZ , vPhase , i );
+      SubsetElementInsert( vDim , vSubRAZ , vPhase2 , i );
+      SubsetElementInsert( vDim , vSubRAZ , 'FC_1_VC' , 1 );
+      SubsetElementInsert( vDim , vSubRAZ , 'MAN_FC_1_VC' , 1 );
+      i=i+1;
+   END;
+ ELSEIF(ParamPhase @= 'Forecast2');
+   i= 0;
+   While (i <= 1 );
+      #pPhase = 'FC_2_V'|NumberToString(i);
+      #pPhase2 = 'MAN_FC_2_V'|NumberToString(i);   
+      #SubsetElementInsert( vDim , vSubRAZ , pPhase , i );
+      #SubsetElementInsert( vDim , vSubRAZ , pPhase2 , i );
+      vPhase = 'FC_2_V'|NumberToString(i);
+      vPhase2 = 'MAN_FC_2_V'|NumberToString(i);   
+      SubsetElementInsert( vDim , vSubRAZ , vPhase , i );
+      SubsetElementInsert( vDim , vSubRAZ , vPhase2 , i );
+      SubsetElementInsert( vDim , vSubRAZ, 'FC_2_VC' , 1 );
+      SubsetElementInsert( vDim , vSubRAZ , 'MAN_FC_2_VC' , 1 );
+      i=i+1;
+   END;
+ ENDIF;
+ELSEIF( pPhase @= 'all' );
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0  );
+             SubsetElementInsert( vDim, vSubRAZ , ElemP , 1 );
+         ENDIF;
+         i=i+1;
+     END;
+ELSEIF(ELLEV(vDim,pPhase)<>0 );
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0 & ELISANC( vDim , pPhase , ElemP) > 0 );
+             SubsetElementInsert( vDim, vSubRAZ , ElemP , 1);
+         ENDIF;
+         i=i+1;
+     END;
+ELSEIF(ELLEV(vDim,pPhase)=0);
+      SubsetElementInsert( vDim, vSubRAZ , pPhase, 1);
+ENDIF;
+ViewSubsetAssign( zCubeTarget , vViewRAZ , vDim, vSubRAZ );
+
+# Indicator -> lev0
+vDim='Indicator';
+SubsetCreate(vDim, vSubRAZ);
+i=1;
+  WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSubRAZ  , ElemE , 1 );
+    ENDIF;
+     i=i+1;
+  END;
+ViewSubsetAssign( zCubeTarget  , vViewRAZ , vDim, vSubRAZ );
+
+ViewZeroOut(zCubeTarget, vViewRAZ);
+
+
+#################################################################################
+#                                                               Source CUBE 
+#################################################################################
+vView = zCube | '_View';
+vSub = zCube | '_View';
+
+ViewDestroy( zCube , vView );
+vDim='Activity';
+SubsetDestroy(vDim,vSub);
+vDim='Currency';
+SubsetDestroy(vDim,vSub);
+vDim='Gaap';
+SubsetDestroy(vDim,vSub);
+vDim='Integration_Rate';
+SubsetDestroy(vDim,vSub);
+vDim='Legal_Organization';
+SubsetDestroy(vDim,vSub);
+vDim='Management_Organization';
+SubsetDestroy(vDim,vSub);
+vDim='Period';
+SubsetDestroy(vDim,vSub);
+vDim='Phase';
+SubsetDestroy(vDim,vSub);
+vDim='Indicator';
+SubsetDestroy(vDim,vSub);
+
+ViewCreate( zCube , vView );
+ViewExtractSkipZeroesSet ( zCube , vView , 1 );
+ViewExtractSkipRuleValuesSet ( zCube , vView , 0 );
+ViewExtractSkipCalcsSet ( zCube , vView , 1 );
+
+# Activity -> lev0
+vDim='Activity';
+SubsetCreate(vDim, vSub);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSub  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+# Currency -> lev0
+vDim='Currency';
+SubsetCreate(vDim, vSub);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSub  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+# Gaap -> lev0
+vDim='Gaap';
+SubsetCreate(vDim, vSub);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSub  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+# Integration_Rate -> lev0
+vDim='Integration_Rate';
+SubsetCreate(vDim, vSub);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSub  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+# Legal_Organization -> lev0
+vDim='Legal_Organization';
+SubsetCreate(vDim, vSub);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0  ) ;
+           SubsetElementInsert( vDim , vSub  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+# Management_Organization -> lev0
+vDim='Management_Organization';
+SubsetCreate(vDim, vSub);
+i=1;
+WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSub  , ElemE , 1 );
+    ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+# Period -> parameter
+vDim='Period';
+SubsetCreate(vDim, vSub);
+IF( pPeriod @= 'default' );
+  IF(pPhase@='ACTUAL');
+     pPeriod_Cube = CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+     SubsetElementInsert( vDim , vSub  , pPeriod_Cube , 1 );
+  ELSEIF(pPhase@='BUDGET_FC');
+     pPeriod_Cube = CellGetS( 'z_Admin_Param' , 'YEAR_BUDGET_FORECAST' , 'STR_VAR1');
+     SubsetElementInsert( vDim , vSub  , pPeriod_Cube , 1 );
+  ENDIF;
+ELSEIF( pPeriod @= 'all' );
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0  );
+             SubsetElementInsert( vDim, vSub , ElemP , 1 );
+         ENDIF;
+         i=i+1;
+     END;
+ELSEIF(ELLEV(vDim,pPeriod)<>0);
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0 & ELISANC( vDim , pPeriod , ElemP) > 0 );
+             SubsetElementInsert( vDim, vSub , ElemP , 1);
+         ENDIF;
+         i=i+1;
+     END;
+ELSEIF(ELLEV(vDim,pPeriod)=0);
+      SubsetElementInsert( vDim, vSub , pPeriod , 1);
+ENDIF;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+# Phase -> parameter
+vDim='Phase';
+SubsetCreate(vDim, vSub);
+IF(pPhase @= 'ACTUAL');
+      SubsetElementInsert( vDim , vSub , 'ACT' , 1 );
+      SubsetElementInsert( vDim , vSub , 'MAN_AJUST' , 2 );
+ELSEIF(pPhase @= 'BUDGET_FC');
+ IF(ParamPhase @= 'Budget');
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0 & ELISANC( vDim , 'BUDG_ALL' , ElemP) > 0 );
+             SubsetElementInsert( vDim, vSub , ElemP , 1);
+         ENDIF;
+         i=i+1;
+     END;
+ ELSEIF(ParamPhase @= 'Forecast1');
+   i= 0;
+   While (i <=1 );
+      #pPhase = 'FC_1_V'|NumberToString(i);
+      #pPhase2 = 'MAN_FC_1_V'|NumberToString(i);   
+      #SubsetElementInsert( vDim , vSub , pPhase , i );
+      #SubsetElementInsert( vDim , vSub , pPhase2 , i );
+      vPhase = 'FC_1_V'|NumberToString(i);
+      vPhase2 = 'MAN_FC_1_V'|NumberToString(i);   
+      SubsetElementInsert( vDim , vSub , vPhase , i );
+      SubsetElementInsert( vDim , vSub , vPhase2 , i );
+      SubsetElementInsert( vDim , vSub , 'FC_1_VC' , 1 );
+      SubsetElementInsert( vDim , vSub , 'MAN_FC_1_VC' , 1 );
+      i=i+1;
+   END;
+ ELSEIF(ParamPhase @= 'Forecast2');
+   i= 0;
+   While (i <= 1 );
+      pPhase = 'FC_2_V'|NumberToString(i);
+      pPhase2 = 'MAN_FC_2_V'|NumberToString(i);   
+      SubsetElementInsert( vDim , vSub , pPhase , i );
+      SubsetElementInsert( vDim , vSub , pPhase2 , i );
+      vPhase = 'FC_2_V'|NumberToString(i);
+      vPhase2 = 'MAN_FC_2_V'|NumberToString(i);   
+      SubsetElementInsert( vDim , vSub , vPhase , i );
+      SubsetElementInsert( vDim , vSub , vPhase2 , i );
+      SubsetElementInsert( vDim , vSub, 'FC_2_VC' , 1 );
+      SubsetElementInsert( vDim , vSub , 'MAN_FC_2_VC' , 1 );
+      i=i+1;
+   END;
+  ENDIF;
+ELSEIF( pPhase @= 'all' );
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0  );
+             SubsetElementInsert( vDim, vSub , ElemP , 1 );
+         ENDIF;
+         i=i+1;
+     END;
+ELSEIF(ELLEV(vDim,pPhase)<>0 );
+      i=1;
+      WHILE( i < DIMSIZ ( vDim)+1 );
+         ElemP = DIMNM( vDim , i );
+         IF( ELLEV( vDim , ElemP ) = 0 & ELISANC( vDim , pPhase , ElemP) > 0 );
+             SubsetElementInsert( vDim, vSub , ElemP , 1);
+         ENDIF;
+         i=i+1;
+     END;
+ELSEIF(ELLEV(vDim,pPhase)=0);
+      SubsetElementInsert( vDim, vSub , pPhase , 1);
+ENDIF;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+# Indicator -> lev0
+vDim='Indicator';
+SubsetCreate(vDim, vSub);
+i=1;
+  WHILE( i < DIMSIZ ( vDim )+1 );
+    ElemE = DIMNM( vDim, i );
+    IF ( ELLEV(vDim,ElemE)=0) ;
+           SubsetElementInsert( vDim , vSub  , ElemE , 1 );
+    ENDIF;
+     i=i+1;
+  END;
+ViewSubsetAssign( zCube , vView , vDim, vSub );
+
+DataSourceType='VIEW';
+DatasourceNameForServer = zCube ;
+DatasourceNameForClient = zCube ;
+DatasourceCubeview = vView ;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+IF(Indicator@='Safety_comp' % Indicator@='Quality_comp' % Indicator@='Env_comp' );
+    itemskip;
+ENDIF;
+
+vValue=stringtonumber(value);
+
+Nb_Lign = Nb_Lign + 1;
+IF( CellIsUpdateable( zCubeTarget , Activity,Currency,Gaap,Integration_rate,Legal_Organization ,Management_Organization, Period , Phase , Indicator ) 
+= 1 );
+   CELLPUTN(vValue , zCubeTarget, Activity,Currency,Gaap,Integration_rate,Legal_Organization ,Management_Organization, Period , Phase , Indicator );
+   Nb_Load = Nb_Load + 1;
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#-- Suppress view
+ViewDestroy( zCube , vView );
+vDim='Activity';
+SubsetDestroy(vDim,vSub);
+vDim='Currency';
+SubsetDestroy(vDim,vSub);
+vDim='Gaap';
+SubsetDestroy(vDim,vSub);
+vDim='Integration_Rate';
+SubsetDestroy(vDim,vSub);
+vDim='Legal_Organization';
+SubsetDestroy(vDim,vSub);
+vDim='Management_Organization';
+SubsetDestroy(vDim,vSub);
+vDim='Period';
+SubsetDestroy(vDim,vSub);
+vDim='Phase';
+SubsetDestroy(vDim,vSub);
+vDim='Indicator';
+SubsetDestroy(vDim,vSub);
+
+ViewDestroy( zCubeTarget , vViewRAZ );
+vDim='Activity';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Currency';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Gaap';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Integration_Rate';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Legal_Organization';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Management_Organization';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Period';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Phase';
+SubsetDestroy(vDim,vSubRAZ);
+vDim='Indicator';
+SubsetDestroy(vDim,vSubRAZ);
+
+
+#################################################################################
+#                                                                             LAUNCH PROCESS update attribute Run_Win_Loss
+#################################################################################
+
+ExecuteProcess( 'DL_RUN_WIN_LOSS', 'P_N_DEBUG', 0 );
+
+#################################################################################
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+#zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+#if (pCountry@='CM');
+#     pChore='Task5_CM_Import_CM_Data_Export_CO_Data';
+#else;
+#     pChore='Task4_CO_Import_Vector_Parameter_Export_CM_Data_' | pCountry;
+#ENDIF;
+#IF( pPeriod @= 'all' );
+#  IF(pPhase@='ACTUAL');
+#     pPeriod = CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+#  ELSEIF(pPhase@='BUDGET_FC');
+#     pPeriod = CellGetS( 'z_Admin_Param' , 'PERIOD' , 'STR_VAR1');
+#  ENDIF;
+#ENDIF;
+#pSource = 'CORE_MODEL';
+
+#CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'Start_date');
+#CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'End_date');
+#CellPutS(numbertostring(nb_lign) , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'Nb_Input_records');
+#CellPutS(numbertostring(nb_load) ,  zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,psource, 'Nb_load_records');
+#IF(nb_lign = nb_load);
+#    CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,  'Status');
+#else;
+#    CellPutS('KO' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,  'Status');
+#endif;
+
+
+#################################################################################
+#                                                                             DETAIL PROCESS SECTION
+#################################################################################
+zCube_Process = 'ZZ_PROCESS_DETAIL';
+
+CellPutS(zDateTimeLoadingStart , zCube_Process , zProcess ,zDateLoadingStart , 'Start_date');
+CellPutS(zDateTimeLoadingEnd , zCube_Process,  zProcess ,zDateLoadingStart  , 'End_date');
+CellPutS(numbertostring(nb_lign) , zCube_Process , zProcess ,zDateLoadingStart  , 'Nb_Input_records');
+CellPutS(numbertostring(nb_load) , zCube_Process , zProcess ,zDateLoadingStart , 'Nb_load_records');
+CellPutS('OK' , zCube_Process , zProcess ,zDateLoadingStart , 'Status');
+
+#################################################################################
+#                                                                             END PROCESS
+#################################################################################
+CubeSetLogChanges(zCubeTarget, 1);
+#endregion

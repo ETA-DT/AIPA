@@ -1,0 +1,20 @@
+{
+	"@type":"Chore",
+	"Name":"z_Report_LTP_RP_LTP",
+	"StartTime":"2014-06-08T00:00Z",
+	"DSTSensitive":false,
+	"Active":false,
+	"ExecutionMode":"SingleCommit",
+	"Frequency":"P7DT00H00M00S",
+	"Tasks":
+	[
+		{
+			"Step":0,
+			"Parameters":[],
+			"Process":
+			{
+				"@id":"Processes('DL_Report_LTP_RP_LTP')"
+			}
+		}
+	]
+}

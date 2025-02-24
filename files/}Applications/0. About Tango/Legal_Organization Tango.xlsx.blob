@@ -1,0 +1,5 @@
+﻿FILE_FORMAT=100
+ENTRYNAME=Legal_Organization Tango.xlsx
+ENTRYTYPE=blob
+ENTRYREFERENCE=TM1:///blob/PUBLIC/.\}externals\Legal_Organization Tango_V2.1.xlsx_20210928074829.xlsx
+REMOVEBLOBONDELETE=Yes

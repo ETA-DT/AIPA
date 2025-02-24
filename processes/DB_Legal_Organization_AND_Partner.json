@@ -1,0 +1,50 @@
+{
+	"@type":"Process",
+	"Name":"DB_Legal_Organization_AND_Partner",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"DB_Legal_Organization_AND_Partner.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":",",
+		"asciiDelimiterChar":";",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":1,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":" ",
+		"dataSourceNameForClient":"\\\\TFR-AP019292\\tm1data\\Core_Model\\Input\\Structure\\Legal_Organization_AND_Partner.csv",
+		"dataSourceNameForServer":"Defined in Prolog"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"Entity",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Libelle",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Code_ISO",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

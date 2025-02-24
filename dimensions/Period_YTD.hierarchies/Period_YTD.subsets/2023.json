@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"2023",
+	"Expression":"{ORDER({[Period_YTD].[Period_YTD].[2023.12_YTD],[Period_YTD].[Period_YTD].[2023.11_YTD],[Period_YTD].[Period_YTD].[2023.10_YTD],[Period_YTD].[Period_YTD].[2023.09_YTD],[Period_YTD].[Period_YTD].[2023.08_YTD],[Period_YTD].[Period_YTD].[2023.07_YTD],[Period_YTD].[Period_YTD].[2023.06_YTD],[Period_YTD].[Period_YTD].[2023.05_YTD],[Period_YTD].[Period_YTD].[2023.04_YTD],[Period_YTD].[Period_YTD].[2023.03_YTD],[Period_YTD].[Period_YTD].[2023.02_YTD],[Period_YTD].[Period_YTD].[2023.01_YTD]} , [Period_YTD].[Period_YTD].CURRENTMEMBER.PROPERTIES(\"MEMBER_NAME\") , BASC)}"
+}

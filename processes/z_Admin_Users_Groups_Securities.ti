@@ -1,0 +1,234 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+###############################################################################
+# Project : Tango - Update }ClientGroups cube securities
+# Created by : AEV
+# Created at : 03/08/2011
+# Modified by : VNN & YAD
+# Modified at : 20/05/2016 et 26/05/2016
+# Modify reason : ExecuteProcess( 'DB_z_Stat_Utilisateur_1' et 'z_Admin_z_Client_In_Group' )  ajoutés en épilogue
+# Modify reason : Alimentation des Attributs Flags et Profils du Cube z_Client_Properties liés aux Groupes de sécu
+# Modified by : BTA
+# Modified at : 16/01/2017
+# Modify reason : Modification suite à la refonte de la sécurité 
+###############################################################################
+
+
+zCube = '}ClientGroups';
+zFile = 'Tango_Users_Groups_Securities';
+
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\' | zFile | '.csv';
+DataSourceNameForServer = Source_File;
+
+
+
+#-- RAZ
+P_NAME_RAZ = zCube | '_Groups_Security_RAZ';
+ViewDestroy( zCube , P_NAME_RAZ );
+ViewCreate( zCube , P_NAME_RAZ );
+
+
+#-- Create subset in }Clients dimension
+SubsetDestroy( '}Clients' , P_NAME_RAZ );
+SubsetCreate( '}Clients' , P_NAME_RAZ );
+i=1;
+WHILE( i < DIMSIZ ( '}Clients' )+1 );
+   ElemC = DIMNM( '}Clients' , i );
+#      IF( SCAN( '.' , ElemC ) > 0 ) ;
+           SubsetElementInsert( '}Clients' , P_NAME_RAZ , ElemC , 1 );
+#      ENDIF;
+    i=i+1;
+END;
+ViewSubsetAssign( zCube , P_NAME_RAZ , '}Clients' , P_NAME_RAZ );
+
+
+###################  Nettoyage du cube ################### 
+ViewZeroOut( zCube , P_NAME_RAZ );
+
+###################  Suppression des subsets ################### 
+ViewDestroy( zCube , P_NAME_RAZ );
+SubsetDestroy( '}Clients' , P_NAME_RAZ );
+
+vPropriete_Utilisateur = 'z_Client_Properties';
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+############## Alimentation des Groupes depuis le Fichier (20 Groupes Max / User)
+
+IF(Group_1@<>'');
+   CellPutS(Group_1, '}ClientGroups', vLogin, Group_1);
+ENDIF;
+IF(Group_2@<>'');
+   CellPutS(Group_2, '}ClientGroups', vLogin, Group_2);
+ENDIF;
+IF(Group_3@<>'');
+   CellPutS(Group_3, '}ClientGroups', vLogin, Group_3);
+ENDIF;
+IF(Group_4@<>'');
+   CellPutS(Group_4, '}ClientGroups', vLogin, Group_4);
+ENDIF;
+IF(Group_5@<>'');
+   CellPutS(Group_5, '}ClientGroups', vLogin, Group_5);
+ENDIF;
+IF(Group_6@<>'');
+   CellPutS(Group_6, '}ClientGroups', vLogin, Group_6);
+ENDIF;
+IF(Group_7@<>'');
+   CellPutS(Group_7, '}ClientGroups', vLogin, Group_7);
+ENDIF;
+IF(Group_8@<>'');
+   CellPutS(Group_8, '}ClientGroups', vLogin, Group_8);
+ENDIF;
+IF(Group_9@<>'');
+   CellPutS(Group_9, '}ClientGroups', vLogin, Group_9);
+ENDIF;
+IF(Group_10@<>'');
+   CellPutS(Group_10, '}ClientGroups', vLogin, Group_10);
+ENDIF;
+IF(Group_11@<>'');
+   CellPutS(Group_11, '}ClientGroups', vLogin, Group_11);
+ENDIF;
+IF(Group_12@<>'');
+   CellPutS(Group_12, '}ClientGroups', vLogin, Group_12);
+ENDIF;
+IF(Group_13@<>'');
+   CellPutS(Group_13, '}ClientGroups', vLogin, Group_13);
+ENDIF;
+IF(Group_14@<>'');
+   CellPutS(Group_14, '}ClientGroups', vLogin, Group_14);
+ENDIF;
+IF(Group_15@<>'');
+   CellPutS(Group_15, '}ClientGroups', vLogin, Group_15);
+ENDIF;
+IF(Group_16@<>'');
+   CellPutS(Group_16, '}ClientGroups', vLogin, Group_16);
+ENDIF;
+IF(Group_17@<>'');
+   CellPutS(Group_17, '}ClientGroups', vLogin, Group_17);
+ENDIF;
+IF(Group_18@<>'');
+   CellPutS(Group_18, '}ClientGroups', vLogin, Group_18);
+ENDIF;
+IF(Group_19@<>'');
+   CellPutS(Group_19, '}ClientGroups', vLogin, Group_19);
+ENDIF;
+IF(Group_20@<>'');
+   CellPutS(Group_20, '}ClientGroups', vLogin, Group_20);
+ENDIF;
+
+############## Déplacement Onglet Data 24052016
+
+# MAJ des Attibuts de base des }Clients
+
+vUtilisateur = vLogin;
+
+AttrPutS( vUtilisateur , 'z_Stat_Utilisateur' , vUtilisateur , 'Code' ) ;
+AttrPutS( vLastName , 'z_Stat_Utilisateur' , vUtilisateur , 'Nom' ) ;
+AttrPutS( vFirstName , 'z_Stat_Utilisateur' , vUtilisateur , 'Prenom' ) ;
+AttrPutS( veMail, 'z_Stat_Utilisateur' , vUtilisateur , 'AdresseMail' ) ;
+
+### RAZ ATTR et VALUES du CUBE Cible z_Client_Properties liés aux Groupes de sécurité
+
+      CellPutS( '' , vPropriete_Utilisateur , 'Profil' , vUtilisateur ) ;
+      CellPutS( '' , vPropriete_Utilisateur ,'EstCountry_PM' , vUtilisateur ) ; 
+      CellPutS( '' , vPropriete_Utilisateur , 'EstLTP' , vUtilisateur ) ;
+
+### Création des Variables des Groupes de Sécurité Impactant les Profils des Users et les Flags liés
+
+Groupe_Secu1 = CellGetS( '}ClientGroups' , vUtilisateur , 'Admin' ) ;
+Groupe_Secu2 = CellGetS( '}ClientGroups' , vUtilisateur , 'DataAdmin' ) ;
+Groupe_Secu3 = CellGetS( '}ClientGroups' , vUtilisateur , 'SecurityAdmin' ) ;
+
+# -- BTA 16/01/2017 : Désactivation suite à la refonte de la sécurité
+# Groupe_Secu4 = CellGetS( '}ClientGroups' , vUtilisateur , 'Cube_Country_Project_Mgr' ) ;
+# Groupe_Secu5 = CellGetS( '}ClientGroups' , vUtilisateur , 'Cube_Country_CM_Mgr' ) ;
+# Groupe_Secu6 = CellGetS( '}ClientGroups' , vUtilisateur , 'R_LTP' ) ;
+
+# Profil Admin.
+
+IF( Groupe_Secu1 @<>'' % Groupe_Secu2 @<>'' % Groupe_Secu3 @<> '' ) ;
+
+     CellPutS( 'Admin.' , vPropriete_Utilisateur , 'Profil' , vUtilisateur ) ;
+
+ELSE; 
+
+# Profil Country_PM et Flag EstCountry_PM (Deux Groupes)
+
+# -- BTA 16/01/2017 : Désactivation suite à la refonte de la sécurité
+# IF( Groupe_Secu4 @<>'' ) ;
+#      #AttrPutS( 'Country_PM' , 'z_Stat_Utilisateur' , vUtilisateur , 'Profil' ) ;
+#      CellPutS( 'Country_PM' , vPropriete_Utilisateur , 'Profil' , vUtilisateur ) ;
+#      #AttrPutS( 'Y' , 'z_Stat_Utilisateur' , vUtilisateur , 'EstCountry_PM' ) ;
+#      CellPutS( 'Y' , vPropriete_Utilisateur ,'EstCountry_PM' , vUtilisateur ) ;
+# ENDIF ;
+
+# -- BTA 16/01/2017 : Désactivation suite à la refonte de la sécurité
+# IF( Groupe_Secu5 @<>'' ) ;
+#     #AttrPutS( 'Country_PM' , 'z_Stat_Utilisateur' , vUtilisateur , 'Profil' ) ;
+#      CellPutS( 'Country_PM' , vPropriete_Utilisateur , 'Profil' , vUtilisateur ) ;
+#      #AttrPutS( 'Y' , 'z_Stat_Utilisateur' , vUtilisateur , 'EstCountry_PM' ) ;
+#      CellPutS( 'Y' , vPropriete_Utilisateur ,'EstCountry_PM' , vUtilisateur ) ;
+# ENDIF ;
+
+# Flag EstLTP
+# -- BTA 16/01/2017 : Désactivation suite à la refonte de la sécurité
+# IF( Groupe_Secu6 @<>'' ) ;
+#      CellPutS( 'Y' , vPropriete_Utilisateur , 'EstLTP' , vUtilisateur ) ;
+# ENDIF ;
+
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#### Création d'un Fichier temp avec les Clients et les 6 Groupes Filtrés -> Sortie dans Output
+j=1;
+
+WHILE( j < DIMSIZ ( '}Clients' )+1 );
+   Elem = DIMNM( '}Clients' , j );
+Groupe_Secu1x = CellGetS( '}ClientGroups' , Elem , 'Admin' ) ;
+Groupe_Secu2x = CellGetS( '}ClientGroups' , Elem , 'DataAdmin' ) ;
+Groupe_Secu3x = CellGetS( '}ClientGroups' , Elem , 'SecurityAdmin' ) ;
+
+# -- BTA 16/01/2017 : Désactivation suite à la refonte de la sécurité
+# Groupe_Secu4x = CellGetS( '}ClientGroups' ,Elem , 'Cube_Country_Project_Mgr' ) ;
+# Groupe_Secu5x = CellGetS( '}ClientGroups' , Elem , 'Cube_Country_CM_Mgr' ) ;
+# Groupe_Secu6x = CellGetS( '}ClientGroups' ,Elem , 'R_LTP' ) ;
+
+Export_File = CellGetS( 'z_Admin_Param' , 'REP_OUTPUT','STR_VAR1')| '\' |  'Tango_Users_Groups_Securities_temp.csv';
+
+# -- BTA 16/01/2017 : Désactivation suite à la refonte de la sécurité et remplacement par la ligne suivante 
+# ASCIIOUTPUT( Export_File , Elem, Groupe_Secu1x  , Groupe_Secu2x , Groupe_Secu3x, Groupe_Secu4x,Groupe_Secu5x,Groupe_Secu6x );
+ASCIIOUTPUT( Export_File , Elem, Groupe_Secu1x  , Groupe_Secu2x , Groupe_Secu3x  );
+
+    j=j+1;
+
+END;
+
+##### Lancement du Process de création d'une Dim technique z_Client_In_Group et de l'Alim de la dim }Clients Historique
+
+
+ExecuteProcess( 'z_Admin_z_Client_In_Group' ) ;
+ExecuteProcess( 'DB_z_Stat_Utilisateur_1' ) ;
+#endregion

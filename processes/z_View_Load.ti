@@ -1,0 +1,65 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+##############################################################
+# -- z_View_Load 
+# -- Construction des vues pour chargement en mémoire afin d'optimiser l'utilisation
+
+# Created by : BTA 
+# Created at : 28/09/2016 
+
+# Modified by :
+# Modified at : 
+# Modify reason : 
+#############################################################
+
+
+# -- Load cube views for RP_PL
+
+IF( ViewExists(  'RP_PL' , 'Par défaut' ) = 1 ); 
+	ViewConstruct( 'RP_PL' , 'Par défaut' ); 
+ENDIF;
+
+IF( ViewExists( 'RP_PL' , 'Default' ) = 1 ); 
+	ViewConstruct( 'RP_PL' , 'Default' ); 
+ENDIF;
+
+# -- Load cube views for RP_LTP
+
+IF( ViewExists(  'RP_LTP' , 'Par défaut' ) = 1 ); 
+	ViewConstruct( 'RP_LTP' , 'Par défaut' ); 
+ENDIF;
+
+# -- Load cube views for Report_PL
+
+IF( ViewExists(  'Report_PL' , 'Par défaut' ) = 1 ); 
+	ViewConstruct( 'Report_PL' , 'Par défaut' ); 
+ENDIF;
+
+IF( ViewExists(  'Report_PL' , 'Default' ) = 1 ); 
+	ViewConstruct( 'Report_PL' , 'Default' ); 
+ENDIF;
+
+
+# -- Load cube views for Report_LTP
+# ViewConstruct( 'Report_LTP' , 'Par défaut' ); 
+# ViewConstruct( 'Report_LTP' , 'Default' ); 
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"L0",
+	"Expression":"{TM1SORTBYINDEX( {TM1SORT( {TM1SORT( {TM1FILTERBYLEVEL( {TM1SUBSETALL( [Management_Organization_Corp] )}, 0)}, ASC)}, ASC)}, ASC)}"
+}

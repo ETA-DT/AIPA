@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Country_List_VISION",
+	"Hierarchies@Code.links":
+	[
+		"Country_List_VISION.hierarchies/Country_List_VISION.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Country_List_VISION')/Hierarchies('Country_List_VISION')"
+	}
+}

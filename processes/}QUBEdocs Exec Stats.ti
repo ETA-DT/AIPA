@@ -1,0 +1,87 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Added support for multiple instances of stats
+#GENERALCOMMENT This process populates the }QBUEdocs Stats cube with data in the TM1 stats cubes so that the stats can be consolidated
+#DATASOURCECOMMENT Not Applicable
+#PROLOGCOMMENT Reads from Stats cubes (if they exist)
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Not Applicable
+#EPILOGCOMMENT Not Applicable
+
+sPrefix = '}QUBEdocs Load ';
+sStatVersionDate = TODAY(1);
+sSettingsCube = '}ElementAttributes_QUBEdocs Setup Item';
+sSetting ='Performance Stats over time';
+
+sCubeName = '}StatsByChore';
+IF(CUBEEXISTS(sCubeName) =1);
+ sProcessName = sPrefix | sCubeName;
+ EXECUTEPROCESS(sProcessName);
+ IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS(sProcessName,'pStatVersion',sStatVersionDate);
+ ENDIF;
+ENDIF;
+
+sCubeName = '}StatsByClient';
+IF(CUBEEXISTS(sCubeName) =1);
+ sProcessName = sPrefix | sCubeName;
+ EXECUTEPROCESS(sProcessName);
+ IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS(sProcessName,'pStatVersion',sStatVersionDate);
+ ENDIF;
+ENDIF;
+
+sCubeName = '}StatsByCube';
+IF(CUBEEXISTS(sCubeName) =1);
+ sProcessName = sPrefix | sCubeName;
+ EXECUTEPROCESS(sProcessName);
+ IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS(sProcessName,'pStatVersion',sStatVersionDate);
+ ENDIF;
+ENDIF;
+
+sCubeName = '}StatsByCubeByClient';
+IF(CUBEEXISTS(sCubeName) =1);
+ sProcessName = sPrefix | sCubeName;
+ EXECUTEPROCESS(sProcessName);
+ IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS(sProcessName,'pStatVersion',sStatVersionDate);
+ ENDIF;
+ENDIF;
+
+sCubeName = '}StatsByProcess';
+IF(CUBEEXISTS(sCubeName) =1);
+ sProcessName = sPrefix | sCubeName;
+ EXECUTEPROCESS(sProcessName);
+ IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS(sProcessName,'pStatVersion',sStatVersionDate);
+ ENDIF;
+ENDIF;
+
+sCubeName = '}StatsForServer';
+IF(CUBEEXISTS(sCubeName) =1);
+ sProcessName = sPrefix | sCubeName;
+ EXECUTEPROCESS(sProcessName);
+ IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS(sProcessName,'pStatVersion',sStatVersionDate);
+ ENDIF;
+ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

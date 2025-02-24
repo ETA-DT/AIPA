@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"pm_all_task",
+	"Hierarchies@Code.links":
+	[
+		"pm_all_task.hierarchies/pm_all_task.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('pm_all_task')/Hierarchies('pm_all_task')"
+	}
+}

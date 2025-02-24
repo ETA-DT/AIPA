@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Tiers",
+	"Hierarchies@Code.links":
+	[
+		"Tiers.hierarchies/Tiers.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Tiers')/Hierarchies('Tiers')"
+	}
+}

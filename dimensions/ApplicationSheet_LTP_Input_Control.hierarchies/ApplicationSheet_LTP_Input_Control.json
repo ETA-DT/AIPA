@@ -1,0 +1,149 @@
+{
+	"@type":"Hierarchy",
+	"Name":"ApplicationSheet_LTP_Input_Control",
+	"ElementsSortType":"ByHierarchy",
+	"Elements":
+	[
+		{
+			"Name":"Disposals Plan Report",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"DP - Operating leases - Rentals",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"DP - Disposals Plan",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"PBZ Report",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"PBZ - Contract Revenue and Renewal",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"PBZ - Operating leases - Rentals",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"PBZ - Zero Growth Plan",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Action Plan Report",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"AP - Operating leases",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"AP - Action Plan",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"External Growth Report",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"EG - Growth Contracts",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"EG - Operating leases & Rentals",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"EG - External Growth PLAN",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Normative Growth Plan Report",
+			"Type":"Consolidated"
+		},
+		{
+			"Name":"NGP - Growth Contracts",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"NGP - Operating leases",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"NGP - Normative Growth PLAN",
+			"Type":"Numeric"
+		}
+	],
+	"Edges":
+	[
+		{
+			"ParentName":"Disposals Plan Report",
+			"ComponentName":"DP - Operating leases - Rentals",
+			"Weight":0
+		},
+		{
+			"ParentName":"Disposals Plan Report",
+			"ComponentName":"DP - Disposals Plan",
+			"Weight":0
+		},
+		{
+			"ParentName":"PBZ Report",
+			"ComponentName":"PBZ - Contract Revenue and Renewal",
+			"Weight":0
+		},
+		{
+			"ParentName":"PBZ Report",
+			"ComponentName":"PBZ - Operating leases - Rentals",
+			"Weight":0
+		},
+		{
+			"ParentName":"PBZ Report",
+			"ComponentName":"PBZ - Zero Growth Plan",
+			"Weight":0
+		},
+		{
+			"ParentName":"Action Plan Report",
+			"ComponentName":"AP - Operating leases",
+			"Weight":0
+		},
+		{
+			"ParentName":"Action Plan Report",
+			"ComponentName":"AP - Action Plan",
+			"Weight":0
+		},
+		{
+			"ParentName":"External Growth Report",
+			"ComponentName":"EG - Growth Contracts",
+			"Weight":0
+		},
+		{
+			"ParentName":"External Growth Report",
+			"ComponentName":"EG - Operating leases & Rentals",
+			"Weight":0
+		},
+		{
+			"ParentName":"External Growth Report",
+			"ComponentName":"EG - External Growth PLAN",
+			"Weight":0
+		},
+		{
+			"ParentName":"Normative Growth Plan Report",
+			"ComponentName":"NGP - Growth Contracts",
+			"Weight":0
+		},
+		{
+			"ParentName":"Normative Growth Plan Report",
+			"ComponentName":"NGP - Operating leases",
+			"Weight":0
+		},
+		{
+			"ParentName":"Normative Growth Plan Report",
+			"ComponentName":"NGP - Normative Growth PLAN",
+			"Weight":0
+		}
+	],
+	"Subsets@Code.links":[]
+}

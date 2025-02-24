@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"z_DSO",
+	"Hierarchies@Code.links":
+	[
+		"z_DSO.hierarchies/z_DSO.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('z_DSO')/Hierarchies('z_DSO')"
+	}
+}

@@ -1,0 +1,282 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - build dimension Indicator
+# Created by : FBU
+# Created at : 11/07/2011
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+zDim = '}Indicator';
+
+zFile = 'Indic_Destination';
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zFile | '.csv';
+DataSourceNameForServer = Source_File;
+
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#-- Traitement spécifique pour le To classify
+IF( Level_7 @= 'To_be_Classified' );
+
+          DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'n' );
+
+ELSE;
+
+
+          IF( Level_7 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ELSEIF( Level_6 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ELSEIF( Level_5 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ELSEIF( Level_4 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ELSEIF( Level_3 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ELSEIF( Level_2 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ELSEIF( Level_1 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ELSEIF( Level_0 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_1 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_2 , Level_1 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ELSE;
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_0 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_1 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_6 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_7 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_8 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_9 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_1 , Level_0 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_2 , Level_1 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_6 , Level_5 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_7 , Level_6 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_8 , Level_7 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_9 , Level_8 , 1 );
+
+          ENDIF;
+
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+IF( Level_9 @<> '' );
+          ATTRPUTS( Desc_English_9 , zDim , Level_9 , 'English' );
+          ATTRPUTS( Desc_French_9 , zDim , Level_9 , 'French' );
+          #ATTRPUTS( Desc_English_9 , zDim , Level_9 , 'German' );
+          #ATTRPUTS( Desc_English_9 , zDim , Level_9 , 'Dutch' );
+          #ATTRPUTS( Desc_English_9 , zDim , Level_9 , 'Portuguese' );
+ENDIF;
+
+IF( Level_8 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_8 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_8 , zDim , Level_8 , 'English' );
+          ATTRPUTS( Desc_French_8 , zDim , Level_8 , 'French' );
+          #ATTRPUTS( Desc_English_8 , zDim , Level_8 , 'German' );
+          #ATTRPUTS( Desc_English_8 , zDim , Level_8 , 'Dutch' );
+          #ATTRPUTS( Desc_English_8 , zDim , Level_8 , 'Portuguese' );
+ENDIF;
+
+IF( Level_7 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_7 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_7 , zDim , Level_7 , 'English' );
+          ATTRPUTS( Desc_French_7 , zDim , Level_7 , 'French' );
+          #ATTRPUTS( Desc_English_7 , zDim , Level_7 , 'German' );
+          #ATTRPUTS( Desc_English_7 , zDim , Level_7 , 'Dutch' );
+          #ATTRPUTS( Desc_English_7 , zDim , Level_7 , 'Portuguese' );
+ENDIF;
+
+IF( Level_6 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_6 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+          ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+          #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'German' );
+          #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Dutch' );
+          #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Portuguese' );
+ENDIF;
+
+IF( Level_5 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_5 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+          ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+          #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'German' );
+          #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Dutch' );
+          #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Portuguese' );
+ENDIF;
+
+IF( Level_4 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_4 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+          ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+          #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'German' );
+          #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Dutch' );
+          #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Portuguese' );
+ENDIF;
+
+IF( Level_3 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_3 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+          ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+          #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'German' );
+          #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Dutch' );
+          #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Portuguese' );
+ENDIF;
+
+IF( Level_2 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_2 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+          ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+          #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'German' );
+          #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Dutch' );
+          #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Portuguese' );
+ENDIF;
+
+ IF( Level_1 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_1 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+          ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+          #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'German' );
+          #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'Dutch' );
+          #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'Portuguese' );
+ENDIF;
+
+IF( Level_0 @<> '' );
+          ATTRPUTS( Source_indicator , zDim , Level_0 , 'Source_Indicator' );
+
+          ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+          ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+          #ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'German' );
+          #ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'Dutch' );
+          #ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'Portuguese' );
+ENDIF;
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

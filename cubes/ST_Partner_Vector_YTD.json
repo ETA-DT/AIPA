@@ -1,0 +1,40 @@
+{
+	"@type":"Cube",
+	"Name":"ST_Partner_Vector_YTD",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Integration_Rate')"
+		},
+		{
+			"@id":"Dimensions('Currency')"
+		},
+		{
+			"@id":"Dimensions('Audit_ID')"
+		},
+		{
+			"@id":"Dimensions('Legal_Organization')"
+		},
+		{
+			"@id":"Dimensions('Partner')"
+		},
+		{
+			"@id":"Dimensions('Period_YTD')"
+		},
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('Indicator_Vector')"
+		}
+	],
+	"ViewStorageMaxMemory":500000,
+	"ViewStorageMinTime":1,
+	"Views@Code.links":
+	[
+		"ST_Partner_Vector_YTD.views/Checks VECTOR YD.json",
+		"ST_Partner_Vector_YTD.views/mepvectorconso.json",
+		"ST_Partner_Vector_YTD.views/mepvectorniv0.json",
+		"ST_Partner_Vector_YTD.views/portugalverif.json"
+	]
+}

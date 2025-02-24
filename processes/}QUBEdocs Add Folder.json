@@ -1,0 +1,39 @@
+{
+	"@type":"Process",
+	"Name":"}QUBEdocs Add Folder",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"}QUBEdocs Add Folder.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pFolderPath",
+			"Prompt":"Folder Path?",
+			"Value":"}Applications",
+			"Type":"String"
+		},
+		{
+			"Name":"pExtension",
+			"Prompt":"File Extension?",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pParent",
+			"Prompt":"Parent Element?",
+			"Value":"AF",
+			"Type":"String"
+		},
+		{
+			"Name":"pPrefix",
+			"Prompt":"Prefix?",
+			"Value":"AF",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

@@ -1,0 +1,10 @@
+{
+	"@type":"Subset",
+	"Name":"z_Contract_Pending_Approval_validation",
+	"Elements":
+	[
+		{
+			"@id":"Dimensions('z_Contract_Measures')/Hierarchies('z_Contract_Measures')/Elements('Validation')"
+		}
+	]
+}

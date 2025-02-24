@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"GIE_Indicator",
+	"Hierarchies@Code.links":
+	[
+		"GIE_Indicator.hierarchies/GIE_Indicator.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('GIE_Indicator')/Hierarchies('GIE_Indicator')"
+	}
+}

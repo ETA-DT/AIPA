@@ -1,0 +1,21 @@
+{
+	"@type":"Process",
+	"Name":"z_Sauvegarde_Application",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"z_Sauvegarde_Application.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pNbJourHisto",
+			"Prompt":"Nombre de jours historique à sauvegarder",
+			"Value":9,
+			"Type":"Numeric"
+		}
+	],
+	"Variables":[]
+}

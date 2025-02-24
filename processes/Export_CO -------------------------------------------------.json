@@ -1,0 +1,13 @@
+{
+	"@type":"Process",
+	"Name":"Export_CO -------------------------------------------------",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"Export_CO -------------------------------------------------.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

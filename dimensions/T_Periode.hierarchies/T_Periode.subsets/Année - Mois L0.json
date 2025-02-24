@@ -1,0 +1,5 @@
+{
+	"@type":"Subset",
+	"Name":"Année - Mois L0",
+	"Expression":"{ HIERARCHIZE( {TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( FILTER({TM1SUBSETALL( [T_Periode] )}, LEN([T_Periode].CurrentMember.Name) = 4), ALL, RECURSIVE )}, 0)} ) }"
+}

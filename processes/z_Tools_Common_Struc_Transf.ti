@@ -1,0 +1,90 @@
+#region Prolog
+########################################
+# Project : Tango - Data transfert files
+# Created by : FBU
+# Created at : 27/10/2011
+# Modified by :
+# Modified at :
+# Modify reason :
+#########################################
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Fichier de sortie
+TXT_FILE=CellGetS('z_ADMIN_PARAM','REP_OUTPUT','STR_VAR1') | '\DATA_TRANSFERT.txt';
+IF( FileExists(TXT_FILE) = 1 );
+   ASCIIDELETE( TXT_FILE );
+ENDIF;
+
+#-- Retraitement du nom (vide ou espace si lancement par chores)
+Name='';
+
+#-- Récupération de l'emplacement du fichier de commande
+TMP_DIR=CellGetS('z_ADMIN_PARAM','REP_TEMP','STR_VAR1');
+
+IF( FileExists( TMP_DIR | '\save2.cmd' ) = 1 );
+   ProcessQuit;
+ENDIF;
+
+#-- Répertoire de destination de sauvegarde
+DIR = '\\'|CellGetS( 'z_ADMIN_PARAM_Instance' , 'SERVER_NAME' , pCountry , 'STR_VAR1' )
+|CellGetS( 'z_ADMIN_PARAM_Instance' , 'REP_CM_STRUC_EXPORT' , pCountry , 'STR_VAR1' )
+| pCountry | '\Input\Structure';
+
+#-- Répertoire où se trouvent les données à sauvegarder
+DATA_DIR = '"' | CellGetS('z_ADMIN_PARAM','REP_ITF','STR_VAR1') | '\' | zFile | '.csv' | '"';
+Source_File = CellGetS('z_ADMIN_PARAM','REP_ITF','STR_VAR1') | '\' | zFile | '.csv' ;
+
+IF( FileExists( Source_File ) = 0 );
+    ProcessBreak;
+ENDIF;
+
+#-- Permet de supprimer le délimiteur du champ dans le batch
+DataSourceASCIIQuoteCharacter='';
+
+
+#-- Ecriture du fichier de commande
+#-- Répertoire pour destination des sauvegardes
+ASCIIOUTPUT(TMP_DIR | '\save2.cmd' , 'Set vSave=' | DIR);
+
+#-- Répertoire à sauvegarder
+ASCIIOUTPUT(TMP_DIR | '\save2.cmd' , 'Set vData=' | DATA_DIR);
+
+#-- Fichier à sauvegarder
+ASCIIOUTPUT(TMP_DIR | '\save2.cmd' , 'Set vFile=' | Source_File); 
+
+#-- On efface le fichier en cible
+ASCIIOUTPUT(TMP_DIR | '\save2.cmd' , 'Del %vSave%\' | zFile | '.csv' );
+
+#-- Recopie du fichier source
+ASCIIOUTPUT(TMP_DIR | '\save2.cmd' , 'xcopy /Exclude:%vExclude% /C/q/y  %vFile% %vSave%' );
+
+################ Retirer le commentaire une fois les tests de chargement de fichiers source réalisés
+#ASCIIOUTPUT(TMP_DIR | '\save2.cmd' , 'del %vFile%' );
+
+#-- Auto-suppression du batch
+ASCIIOUTPUT(TMP_DIR | '\save2.cmd' , 'del ' | TMP_DIR | '\save2.cmd');
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#-- Lancement du fichier de commande qui effectue la copie de sauvegarde du répertoire de base de données
+ExecuteCommand('cmd /c " Call ' | TMP_DIR | '\save2.cmd  && exit"',1);
+#endregion

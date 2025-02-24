@@ -1,0 +1,232 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Tango - Core Model
+# Created by : ASZ - Anone
+# Created at : 02/05/2016
+# Modified by : BTA 
+# Reason : Refonte de la sécurité + revue de la vue source qui était statique + ajout des commentaires
+# Date : 12/01/2017
+# Modified by : RSJC
+# Reason : Ajout droits groupe User_Strategy
+# Date : 10/06/2021
+#########################################
+
+
+
+#################################################################################
+#                                                               Déclaration des variables
+#################################################################################
+
+zCube = '}ElementSecurity_Management_Organization';
+Dim_MO = 'Management_Organization';
+zSubset = GetProcessName() ; 
+
+Subset_MDX_R = 'z_mdx_management_organization_R';
+Subset_MDX_W = 'z_mdx_management_organization_W';
+
+
+#################################################################################
+#                                                               Clear Cube
+#################################################################################
+
+CubeClearData( zCube ) ;
+
+
+#################################################################################
+#                                                              Sous ensemble source
+#################################################################################
+
+# -- Sous ensemble Source Groups
+zDim = '}Groups' ;
+SubsetDestroy( zDim , zSubset );
+SubsetCreate( zDim , zSubset );
+SubsetElementInsert( zDim , zSubset , 'Corporate_Plus' , 1 );
+SubsetElementInsert( zDim , zSubset , 'Financial_Controller' , 1 );
+SubsetElementInsert( zDim , zSubset , 'Performance_Corporate' , 1 ); 
+## 10/06/2021 RSJC Ajout droits User_STrategy
+SubsetElementInsert( zDim , zSubset , 'User_Strategy' , 1 ); 
+
+i = 1 ; 
+iMax = DimSiz( zDim ); 
+While( i <= iMax ) ; 
+
+	vElem = DimNm( zDim , i ); 
+	IF( SCAN( 'R_', vElem ) <> 0 % SCAN( 'W_' , vElem ) <> 0 ); 
+		SubsetElementInsert( zDim , zSubset , vElem , 1 ) ; 
+	ENDIF;
+	i = i + 1; 
+
+End;
+
+DatasourceDimensionSubset = zSubset ;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+# -- Pour toutes les Mgt Orga et le groupe Corporate Plus, renseigner le WRITE
+IF( Groups @= 'Corporate_Plus' ); 
+
+	i = 1 ; 
+	iMax = DimSiz ( Dim_MO ); 
+	While( i <= iMax ); 
+
+		vElem = DimNm( Dim_MO , i ); 
+		IF( CellIsUpdateable( zCube , vElem, Groups ) = 1 ); 
+			CellPutS( 'WRITE' , zCube , vElem, Groups ); 	
+		ENDIF;	
+		i = i + 1; 
+
+	End;
+
+ENDIF;
+
+# -- Pour toutes les Mgt Orga et les 2 groupes Financial Controller et Performance Corporate renseigner le READ 
+## 10/06/2021 RSJC Ajout droits User_STrategy
+##IF( Groups @= 'Financial_Controller' % Groups @= 'Performance_Corporate' ); 
+IF( Groups @= 'Financial_Controller' % Groups @= 'Performance_Corporate' % Groups @= 'User_Strategy'); 
+	i = 1 ; 
+	iMax = DimSiz ( Dim_MO ); 
+	While( i <= iMax ); 
+
+		vElem = DimNm( Dim_MO , i ); 
+		IF( CellIsUpdateable( zCube , vElem, Groups ) = 1 ); 
+			CellPutS( 'WRITE', zCube , vElem, Groups ); 		
+		ENDIF;
+		i = i + 1; 
+
+	End;
+
+ENDIF;
+
+
+
+# RSJC Ajout 22/11/2019
+# -- Les groupes W_North_America et W_USA et W_CAN auront accès à Cityway_Corp
+IF( Groups @= 'W_North_America' % Groups @= 'W_USA' % Groups @= 'W_CAN' ); 
+	CellPutS( 'WRITE' , zCube, 'Cityway_Corp' , Groups ); 
+ENDIF;
+
+
+# -- Les groupes comportant la chaine "_MGT_" auront accès aux éléments de la dimension suivant la chaine de caractère _MGT_
+IF( SCAN('_MGT_',Groups) <> 0 ); 
+
+	zMO_W = SUBST( Groups , SCAN('_MGT_',Groups) + 5 , LONG(Groups) );
+
+	IF( DIMIX( Dim_MO , zMO_W ) = 0 );
+
+		ItemSkip;
+
+	ELSEIF( CellIsUpdateable( zCube , zMO_W , Groups ) = 1 );
+
+		CellPutS( 'WRITE' , zCube , zMO_W , Groups );
+
+	ENDIF;
+
+	ItemSkip;
+
+ENDIF;
+
+
+IF(SUBST(Groups, 1, 2)@='R_'  & SCAN('_MGT_',Groups)=0 );
+
+	zMO_R=SUBST(Groups, 3, LONG(Groups));
+
+	IF( DIMIX( Dim_MO , zMO_R ) = 0 );
+
+		ItemSkip;
+
+	ELSEIF( CellIsUpdateable( zCube , zMO_R , Groups ) = 1 );
+
+		CellPutS('READ' , zCube , zMO_R , Groups );
+
+	ENDIF;
+
+	IF(Subsetexists( Dim_MO , Subset_MDX_R ) = 1 );
+
+		Subsetdestroy( Dim_MO , Subset_MDX_R );
+
+	ENDIF;
+
+	SubsetCreatebyMDX (Subset_MDX_R, '{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [Management_Organization] )}, "'|zMO_R|'")}, ALL, RECURSIVE )}');
+
+	nSize_R_MO = SubsetGetSize(Dim_MO, Subset_MDX_R);
+	j=1;
+
+	WHILE(j<=nSize_R_MO);
+		Elem_R_MO = SubsetGetElementName(Dim_MO, Subset_MDX_R, j);
+                                IF(CellIsUpdateable(zCube, Elem_R_MO,  Groups )=1);
+		  CellPutS('READ', zCube, Elem_R_MO, Groups );
+                                ENDIF;    
+		j=j+1;
+	END;	
+
+	CellPutS( 'READ' , zCube, 'NA' , Groups ); 
+	CellPutS( 'READ' , zCube, 'VTD_Corp' , Groups ); 
+	CellPutS( 'READ' , zCube, 'VTD_Corp_BM' , Groups ); 
+
+ENDIF;
+
+IF(SUBST(Groups, 1, 2)@='W_' & SCAN('_MGT_',Groups)=0 );
+
+	zMO_W=SUBST(Groups, 3, LONG(Groups));
+
+	IF(DIMIX(Dim_MO, zMO_W)=0);
+		ITEMSKIP;
+	ELSEIF(CellIsUpdateable(zCube, zMO_W, Groups ) = 1 ) ;
+		CellPutS('WRITE', zCube, zMO_W, Groups );
+	ENDIF;
+
+	IF(Subsetexists(Dim_MO, Subset_MDX_W)=1);
+		Subsetdestroy(Dim_MO, Subset_MDX_W);
+	ENDIF;
+
+	SubsetCreatebyMDX (Subset_MDX_W, '{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [Management_Organization] )}, "'|zMO_W|'")}, ALL, RECURSIVE )}');
+
+	nSize_W_MO = SubsetGetSize(Dim_MO, Subset_MDX_W);
+	k=1;
+	WHILE(k<=nSize_W_MO);
+		Elem_W_MO = SubsetGetElementName(Dim_MO, Subset_MDX_W, k);
+                                IF( CellIsUpdateable( zCube, Elem_W_MO , Groups )  = 1 );
+		  CellPutS( 'WRITE', zCube, Elem_W_MO, Groups );
+                                ENDIF;
+		k=k+1;
+	END;
+
+	CellPutS( 'WRITE' , zCube, 'NA' , Groups ); 
+	CellPutS( 'WRITE' , zCube, 'VTD_Corp' , Groups ); 
+	CellPutS( 'WRITE' , zCube, 'VTD_Corp_BM' , Groups ); 
+
+ENDIF;
+
+
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- Destruction du sous ensemble source 
+zDim = '}Groups' ;
+SubsetDestroy( zDim , zSubset );
+#endregion

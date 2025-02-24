@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"}zz_indicator_PL_US_ORACLE",
+	"Hierarchies@Code.links":
+	[
+		"}zz_indicator_PL_US_ORACLE.hierarchies/}zz_indicator_PL_US_ORACLE.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('}zz_indicator_PL_US_ORACLE')/Hierarchies('}zz_indicator_PL_US_ORACLE')"
+	}
+}

@@ -1,0 +1,50 @@
+{
+	"@type":"Process",
+	"Name":"DL_TC_IND_OPE_VTD_VECTORENHANCED",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"DL_TC_IND_OPE_VTD_VECTORENHANCED.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":",",
+		"asciiDelimiterChar":";",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":1,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":" ",
+		"dataSourceNameForClient":"\\\\Tfr-ap019292\\tango\\ITF\\INPUT\\Structure\\Mapping_OPE_VTD_VECTORENHANCED.csv",
+		"dataSourceNameForServer":"Defined to prolog"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"code_local",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"code_tango",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"libelle_tango",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

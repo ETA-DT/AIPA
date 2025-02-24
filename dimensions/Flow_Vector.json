@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Flow_Vector",
+	"Hierarchies@Code.links":
+	[
+		"Flow_Vector.hierarchies/Flow_Vector.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Flow_Vector')/Hierarchies('Flow_Vector')"
+	}
+}

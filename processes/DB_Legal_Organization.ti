@@ -1,0 +1,401 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - build dimension Legal_Organization
+# Created by : FBU & LTH
+# Created at : 11/07/2011
+# Modified by : AEV
+# Modified at : 12/12/2011
+# Modified by : RSJC
+# Modified at : 18/04/2016
+# Modify reason : Ajout croisement automatiquedans 
+# Modified by : BTA
+# Modified at : 21/11/2016
+# Modify reason : Suppression des langues German, Dutch et Portuguese
+# Modified by : MTA - Datatilt
+# Modified at : 08/11/2021
+# Modify reason : ajout d'un nouvel attribut pour distinguer les entités legale en croissance
+#########################################
+
+
+zDim = 'Legal_Organization';
+zCube='TC_CONTRACT_ECO_MO_TYP_CLI';
+
+
+#Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\INPUT\STRUCTURE\' | zDim | '.csv';
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+#DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+ATTRDELETE( zDim , 'German' );
+# ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+ATTRDELETE( zDim , 'Dutch' );
+# ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+ATTRDELETE( zDim , 'Portuguese' );
+# ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+
+ATTRDELETE( zDim , 'Source_entity' );
+ATTRINSERT( zDim , '' , 'Source_entity' , 'S' );
+
+ATTRDELETE( zDim , 'Code_ISO' );
+ATTRINSERT( zDim , '' , 'Code_ISO' , 'S' );
+
+
+ATTRDELETE( zDim , 'Miles' );
+ATTRINSERT( zDim , '' , 'Miles' , 'S' );
+
+ATTRDELETE( zDim , 'Country_entity' );
+ATTRINSERT( zDim , '' , 'Country_entity' , 'S' );
+
+ATTRDELETE( zDim , 'Activity_entity' );
+ATTRINSERT( zDim , '' , 'Activity_entity' , 'S' );
+
+
+ATTRDELETE( zDim , 'Code_Name' );
+ATTRINSERT( zDim , '' , 'Code_Name' , 'A' );
+
+
+ATTRDELETE( zDim , 'External_Growth' );
+ATTRINSERT( zDim , '' , 'External_Growth' , 'S' );
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#-- Traitement spécifique pour le To classify
+IF( Level_4 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'n' );
+
+
+          ELSEIF( Level_3 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+
+          ELSEIF( Level_2 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+
+
+          ELSEIF( Level_1 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+
+
+          ELSEIF( Level_0 @= '' );
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_1 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_2 , Level_1 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+
+          ELSE;
+
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_0 , 'n' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_1 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_2 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_3 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_4 , 'c' );
+                    DIMENSIONELEMENTINSERT( zDim , '' , Level_5 , 'c' );
+
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_1 , Level_0 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_2 , Level_1 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_3 , Level_2 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_4 , Level_3 , 1 );
+                    DIMENSIONELEMENTCOMPONENTADD( zDim , Level_5 , Level_4 , 1 );
+
+          ENDIF;
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( Level_4 @= '' );
+
+     ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+     ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+
+     ATTRPUTS( Code_ISO , zDim , Level_5 , 'Code_ISO' );
+
+     ATTRPUTS( Source_Entity , zDim , Level_5 , 'Source_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_5 , 'Country_Entity' );
+     ATTRPUTS( Activity_Entity, zDim , Level_5 , 'Activity_Entity' );
+
+     vEntity = Level_5;
+
+     IF( ELLEV( zDim, Level_5 ) = 0 ); 
+	ATTRPUTS( Level_5 | ' - ' | Desc_English_5 , zDim, Level_5, 'Code_Name');
+     ELSE;
+	ATTRPUTS( Desc_English_5 , zDim, Level_5, 'Code_Name');
+     ENDIF;
+
+ELSEIF( Level_3 @= '' );
+
+     ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+     ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+     ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+     ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+
+     ATTRPUTS( Code_ISO , zDim , Level_4, 'Code_ISO' );
+
+     ATTRPUTS( Source_Entity , zDim , Level_4 , 'Source_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_4 , 'Country_Entity' );
+
+
+     ATTRPUTS( Miles_flag , zDim , Level_4 , 'Miles' );
+
+     ATTRPUTS( Activity_Entity, zDim , Level_4 , 'Activity_Entity' );
+
+     vEntity = Level_4;
+
+
+     IF( ELLEV( zDim, Level_4 ) = 0 ); 
+	ATTRPUTS( Desc_English_5 , zDim, Level_5, 'Code_Name');
+	ATTRPUTS( Level_4 | ' - ' | Desc_English_4 , zDim, Level_4, 'Code_Name');
+     ELSE;
+	ATTRPUTS( Desc_English_4 , zDim, Level_4, 'Code_Name');
+     ENDIF;
+
+ELSEIF( Level_2 @= '' );
+
+     ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+     ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+     ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+     ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+     ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+     ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+
+     ATTRPUTS( Code_ISO , zDim , Level_3 , 'Code_ISO' );
+
+     ATTRPUTS( Source_Entity , zDim , Level_3 , 'Source_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_3 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_4 , 'Country_Entity' );
+     ATTRPUTS( Activity_Entity, zDim , Level_3 , 'Activity_Entity' );
+
+
+     ATTRPUTS( Miles_flag , zDim , Level_3 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_4 , 'Miles' );
+
+     vEntity = Level_3;
+
+     ATTRPUTS( Level_5 | ' ' | Desc_English_5 , zDim, Level_5, 'Code_Name');
+     ATTRPUTS( Level_4 | ' ' | Desc_English_4 , zDim, Level_4, 'Code_Name');
+     ATTRPUTS( Level_3 | ' ' | Desc_English_3 , zDim, Level_3, 'Code_Name');
+
+
+     IF( ELLEV( zDim, Level_3 ) = 0 ); 
+	ATTRPUTS( Desc_English_5 , zDim, Level_5, 'Code_Name');
+                ATTRPUTS( Desc_English_4 , zDim, Level_4, 'Code_Name');
+	ATTRPUTS( Level_3 | ' - ' | Desc_English_3 , zDim, Level_3, 'Code_Name');
+     ELSE;
+	ATTRPUTS( Desc_English_3 , zDim, Level_3, 'Code_Name');
+     ENDIF;
+
+ELSEIF( Level_1 @= '' );
+
+     ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+     ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+     ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+     ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+     ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+     ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+     ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+     ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+
+     ATTRPUTS( Code_ISO , zDim , Level_2 , 'Code_ISO' );
+
+     ATTRPUTS( Source_Entity , zDim , Level_2 , 'Source_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_2 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_3 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_4 , 'Country_Entity' );
+     ATTRPUTS( Activity_Entity, zDim , Level_2 , 'Activity_Entity' );
+
+     ATTRPUTS( Miles_flag , zDim , Level_2 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_3 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_4 , 'Miles' );
+
+     vEntity = Level_2;
+
+     IF( ELLEV( zDim, Level_2 ) = 0 ); 
+	ATTRPUTS( Desc_English_5 , zDim, Level_5, 'Code_Name');
+                ATTRPUTS( Desc_English_4 , zDim, Level_4, 'Code_Name');
+                ATTRPUTS( Desc_English_3 , zDim, Level_3, 'Code_Name');
+	ATTRPUTS( Level_2 | ' - ' | Desc_English_2 , zDim, Level_2, 'Code_Name');
+
+	ATTRPUTS( External_Growth, zDim , Level_2 , 'External_Growth' );
+     ELSE;
+	ATTRPUTS( Desc_English_2 , zDim, Level_2, 'Code_Name');
+     ENDIF;
+
+ELSEIF( Level_0 @= '' );
+
+     ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+     ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+     ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+     ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+     ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+     ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+     ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+     ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+     ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+     ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+
+     ATTRPUTS( Code_ISO , zDim , Level_1 , 'Code_ISO' );
+
+     ATTRPUTS( Source_Entity , zDim , Level_1 , 'Source_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_1 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_2 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_3 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_4 , 'Country_Entity' );
+     ATTRPUTS( Activity_Entity, zDim , Level_1 , 'Activity_Entity' );
+
+
+     ATTRPUTS( Miles_flag , zDim , Level_1 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_2 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_3 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_4 , 'Miles' );
+
+     vEntity = Level_1;
+
+     IF( ELLEV( zDim, Level_1 ) = 0 ); 
+	ATTRPUTS( Desc_English_5 , zDim, Level_5, 'Code_Name');
+                ATTRPUTS( Desc_English_4 , zDim, Level_4, 'Code_Name');
+                ATTRPUTS( Desc_English_3 , zDim, Level_3, 'Code_Name');
+                ATTRPUTS( Desc_English_2 , zDim, Level_2, 'Code_Name');
+	ATTRPUTS( Level_1 | ' - ' | Desc_English_1 , zDim, Level_1, 'Code_Name');
+     ELSE;
+	ATTRPUTS( Desc_English_1 , zDim, Level_1, 'Code_Name');
+     ENDIF;
+
+ELSE;
+
+     ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+     ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+     ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+     ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+     ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+     ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+     ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+     ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+     ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+     ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+     ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+     ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+
+     ATTRPUTS( Source_Entity , zDim , Level_0 , 'Source_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_0 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_1 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_2 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_3 , 'Country_Entity' );
+     ATTRPUTS( Country_Entity, zDim , Level_4 , 'Country_Entity' );
+
+     ATTRPUTS( Code_ISO , zDim , Level_0 , 'Code_ISO' );
+     ATTRPUTS( Code_ISO , zDim , Level_1 , 'Code_ISO' );
+     ATTRPUTS( Code_ISO , zDim , Level_2 , 'Code_ISO' );
+     ATTRPUTS( Code_ISO , zDim , Level_3 , 'Code_ISO' );
+
+     ATTRPUTS( Miles_flag , zDim , Level_0 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_1 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_2 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_3 , 'Miles' );
+     ATTRPUTS( Miles_flag , zDim , Level_4 , 'Miles' );
+     ATTRPUTS( Activity_Entity, zDim , Level_0 , 'Activity_Entity' );
+
+     vEntity = Level_0;
+
+
+     ATTRPUTS( Level_5 | ' ' | Desc_English_5 , zDim, Level_5, 'Code_Name');
+     ATTRPUTS( Level_4 | ' ' | Desc_English_4 , zDim, Level_4, 'Code_Name');
+     ATTRPUTS( Level_3 | ' ' | Desc_English_3 , zDim, Level_3, 'Code_Name');
+     ATTRPUTS( Level_2 | ' ' | Desc_English_2 , zDim, Level_2, 'Code_Name');
+     ATTRPUTS( Level_1 | ' ' | Desc_English_1 , zDim, Level_1, 'Code_Name');
+     ATTRPUTS( Level_0 | ' ' | Desc_English_0 , zDim, Level_0, 'Code_Name');
+
+     IF( ELLEV( zDim, Level_0 ) = 0 ); 
+	ATTRPUTS( Desc_English_5 , zDim, Level_5, 'Code_Name');
+                ATTRPUTS( Desc_English_4 , zDim, Level_4, 'Code_Name');
+                ATTRPUTS( Desc_English_3 , zDim, Level_3, 'Code_Name');
+                ATTRPUTS( Desc_English_2 , zDim, Level_2, 'Code_Name');
+     	ATTRPUTS( Desc_English_1 , zDim, Level_1, 'Code_Name');
+     	ATTRPUTS( Level_0 | ' - ' | Desc_English_0 , zDim, Level_0, 'Code_Name');
+     ELSE;
+	ATTRPUTS( Desc_English_0 , zDim, Level_0, 'Code_Name');
+     ENDIF;
+
+ENDIF;
+
+
+#################################################################################
+#                                                  TC_CONTRACT_ECO_MO_TYP_CLI INPUT SECTION
+#################################################################################
+  
+#-- Input dans le cube TC_CONTRACT_ECO_MO_TYP_CLI
+
+IF( ELLEV( zDim , vEntity ) = 0 ); 
+
+	CellPutS('NA', zCube , Activity_Entity,  vEntity,'NA', 'STR_VAR1' );
+	CellPutS('NA', zCube , Activity_Entity, vEntity, 'NA', 'STR_VAR2' );
+
+ENDIF;
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zDim );
+
+#-- Load Security
+#ExecuteProcess( 'Import_CM_Security_Legal_Organization');
+
+
+#-- MAJ la dimension 'Country'
+ExecuteProcess( 'DB_Country');
+#endregion

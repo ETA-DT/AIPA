@@ -1,0 +1,920 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+###########################################
+##                              VARIABLES                                         ##
+###########################################
+vDate = TIMST(now ,  '\d-\m-\y' );
+
+vDimScenario = 'Phase';
+
+vDimCompte = 'Indicateurs_Activité';
+vDimOther = pDimOther;
+
+vNbDim = 1;
+Process='ti_'|GetProcessName | '_' |vDate ;
+vSource = 'VersionSource';
+vCible = 'VersionCible';
+sView='sView_'|Process;
+cView='cView_'|Process;
+sSub='sSub_'|Process;
+cSub='cSub_'|Process;
+vI = 1;
+
+
+#==== Tout en Majuscule===========
+
+P_ComptesSource = UPPER(P_ComptesSource);
+P_ComptesCible = UPPER(P_ComptesCible);
+
+# =============================================================
+# ========== PROCESS LOG                                                                                                                                    
+# =============================================================
+StringGlobalVariable('sDate');
+NumericGlobalVariable('nNumberofRecords');
+NumericGlobalVariable('PrologMinorErrorCount');
+NumericGlobalVariable('MetadataMinorErrorCount');
+NumericGlobalVariable('DataMinorErrorCount');
+
+	nTime = NOW;
+	sDate = TIMST(nTime, '\Y-\m-\d');
+
+
+nNumberofRecords = 0;
+# ============================================================
+
+##################################
+#-------------------------------------------------------------
+# Gestion de l'asciioutput
+#------------------------------------------------------------
+DataSourceAsciiQuoteCharacter = '"';
+DataSourceAsciiDelimiter = ';=';
+#-----------------------------------------------------------
+vAsciioutputHeaderCounter=0;
+
+#-- fichier export pour contrôle -- sous : \\data\s\prod\Sharedfiles\Output  --
+# --  zPath='S:\prod\Partage_fichier\Output\';
+zOUTPUT_DIR =   GetProcessErrorFileDirectory;
+zErrorDim_txt = zOUTPUT_DIR | 'InfosErreurs_Dimension_';
+zErrorData_txt = zOUTPUT_DIR | 'InfosErreurs_Data_'| vDate |'.csv';
+zErrorCheckData = zOUTPUT_DIR | 'zCheckData_'| vDate |'.csv';
+zErrorOther = zOUTPUT_DIR | 'zError_'| vDate |'.csv';
+
+
+
+#****Edit des logs
+OldCubeLogChanges = CUBEGETLOGCHANGES(pCube);
+CUBESETLOGCHANGES(pCube, 0);
+
+
+
+###########################################
+##               DEFINITION DATASOURCE                          ##
+###########################################
+DataSourceType = 'VIEW';
+DatasourceNameForServer = pCube;
+
+
+DatasourceCubeview = sView;
+
+
+###########################################
+##          TEST DE L'EXISTENCE DU CUBE                         ##
+###########################################
+
+IF ( CubeExists(pCube) = 0 );
+
+   ItemReject('Le cube : ' | pCube | ' est inexistant' );
+   ProcessError;      
+
+ENDIF;
+
+
+###########################################
+##       TEST DE L'EXISTENCE DE LA DIMENSION             ##
+###########################################
+
+
+# Check sur la dimension temps utilisée
+nDim = 1;
+While( TabDim( pCube, nDim ) @<> '' );
+  sDim = TabDim( pCube, nDim );
+  IF( sDim @= 'Period' %  sDim @='Period');
+vDimTemps =sDim ;
+    EndIF;
+  nDim = nDim + 1;
+End;
+
+
+  IF ( DimensionExists(vDimScenario) = 0 );
+
+     ItemReject('La Dimension : ' | vDimScenario | ' est inexistante' );
+     ProcessError;      
+
+  ENDIF;
+
+  IF ( DimensionExists(vDimTemps) = 0 );
+
+     ItemReject( 'La Dimension : ' | vDimTemps | ' est inexistante' );
+     ProcessError;      
+
+  ENDIF;
+
+
+IF ( DimensionExists(vDimCompte) = 0 );
+
+   ItemReject( 'La Dimension : ' | vDimCompte | ' est inexistante' );
+   ProcessError;      
+
+ENDIF;
+
+IF ( vDimOther @<> '' & DimensionExists(vDimOther)= 0 );
+
+   ItemReject( 'La Dimension : ' | vDimOther | ' est inexistante' );
+   ProcessError;      
+
+ENDIF;
+
+
+
+###########################################
+##       TEST EXISTENCE DES MEMBRES & AUTRES        ##
+###########################################
+
+#=================================================
+#=== Si Source = ALL alors Cible = ALL    =================
+#=================================================
+IF(P_ComptesSource @= 'ALL');
+   P_ComptesCible = 'ALL';
+ENDIF;
+
+IF(pDimOtherSource @= 'ALL');
+   pDimOtherCible = 'ALL';
+ENDIF;
+
+
+
+
+
+#=================================================
+#=== Test sur la dimension Scenario  =====================
+#=================================================
+
+IF ( DIMIX(vDimScenario,pScenarioSource) = 0 );
+
+  ItemReject('La version source : ' | pScenarioSource | ' est inexistante' );
+   ProcessError;
+
+ELSEIF( DIMIX(vDimScenario, pScenarioCible) = 0 );
+
+   ItemReject('La version cible : ' | pScenarioCible | ' est inexistante' );
+   ProcessError;
+
+ELSEIF ( DTYPE(vDimScenario, pScenarioSource) @= 'C' );
+
+  ItemReject('Element : ' | pScenarioSource | ' est consolidé et ne peut être copié' );
+   ProcessError;
+
+ELSEIF ( DTYPE(vDimScenario, pScenarioCible) @= 'C' );
+
+   ItemReject('Element : ' | pScenarioCible | ' est consolidé et ne peut être copié' );
+   ProcessError;
+
+#=================================================
+#=== Test sur la dimension Temps  ======================
+#=================================================
+
+ELSEIF ( DIMIX(vDimTemps, pTempsSource) = 0 );
+
+   ItemReject('Période source : ' | pTempsSource | ' est inexistante' );
+   ProcessError;
+
+ELSEIF( DIMIX(vDimTemps, pTempsCible) = 0 );
+
+  ItemReject('Période cible : ' | pTempsCible | ' est inexistante' );
+   ProcessError;
+ENDIF;
+
+
+
+
+
+#=================================================
+#=== Test sur la dimension P_Comptes===============
+#=================================================
+
+
+#ELSEIF(  DTYPE(vDimCompte, P_ComptesCible) @= 'C' );
+
+#  ItemReject('Element : ' | P_ComptesSource | ' est consolidé et ne peut être copié' );
+#   ProcessError;
+
+
+#=================================================
+#=== Test sur la dimension Other ===============
+#=================================================
+
+
+#=================================================
+#=== Test sur Source = Cible          ======================
+#=================================================
+
+
+
+###########################################
+##                      NOMBRE DE DIM DU CUBE                       ##
+###########################################
+
+WHILE ( TABDIM(pCube, vNbDim) @<> '');
+
+   vNbDim = vNbDim + 1;   
+
+END;
+
+###########################################
+##                     CREATION DES VUES                                 ##
+###########################################
+
+IF (ViewExists(pCube, sView) = 1);
+   ViewDestroy(pCube,sView);
+   ViewCreate(pCube, sView);
+ELSE;
+   ViewCreate(pCube, sView);
+ENDIF;
+
+IF (ViewExists(pCube, cView) = 1);
+   ViewDestroy(pCube,cView);
+   ViewCreate(pCube, cView);
+ELSE;
+   ViewCreate(pCube, cView);
+ENDIF;
+
+###########################################
+##                     CREATION DES SUBSETS                          ##
+###########################################
+
+
+#****Création du sous-ensemble Source****#
+
+nDim = 1;
+While( TabDim( pCube, nDim ) @<> '' );
+  sDim = TabDim( pCube, nDim );
+  IF( SubsetExists( sDim,sSub) = 1 );
+   SubsetDeleteAllElements(sDim, sSub);
+  ELSE;
+   SubsetCreate(sDim,sSub);
+  EndIF;
+  nDim = nDim + 1;
+End;
+
+#****Création du sous-ensemble Cible****#
+
+nDim = 1;
+While( TabDim( pCube, nDim ) @<> '' );
+  cDim = TabDim( pCube, nDim );
+  IF( SubsetExists( cDim,cSub) = 1 );
+   SubsetDeleteAllElements(cDim, cSub);
+  ELSE;
+   SubsetCreate(cDim,cSub);
+ 
+  EndIF;
+  nDim = nDim + 1;
+End;
+
+
+###########################################
+##                     Subset : ajout des éléments                           ##
+###########################################
+
+WHILE ( vI < vNbDim );
+vDim = TABDIM(pCube, vI);
+   
+  IF (TABDIM(pCube, vI) @= vDimScenario );
+
+      SubsetElementInsert(vDimScenario, sSub,pScenarioSource, 1);
+      SubsetElementInsert(vDimScenario, cSub,pScenarioCible, 1);
+
+   ELSEIF ( TABDIM(pCube, vI) @= vDimTemps & (DTYPE(vDimTemps, pTempsSource) @<> 'C' % DTYPE(vDimTemps, pTempsCible) @<> 'C') );
+      SubsetElementInsert(vDimTemps, sSub,pTempsSource, 1);
+      SubsetElementInsert(vDimTemps, cSub,pTempsCible, 1);
+
+     ELSEIF ( TABDIM(pCube, vI) @= vDimCompte & P_ComptesSource @<> 'ALL' & DTYPE(vDimCompte, P_ComptesCible) @<> 'C');
+  
+      SubsetElementInsert(vDimCompte, sSub,P_ComptesSource, 1);
+      SubsetElementInsert(vDimCompte, cSub,P_ComptesCible, 1);
+	  
+  
+   ELSEIF ( TABDIM(pCube, vI) @= vDimOther & UPPER(pDimOtherSource) @<> 'ALL' & DTYPE(vDimOther, pDimOtherCible) @<> 'C');
+  
+      SubsetElementInsert(vDimOther, sSub,pDimOtherSource, 1);
+      SubsetElementInsert(vDimOther, cSub,pDimOtherCible, 1);
+	  
+    ELSE;
+
+          #Gère le cas Consolidation Source -> Consolidation Cible et Element Fin Source -> Element Cible
+          IF(TABDIM(pCube, vI) @= vDimTemps);
+             SubsetDestroy(TABDIM(pCube, vI), sSub);
+             SubsetCreatebyMDX(sSub, '{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER({[ '| TABDIM(pCube, vI) |' ].[ '|pTempsSource|' ]}, ALL, RECURSIVE )}, 0)}' );
+
+             SubsetDestroy(TABDIM(pCube, vI), cSub);
+             SubsetCreatebyMDX(cSub, '{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER({[ '| TABDIM(pCube, vI) |' ].[ '|pTempsCible|' ]}, ALL, RECURSIVE )}, 0)}' );
+
+              
+          ELSEIF(TABDIM(pCube, vI) @= vDimOther & UPPER(pDimOtherSource) @<> 'ALL' );
+             SubsetDestroy(TABDIM(pCube, vI), sSub);
+             SubsetCreatebyMDX(sSub, '{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER({[ '| TABDIM(pCube, vI) |' ].[ '|pDimOtherSource|' ]}, ALL, RECURSIVE )}, 0)}' );
+
+             SubsetDestroy(TABDIM(pCube, vI), cSub);
+             SubsetCreatebyMDX(cSub, '{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER({[ '| TABDIM(pCube, vI) |' ].[ '|pDimOtherCible|' ]}, ALL, RECURSIVE )}, 0)}' );
+
+          ELSEIF(TABDIM(pCube, vI) @= vDimCompte & UPPER(P_ComptesSource) @<> 'ALL');
+             SubsetDestroy(TABDIM(pCube, vI), sSub);
+             SubsetCreatebyMDX(sSub, '{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER({[ '| TABDIM(pCube, vI) |' ].[ '|P_ComptesSource|' ]}, ALL, RECURSIVE )}, 0)}' );
+
+             SubsetDestroy(TABDIM(pCube, vI), cSub);
+             SubsetCreatebyMDX(cSub, '{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER({[ '| TABDIM(pCube, vI) |' ].[ '|P_ComptesCible|' ]}, ALL, RECURSIVE )}, 0)}' );
+
+
+
+           ELSE;
+              SubsetIsAllSet(TABDIM(pCube, vI), sSub, 1);
+              SubsetIsAllSet(TABDIM(pCube, vI), cSub, 1);
+           ENDIF;
+
+   ENDIF;
+
+vI = vI + 1;
+
+END;
+
+#######################################################
+##                     Test si la dimension ReseauAnalytique existe dans le cube       ##
+#######################################################
+
+vDimUsed_CB=0;
+vDimUsed_ND=0;
+vDimUsed_S=0;
+
+nDim = 1;
+While( TabDim( pCube, nDim ) @<> '' );
+  sDim = TabDim( pCube, nDim );
+  IF( sDim @=vDimCompte);
+     vDimUsed_CB=1;
+  EndIF;
+ IF( sDim @=vDimOther);
+     vDimUsed_ND=1;
+  EndIF;
+   nDim = nDim + 1;
+End;
+
+###########################################
+##  AFFECTATION VARIABLES --> DIMENSIONS                ##
+###########################################
+
+v1 = TabDim( pCube, 1 );
+v2 = TabDim( pCube, 2 );
+v3 = TabDim( pCube, 3 );
+v4 = TabDim( pCube, 4 );
+v5 = TabDim( pCube, 5 );
+v6 = TabDim( pCube, 6 );
+v7 = TabDim( pCube, 7 );
+v8 = TabDim( pCube, 8 );
+v9 =  TabDim( pCube, 9 );
+v10 = TabDim( pCube, 10 );
+v11 = TabDim( pCube, 11 );
+v12 = TabDim( pCube, 12 );
+v13 = TabDim( pCube, 13 );
+v14 = TabDim( pCube, 14 );
+v15 = TabDim( pCube, 15 );
+v16 = TabDim( pCube, 16 );
+v17 = TabDim( pCube, 17 );
+v18 = TabDim( pCube, 18 );
+v19 = TabDim( pCube, 19 );
+v20 = TabDim( pCube, 20 );
+
+#ASCIIOUTPUT(vlog,v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13);
+
+###########################################
+##                 AFFECTATION SUBSETS --> VUES                ##
+###########################################
+
+vI = 1;
+
+WHILE ( vI < vNbDim );
+      ViewSubsetAssign(pCube, sView,TABDIM(pCube, vI), sSub);
+      ViewSubsetAssign(pCube, cView,TABDIM(pCube, vI), cSub);
+vI = vI + 1;
+
+END;
+
+###########################################
+##                 SUPPRESSION ZERO & MISSING                  ##
+###########################################
+
+
+ViewExtractSkipZeroesSet (pCube, sView, 1);
+ViewExtractSkipRuleValuesSet(pCube,sView,0);
+
+
+#=================================================
+#=== Ne skip pas la consolidation si la source en est une ====
+#=================================================
+
+
+IF(
+  DTYPE(vDimTemps, pTempsSource) @= 'C'  
+% DTYPE(vDimScenario, pScenarioSource) @= 'C' 
+% DTYPE(vDimCompte, P_ComptesSource) @= 'C' 
+% DTYPE(vDimOther, pDimOtherSource) @= 'C') ;
+
+  ViewExtractSkipCalcsSet (pCube, sView, 0);
+ELSE;
+ ViewExtractSkipCalcsSet (pCube, sView, 0);
+ENDIF;
+
+
+
+
+###########################################
+##                     RAZ DE LA VUE CIBLE                                ##
+###########################################
+
+ViewZeroOut(pCube, cView);
+
+
+
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+
+
+###########################################
+##                        AFFECTATION CIBLE                               ##
+###########################################
+IF ( DTYPE(vDimTemps, pTempsCible) @<> 'C' & UPPER(pTempsCible) @<> 'ALL' );
+ v1 = IF (TabDim( pCube, 1 ) @= vDimTemps, pTempsCible, v1);
+ v2 = IF (TabDim( pCube, 2 ) @= vDimTemps, pTempsCible, v2);
+ v3 = IF (TabDim( pCube, 3 ) @= vDimTemps, pTempsCible, v3);
+ v4 = IF (TabDim( pCube, 4 ) @= vDimTemps, pTempsCible, v4);
+ v5 = IF (TabDim( pCube, 5 ) @= vDimTemps, pTempsCible, v5);
+ v6 = IF (TabDim( pCube, 6 ) @= vDimTemps, pTempsCible, v6);
+ v7 = IF (TabDim( pCube, 7 ) @= vDimTemps, pTempsCible, v7);
+ v8 = IF (TabDim( pCube, 8 ) @= vDimTemps, pTempsCible, v8);
+ v9 = IF (TabDim( pCube, 9 ) @= vDimTemps, pTempsCible, v9);
+ v10 = IF (TabDim( pCube, 10 ) @= vDimTemps, pTempsCible, v10);
+ v11 = IF (TabDim( pCube, 11 ) @= vDimTemps, pTempsCible, v11);
+ v12 = IF (TabDim( pCube, 12 ) @= vDimTemps, pTempsCible, v12);
+ v13 = IF (TabDim( pCube, 13 ) @= vDimTemps, pTempsCible, v13);
+ v14 = IF (TabDim( pCube, 14 ) @= vDimTemps, pTempsCible, v14);
+ v15 = IF (TabDim( pCube, 15 ) @= vDimTemps, pTempsCible, v15);
+ v16 = IF (TabDim( pCube, 16 ) @= vDimTemps, pTempsCible, v16);
+ v17 = IF (TabDim( pCube, 17 ) @= vDimTemps, pTempsCible, v17); 
+ v18 = IF (TabDim( pCube, 18 ) @= vDimTemps, pTempsCible, v18);
+ v19 = IF (TabDim( pCube, 19 ) @= vDimTemps, pTempsCible, v19);
+ v20 = IF (TabDim( pCube, 20 ) @= vDimTemps, pTempsCible, v20);
+
+ENDIF;
+
+IF ( DTYPE(vDimScenario, pScenarioCible) @<> 'C' & UPPER(pScenarioCible) @<> 'ALL' );
+v1 = IF (TabDim( pCube, 1 ) @= vDimScenario, pScenarioCible   ,v1);
+v2 = IF (TabDim( pCube, 2 ) @= vDimScenario, pScenarioCible   ,v2);
+v3 = IF (TabDim( pCube, 3 ) @= vDimScenario, pScenarioCible   ,v3);
+v4 = IF (TabDim( pCube, 4 ) @= vDimScenario, pScenarioCible   ,v4);
+v5 = IF (TabDim( pCube, 5 ) @= vDimScenario, pScenarioCible   ,v5);
+v6 = IF (TabDim( pCube, 6 ) @= vDimScenario, pScenarioCible   ,v6);
+v7 = IF (TabDim( pCube, 7 ) @= vDimScenario, pScenarioCible   ,v7);
+v8 = IF (TabDim( pCube, 8 ) @= vDimScenario, pScenarioCible   ,v8);
+v9 = IF (TabDim( pCube, 9 ) @= vDimScenario, pScenarioCible   ,v9);
+v10 = IF (TabDim( pCube, 10 ) @= vDimScenario, pScenarioCible,v10);
+v11 = IF (TabDim( pCube, 11 ) @= vDimScenario, pScenarioCible,v11);
+v12 = IF (TabDim( pCube, 12 ) @= vDimScenario, pScenarioCible,v12);
+v13 = IF (TabDim( pCube, 13 ) @= vDimScenario, pScenarioCible,v13);
+v14 = IF (TabDim( pCube, 14 ) @= vDimScenario, pScenarioCible,v14);
+v15 = IF (TabDim( pCube, 15 ) @= vDimScenario, pScenarioCible,v15);
+v16 = IF (TabDim( pCube, 16 ) @= vDimScenario, pScenarioCible,v16);
+v17 = IF (TabDim( pCube, 17 ) @= vDimScenario, pScenarioCible,v17);
+v18 = IF (TabDim( pCube, 18 ) @= vDimScenario, pScenarioCible,v18);
+v19 = IF (TabDim( pCube, 19 ) @= vDimScenario, pScenarioCible,v19);
+v20 = IF (TabDim( pCube, 20 ) @= vDimScenario, pScenarioCible,v20);
+ENDIF;
+
+IF ( DTYPE(vDimCompte, P_ComptesCible) @<> 'C' & UPPER(P_ComptesCible) @<> 'ALL' );
+   v1 = IF (TabDim( pCube, 1 ) @= vDimCompte, P_ComptesCible, v1);
+   v2 = IF (TabDim( pCube, 2 ) @= vDimCompte, P_ComptesCible, v2);
+   v3 = IF (TabDim( pCube, 3 ) @= vDimCompte, P_ComptesCible, v3);
+   v4 = IF (TabDim( pCube, 4 ) @= vDimCompte, P_ComptesCible, v4);
+   v5 = IF (TabDim( pCube, 5 ) @= vDimCompte, P_ComptesCible, v5);
+   v6 = IF (TabDim( pCube, 6 ) @= vDimCompte, P_ComptesCible, v6);
+   v7 = IF (TabDim( pCube, 7 ) @= vDimCompte, P_ComptesCible, v7);
+   v8 = IF (TabDim( pCube, 8 ) @= vDimCompte, P_ComptesCible, v8);
+   v9 = IF (TabDim( pCube, 9 ) @= vDimCompte, P_ComptesCible, v9);
+   v10 = IF (TabDim( pCube, 10 ) @= vDimCompte, P_ComptesCible, v10);
+   v11 = IF (TabDim( pCube, 11 ) @= vDimCompte, P_ComptesCible, v11);
+   v12 = IF (TabDim( pCube, 12 ) @= vDimCompte, P_ComptesCible, v12);
+   v13 = IF (TabDim( pCube, 13 ) @= vDimCompte, P_ComptesCible, v13);
+   v14 = IF (TabDim( pCube, 14 ) @= vDimCompte, P_ComptesCible, v14);
+   v15 = IF (TabDim( pCube, 15 ) @= vDimCompte, P_ComptesCible, v15);
+   v16 = IF (TabDim( pCube, 16 ) @= vDimCompte, P_ComptesCible, v16);
+   v17 = IF (TabDim( pCube, 17 ) @= vDimCompte, P_ComptesCible, v17);
+   v18 = IF (TabDim( pCube, 18 ) @= vDimCompte, P_ComptesCible, v18);
+   v19 = IF (TabDim( pCube, 19 ) @= vDimCompte, P_ComptesCible, v19);
+   v20 = IF (TabDim( pCube, 20 ) @= vDimCompte, P_ComptesCible, v20);
+ENDIF;
+
+IF ( DTYPE(vDimOther, pDimOtherCible) @<> 'C' & UPPER(pDimOtherCible) @<> 'ALL' );
+   v1 = IF (TabDim( pCube, 1 ) @= vDimOther, pDimOtherCible, v1);
+   v2 = IF (TabDim( pCube, 2 ) @= vDimOther, pDimOtherCible, v2);
+   v3 = IF (TabDim( pCube, 3 ) @= vDimOther, pDimOtherCible, v3);
+   v4 = IF (TabDim( pCube, 4 ) @= vDimOther, pDimOtherCible, v4);
+   v5 = IF (TabDim( pCube, 5 ) @= vDimOther, pDimOtherCible, v5);
+   v6 = IF (TabDim( pCube, 6 ) @= vDimOther, pDimOtherCible, v6);
+   v7 = IF (TabDim( pCube, 7 ) @= vDimOther, pDimOtherCible, v7);
+   v8 = IF (TabDim( pCube, 8 ) @= vDimOther, pDimOtherCible, v8);
+   v9 = IF (TabDim( pCube, 9 ) @= vDimOther, pDimOtherCible, v9);
+   v10 = IF (TabDim( pCube, 10 ) @= vDimOther, pDimOtherCible, v10);
+   v11 = IF (TabDim( pCube, 11 ) @= vDimOther, pDimOtherCible, v11);
+   v12 = IF (TabDim( pCube, 12 ) @= vDimOther, pDimOtherCible, v12);
+   v13 = IF (TabDim( pCube, 13 ) @= vDimOther, pDimOtherCible, v13);
+   v14 = IF (TabDim( pCube, 14 ) @= vDimOther, pDimOtherCible, v14);
+   v15 = IF (TabDim( pCube, 15 ) @= vDimOther, pDimOtherCible, v15);
+   v16 = IF (TabDim( pCube, 16 ) @= vDimOther, pDimOtherCible, v16);
+   v17 = IF (TabDim( pCube, 17 ) @= vDimOther, pDimOtherCible, v17);
+   v18 = IF (TabDim( pCube, 18 ) @= vDimOther, pDimOtherCible, v18);
+   v19 = IF (TabDim( pCube, 19 ) @= vDimOther, pDimOtherCible, v19);
+   v20 = IF (TabDim( pCube, 20 ) @= vDimOther, pDimOtherCible, v20);
+
+ENDIF;
+
+
+
+###########################################
+##                        CHARGEMENT DATA                               ##
+###########################################
+
+#vDataGet = CellGetN(pCube,v1, v2, 'V1', v4, v5, v6, v7, v8, v9, V10, v11, v12,v13);
+ #ASCIIOutput(vLog,numbertostring(vDataGet),pTempsSource,pTempsCible,pScenarioSource,pScenarioCible,pVersionSource,pVersionCible);
+#ASCIIOutput(vLog,numbertostring(vDataGet),TabDim( pCube, 1 ),V1,TabDim( pCube, 2 ),V2,TabDim( pCube, 3 ),V3,TabDim( pCube, 4 ),V4,TabDim( pCube, 5 ),V5,TabDim( pCube, 6 ),V6,TabDim( pCube, 7 ),V7,TabDim( pCube, 8 ),V8,TabDim( pCube, 9 ),V9,TabDim( pCube, 10 ),V10,TabDim( pCube, 11 ),V11,TabDim( pCube, 12 ),V12,TabDim( pCube, 13 ),V13,V14,V15,V16,V17,V18,V19,V20);
+#ASCIIOUTPUT(vlog,numbertostring(vDataGet),pCube, 'Temps',v1,'Scenario', v2, 'V1','versionCible',v3,'Norme', v4,'Vision', v5,'FT', v6,'IndicateurME', v7,'BU', v8,'Reseau', v9,'PTF', V10,'Garantie', v11,'Papiv', v12,'Mesure',v13);
+
+Asciioutput(zErrorOther , pCube,v1, v2, 'V1', v4, v5, v6, v7, v8, v9, V10, v11, v12,v13);
+
+#======================================
+#==== Chargement de données numériques =====
+#=======================================
+
+IF(Value_Is_String =0);
+
+IF ( vNbDim = 3 );
+
+   IF( CellIsUpdateable(pCube, v1, v2) = 1 );
+
+      CellPutN( StringToNumberEx(v3, '.', ' ')+ (StringToNumberEx(v3, '.', ' ')*pTaux), pCube, v1, v2);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 4 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3) = 1 );
+
+      CellPutN( StringToNumberEx(v4, ',', ' ')+ (StringToNumberEx(v4, ',', ' ')*pTaux), pCube, v1, v2, v3);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 5 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4) = 1 );
+
+      CellPutN( StringToNumberEx(v5, ',', ' ')+ (StringToNumberEx(v5, ',', ' ')*pTaux), pCube, v1, v2, v3, v4);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 6 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5) = 1 );
+
+      CellPutN( StringToNumberEx(v6, '.', ' ')+ (StringToNumberEx(v6, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 7 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6) = 1 );
+
+      CellPutN( StringToNumberEx(v7, '.', ' ')+ (StringToNumberEx(v7, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 8 );
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7) = 1 );
+      CellPutN( StringToNumberEx(v8, '.', ' ')+ (StringToNumberEx(v8, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 9 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8) = 1 );
+
+      CellPutN( StringToNumberEx(v9, '.', ' ')+ (StringToNumberEx(v9, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 10 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9) = 1 );
+
+      CellPutN( StringToNumberEx(v10, '.', ' ')+ (StringToNumberEx(v10, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 11 );
+ 
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10) = 1 );
+      CellPutN( StringToNumberEx(v11, '.', ' ')+ (StringToNumberEx(v11, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 12 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11) = 1 );
+
+      CellPutN( StringToNumberEx(v12, '.', ' ')+ (StringToNumberEx(v12, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 13 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12) = 1  );
+
+      CellPutN( StringToNumberEx(v13, '.', ' ')+ (StringToNumberEx(v13, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 14 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13) = 1 );
+
+      CellPutN( StringToNumberEx(v14, '.', ' ')+ (StringToNumberEx(v14, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13);
+
+   ENDIF;
+
+ELSEIF ( vNbDim = 15 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14) = 1 );
+
+      CellPutN( StringToNumberEx(v15, '.', ' ')+ (StringToNumberEx(v15, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 16 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15) = 1 );
+
+      CellPutN( StringToNumberEx(v16, '.', ' ')+ (StringToNumberEx(v16, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 17 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16) = 1 );
+
+      CellPutN( StringToNumberEx(v17, '.', ' ')+ (StringToNumberEx(v17, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 18 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17) = 1 );
+
+      CellPutN( StringToNumberEx(v18, '.', ' ')+ (StringToNumberEx(v18, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 19 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17, v18) = 1 );
+
+      CellPutN( StringToNumberEx(v19, '.', ' ')+ (StringToNumberEx(v19, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17, v18);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 20 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17, v18, v19) = 1 );
+
+      CellPutN(  StringToNumberEx(v20, '.', ' ')+ (StringToNumberEx(v20, '.', ' ')*pTaux), pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17, v18, v19);
+
+   ENDIF;
+ENDIF;
+ENDIF;
+
+#==========================================
+#==== Chargement de données de type chaine =====
+#==========================================
+
+IF(Value_Is_String =1);
+
+IF ( vNbDim = 3 );
+
+   IF( CellIsUpdateable(pCube, v1, v2) = 1 );
+
+      CellPutS( v3, pCube, v1, v2);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 4 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3) = 1 );
+
+      CellPutS( v4, pCube, v1, v2, v3);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 5 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4) = 1 );
+
+      CellPutS( v5, pCube, v1, v2, v3, v4);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 6 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5) = 1 );
+
+      CellPutS( v6, pCube, v1, v2, v3, v4, v5);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 7 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6) = 1 );
+
+      CellPutS( v7, pCube, v1, v2, v3, v4, v5, v6);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 8 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7) = 1 );
+
+      CellPutS( v8, pCube, v1, v2, v3, v4, v5, v6, v7);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 9 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8) = 1 );
+
+      CellPutS( v9, pCube, v1, v2, v3, v4, v5, v6, v7, v8);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 10 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9) = 1 );
+
+      CellPutS( v10, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 11 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10) = 1 );
+
+      CellPutS( v11, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 12 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11) = 1 );
+
+      CellPutS( v12, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 13 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12) = 1  );
+
+      CellPutS( v13, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 14 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13) = 1 );
+
+      CellPutS( v14, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13);
+
+   ENDIF;
+
+ELSEIF ( vNbDim = 15 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14) = 1 );
+
+      CellPutS( v15, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 16 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15) = 1 );
+
+      CellPutS( v16, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 17 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16) = 1 );
+
+      CellPutS( v17, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 18 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17) = 1 );
+
+      CellPutS( v18, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 19 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17, v18) = 1 );
+
+      CellPutS( v19, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17, v18);
+
+   ENDIF;
+
+ELSEIF( vNbDim = 20 );
+
+   IF( CellIsUpdateable(pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17, v18, v19) = 1 );
+
+      CellPutS(  v20, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, V10, v11, v12, v13, v14, v15, v16, v17, v18, v19);
+
+   ENDIF;
+ENDIF;
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+###########################################
+##                    DESTRUCTIONS DES OBJETS                    ##
+###########################################
+
+IF (ViewExists(pCube, sView) = 1);
+  ViewDestroy(pCube,sView);
+ENDIF;
+
+IF (ViewExists(pCube, cView) = 1);
+   ViewDestroy(pCube,cView);
+ENDIF;
+
+vI = 1;
+WHILE ( vI < vNbDim );
+    SubsetDestroy(TABDIM(pCube, vI), sSub);
+    SubsetDestroy(TABDIM(pCube, vI), cSub);
+   vI = vI + 1;
+END;
+
+
+
+
+
+#****Logs d'audit du cube
+#=============================================
+CUBESETLOGCHANGES(pCube, OldCubeLogChanges);
+
+
+
+
+
+
+
+
+
+#endregion

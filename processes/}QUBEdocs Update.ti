@@ -1,0 +1,96 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Documented this process
+#GENERALCOMMENT This process runs all other QUBEdocs processes. 
+#GENERALCOMMENT These processes build the QUBEdocs defintions cube and generate the web based QUBEdocs documentation. 
+#GENERALCOMMENT This process can be packaged up into a chore for scheduling. 
+#DATASOURCECOMMENT Not Applicable
+#PROLOGCOMMENT Executes '}QUBEdocs Build', '}QUBEdocs Export' & '}QUBEdocs Generate' processes
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Not Applicable
+#EPILOGCOMMENT Not Applicable
+
+pCompareVersion = 'TRUE';
+sSettingsCube = '}ElementAttributes_QUBEdocs Setup Item';
+
+IF(UPPER(pUpdate) @= 'Y');
+ EXECUTEPROCESS('}QUBEDocs Build');
+ EXECUTEPROCESS('}QUBEdocs_CheckOrphanElements','pDimName','QUBEdocs Definition');
+
+ sSetting = 'Performance Stats';
+ IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS('}QUBEDocs Build Stats');
+  EXECUTEPROCESS('}QUBEDocs Build Client');
+  EXECUTEPROCESS('}QUBEDocs Exec Stats');
+
+ sSetting = 'View Documentation';
+ IF(ATTRS('QUBEdocs Setup Item', sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS('}QUBEdocs Load Subsets and Views','pType',2);
+ ENDIF;
+
+ sSetting = 'Subset Documentation';
+ IF(ATTRS('QUBEdocs Setup Item', sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS('}QUBEdocs Load Subsets and Views','pType',1);
+ ENDIF;
+
+ sSetting = 'Folder Import';
+ IF(ATTRS('QUBEdocs Setup Item',sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS('}QUBEdocs Folder Import');
+ ENDIF;
+ENDIF;
+
+ENDIF;
+
+
+sDefFile = '1_QUBEdocsDefinitions.qson';
+sAppFile = '2_QUBEdocsApplications.qson';
+sSecFile = '3_QUBEdocsSecurity.qson';
+
+ASCIIDELETE(sDefFile);
+ASCIIDELETE(sAppFile);
+ASCIIDELETE(sSecFile);
+
+IF(UPPER(pGenerate) @<> 'API');
+ sSetting = 'Model Documentation';
+ IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+  EXECUTEPROCESS('}QUBEdocs Export Definitions','pFile',sDefFile); 
+ ENDIF;
+
+sSetting = 'Application Documentation';
+IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+ EXECUTEPROCESS('}QUBEdocs Export Applications','pFile',sAppFile);
+ENDIF;
+
+sSetting = 'User and Group Documentation';
+IF(CELLGETS(sSettingsCube,sSetting,'Enable') @= 'YES');
+ EXECUTEPROCESS('}QUBEdocs Export Security','pFile',sSecFile);
+ENDIF;
+ENDIF;
+
+IF(UPPER(pClearStats) @= 'Y');
+ EXECUTEPROCESS('}QUBEdocs Clear Stats');
+ENDIF;
+
+IF(UPPER(pGenerate) @= 'Y' & pServer @<>'' & pConnection @<>'');
+ EXECUTEPROCESS('}QUBEDocs Generate','pServer',pServer,'pConnection',pConnection,'pCompareVersion',pCompareVersion);
+ENDIF;
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

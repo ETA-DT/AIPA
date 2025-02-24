@@ -1,0 +1,131 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+######################################################################################
+# Projet : Tango - Màj de la dimension z_stats_ Utilisateur step 3
+# Créé par : TIN ANONE
+# Créé le : 25/02/2014
+# Modifié par :  YAD & VNN
+# Modifié le : 10/05/2016 et 26/05/2016
+# Modification apportée : YAD Modification des règles de construction des Hiérachies parallèles 
+# Modification apportée : YAD suppression des Users Histo des Hiérachies secondaires et traitement des modifications d'attributs
+#######################################################################################
+
+sDimTgt = 'z_Stat_Utilisateur';
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+## -- On clean supprime des hierachies parallèles secondaires les élements qui ne sont plus Courants
+
+IF(ATTRS(sDimTgt, vUtilisateur, 'EstCourant') @= 'N');
+
+     DimensionElementComponentAdd( sDimTgt , 'Utilisateurs_Histo' , vUtilisateur , 1 ) ;
+
+      IF(ELISPAR(sDimTgt, 'Utilisateurs_Courants' , vUtilisateur) =1);
+        DimensionElementComponentDelete( sDimTgt , 'Utilisateurs_Courants' , vUtilisateur);
+      ENDIF;
+
+      IF(ELISPAR(sDimTgt, 'Utilisateurs LTP' , vUtilisateur) =1);
+        DimensionElementComponentDelete( sDimTgt , 'Utilisateurs LTP' , vUtilisateur);
+      ENDIF;
+
+      IF(ELISPAR(sDimTgt, 'zLTP NA' , vUtilisateur) =1);
+        DimensionElementComponentDelete( sDimTgt , 'zLTP NA' , vUtilisateur);
+      ENDIF;
+
+      IF(ELISPAR(sDimTgt, 'Utilisateurs Country_PM' , vUtilisateur) =1);
+        DimensionElementComponentDelete( sDimTgt , 'Utilisateurs Country_PM' , vUtilisateur);
+      ENDIF;
+
+         vProfil = ATTRS(sDimTgt, vUtilisateur, 'Profil');
+           IF(vProfil @<>'');
+               IF(ELISPAR(sDimTgt, vProfil, vUtilisateur) =1);
+                 DimensionElementComponentDelete( sDimTgt , vProfil  , vUtilisateur);
+               ENDIF;
+           ELSE;
+               IF(ELISPAR(sDimTgt, 'zProfil NA', vUtilisateur) =1);
+                 DimensionElementComponentDelete( sDimTgt , 'zProfil NA', vUtilisateur);
+               ENDIF;
+       ENDIF;
+
+        vPoste = ATTRS(sDimTgt, vUtilisateur, 'Fonction');
+            IF(vPoste @<>'');
+                IF(ELISPAR(sDimTgt, vPoste, vUtilisateur) =1);
+                    DimensionElementComponentDelete( sDimTgt , vPoste, vUtilisateur);
+                ENDIF;
+             ELSE;
+                 IF(ELISPAR(sDimTgt, 'zFonction NA', vUtilisateur) =1);
+                   DimensionElementComponentDelete( sDimTgt , 'zFonction NA', vUtilisateur);
+                 ENDIF;
+            ENDIF;
+
+         vZone = ATTRS(sDimTgt, vUtilisateur, 'Zone');
+               IF(vZone @<>'');
+                   IF(ELISPAR(sDimTgt, vZone, vUtilisateur) =1);
+                       DimensionElementComponentDelete( sDimTgt , vZone, vUtilisateur);
+                   ENDIF;
+               ELSE;
+                    IF(ELISPAR(sDimTgt, 'zZone NA', vUtilisateur) =1);    
+                       DimensionElementComponentDelete( sDimTgt , 'zZone NA', vUtilisateur);
+                    ENDIF;
+               ENDIF;
+
+         IF(ELISPAR(sDimTgt, 'Country_PM', vUtilisateur) =1);
+               DimensionElementComponentDelete( sDimTgt , 'Country_PM', vUtilisateur);
+         ENDIF;
+
+         IF(ELISPAR(sDimTgt, 'zProfil NA', vUtilisateur) =1);
+              DimensionElementComponentDelete( sDimTgt , 'zProfil NA', vUtilisateur);
+         ENDIF;
+
+         IF(ELISPAR(sDimTgt, 'zCountry_PM NA', vUtilisateur) =1);
+              DimensionElementComponentDelete( sDimTgt , 'zCountry_PM NA', vUtilisateur);
+         ENDIF;
+
+ENDIF;
+
+## -- On supprime des hierachies parallèles secondaires les élements courants dont l'attribut a été modifié
+
+IF(ATTRS(sDimTgt, vUtilisateur, 'EstCourant') @= 'Y');
+
+      IF(ELISPAR(sDimTgt, 'zLTP NA' , vUtilisateur) =1  & ATTRS(sDimTgt, vUtilisateur, 'EstLTP') @= 'Y');
+        DimensionElementComponentDelete( sDimTgt , 'zLTP NA' , vUtilisateur);
+      ENDIF;
+
+      IF(ELISPAR(sDimTgt, 'zCountry_PM NA' , vUtilisateur) =1  & ATTRS(sDimTgt, vUtilisateur, 'EstCountry_PM') @= 'Y');
+        DimensionElementComponentDelete( sDimTgt , 'zCountry_PM NA' , vUtilisateur);
+      ENDIF;
+
+      IF(ELISPAR(sDimTgt, 'zFonction NA' , vUtilisateur) =1  & ATTRS(sDimTgt, vUtilisateur, 'Fonction') @<> '');
+        DimensionElementComponentDelete( sDimTgt , 'zFonction NA' , vUtilisateur);
+      ENDIF;
+
+      IF(ELISPAR(sDimTgt, 'zProfil NA' , vUtilisateur) =1  & ATTRS(sDimTgt, vUtilisateur, 'Profil') @<> '');
+        DimensionElementComponentDelete( sDimTgt , 'zProfil NA' , vUtilisateur);
+      ENDIF;
+
+      IF(ELISPAR(sDimTgt, 'zZone NA' , vUtilisateur) =1  & ATTRS(sDimTgt, vUtilisateur, 'Zone') @<> '');
+        DimensionElementComponentDelete( sDimTgt , 'zZone NA' , vUtilisateur);
+      ENDIF;
+
+ENDIF;
+
+#####
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

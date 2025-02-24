@@ -1,0 +1,84 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#GENERALCOMMENT Unravels a dimension or hierarchy.  Note that if no hierarchy is specified the entire dimension will be unraveled.
+#DATASOURCECOMMENT N/A
+#PROLOGCOMMENT Builds a temporary source subset for a given dimension, iterates through and unravels the hierarchy. Deletes the subset when finished
+#METADATACOMMENT N/A
+#DATACOMMENT N/A
+#EPILOGCOMMENT N/A
+#LASTCHNAGE W Gilling, Mindfull, 19 May 2015 Toolkit 4.2  Parameter validation added
+
+#########
+#Check to see that user input is valid
+IF (DIMIX('}Dimensions',pDimName)=0);
+	PROCESSBREAK;
+ENDIF;
+
+IF (DIMIX(pDimName,pConsolidation)=0 & pConsolidation @<> '' );
+	PROCESSBREAK;
+ENDIF;
+
+#########
+
+sSubsetName = 'SYS.Consolidation_ToDisconnect';
+
+###**************************STEP 1: Build Source Subset*************************###
+IF (SUBSETEXISTS(pDimName, sSubsetName) = 1);
+    	SUBSETDESTROY(pDimName, sSubsetName);
+ENDIF;
+
+IF ( pConsolidation @= '' );
+    	sMDX =  '{ HIERARCHIZE( {TM1SUBSETALL( ['| pDimName |'] )} ) }';
+ELSE;
+    	sMDX = '{TM1DRILLDOWNMEMBER( {['| pDimName |'].['| pConsolidation |']}, ALL, RECURSIVE )}';
+ENDIF;
+
+SUBSETCREATEBYMDX(sSubsetName, sMDX);
+
+###*****Set Data Source to Subset*****###
+DATASOURCETYPE = 'SUBSET';
+DATASOURCENAMEFORSERVER = pDimName;
+DATASOURCEDIMENSIONSUBSET = sSubsetName;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+nComponents = ELCOMPN(pDimName, vElement);
+
+WHILE (nComponents >0);
+    #***Remove the current hierarchy only***#
+    sChild = ELCOMP(pDimName, vElement, nComponents);
+    DIMENSIONELEMENTCOMPONENTDELETE(pDimName, vElement, sChild);
+    nComponents = nComponents - 1;
+END;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+ #########
+#Check to see that user input is valid
+IF (DIMIX('}Dimensions',pDimName)=0);
+	ITEMREJECT(pDimName | ' is an invalid dimension name');
+ENDIF;
+
+IF (DIMIX(pDimName,pConsolidation)=0 & pConsolidation @<> '' );
+	ITEMREJECT(pConsolidation | ' is an invalid Consolidation');
+ENDIF;
+
+#########
+
+SUBSETDESTROY(pDimName, sSubsetName);
+#endregion

@@ -1,0 +1,5 @@
+﻿FILE_FORMAT=100
+ENTRYNAME=3 - MasterFile Output.xlsm
+ENTRYTYPE=blob
+ENTRYREFERENCE=TM1:///blob/PUBLIC/.\}externals\MasterFile.xlsm_20210729132912.xlsm
+REMOVEBLOBONDELETE=Yes

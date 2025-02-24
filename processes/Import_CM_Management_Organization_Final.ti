@@ -1,0 +1,313 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#########################################
+# Project : Multi Instance
+# Created by : MBO
+# Created at : 27/10/2011
+# Modified by : 
+# Modified at : 
+#########################################
+
+
+zDim = 'Management_Organization';
+zDimTech = 'Management_Organization_TEMP';
+Ponderation = 1;
+
+
+V_S_TOT_BM_MO='VTD_corp_BM';
+V_S_BM01='BM01';
+V_S_BM02='BM02';
+V_S_BM03='BM03';
+#V_S_BM04='BM04';
+
+
+
+
+zProcess = 'Import_CM_' | zDim | '_Final';
+zDateLoadingStart = TIMST( NOW , '\Y-\M-\D' );
+zDateTimeLoadingStart = TIMST( NOW , '\Y-\M-\D \h:\i:\s' );
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+
+V_S_TOT_MO='VTD_corp';
+
+V_S_USER=TM1USER();
+#--REM= Replacement of special characters by'_'.
+V_S_RESERVED_CHARS = '/\:*?"<>|''; ,';
+V_N_ITERATE = 1;
+V_N_USER_NAME_SIZ = LONG(V_S_USER);
+V_S_NAME_TMP = '';
+WHILE( V_N_ITERATE <= V_N_USER_NAME_SIZ) ;
+	V_S_CHAR = SUBST( V_S_USER, V_N_ITERATE, 1);
+	IF( SCAN( V_S_CHAR, V_S_RESERVED_CHARS) <> 0) ;
+		V_S_CHAR = '_';
+	ENDIF;
+	V_S_NAME_TMP = V_S_NAME_TMP | V_S_CHAR;
+	V_N_ITERATE = V_N_ITERATE + 1;
+END;
+V_S_USER = V_S_NAME_TMP;
+
+
+
+V_S_PROCESS_NAME = GETPROCESSNAME();		
+V_S_TIMESTAMP=TIMST(NOW, '\Y\m\d_\h\i\s');		
+V_S_RAND=NUMBERTOSTRING(INT(RAND()*1000000));		
+		
+V_S_SUBSET = 'TMP_SUBSET_VTD_CORP_'|V_S_USER|'_'|V_S_PROCESS_NAME|'_'| V_S_TIMESTAMP|'_'| V_S_RAND;		
+
+
+#DIMENSIONDELETEALLELEMENTS( zDim );
+
+IF(SUBSETEXISTS(zDim,V_S_SUBSET)=1);SUBSETDESTROY(zDim,V_S_SUBSET);ENDIF;
+SUBSETCREATEBYMDX(V_S_SUBSET,'EXCEPT({DESCENDANTS({['|zDim|'].['|V_S_TOT_MO|']})},{{['|zDim|'].['|V_S_TOT_MO|']}})');
+V_N_SUBSET_SIZE=SUBSETGETSIZE(zDim,V_S_SUBSET);
+i=V_N_SUBSET_SIZE;
+WHILE(i>0);
+	V_S_ELEM=SUBSETGETELEMENTNAME(zDim,V_S_SUBSET,i);
+	DIMENSIONELEMENTDELETE(zDim,V_S_ELEM);
+	i=i-1;
+END;
+
+IF(SUBSETEXISTS(zDim,V_S_SUBSET)=1);SUBSETDESTROY(zDim,V_S_SUBSET);ENDIF;
+
+#IF(SUBSETEXISTS(zDim,V_S_SUBSET)=1);SUBSETDESTROY(zDim,V_S_SUBSET);ENDIF;
+#SUBSETCREATEBYMDX(V_S_SUBSET,'{DESCENDANTS({['|zDim|'].['|V_S_TOT_BM_MO|']},1)}');
+#V_N_SUBSET_SIZE=SUBSETGETSIZE(zDim,V_S_SUBSET);
+#i=1;
+#WHILE(i<=V_N_SUBSET_SIZE);
+#	V_S_ELEM=SUBSETGETELEMENTNAME(zDim,V_S_SUBSET,i);
+#	DIMENSIONELEMENTDELETE(zDim,V_S_ELEM);
+#	i=i+1;
+#END;
+
+#IF(SUBSETEXISTS(zDim,V_S_SUBSET)=1);SUBSETDESTROY(zDim,V_S_SUBSET);ENDIF;
+
+
+
+DIMENSIONSORTORDER( zDim , 'ByInput' , 'ASCENDING' , 'ByHierarchy' , 'ASCENDING' );
+
+
+ATTRDELETE( zDim , 'English' );
+ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+ATTRDELETE( zDim , 'French' );
+ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+ATTRDELETE( zDim , 'German' );
+ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+ATTRDELETE( zDim , 'Dutch' );
+ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+ATTRDELETE( zDim , 'Portuguese' );
+ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+
+
+ATTRDELETE( zDim , 'Type Contract' );
+ATTRINSERT( zDim , '' , 'Type Contract' , 'S' );
+
+ATTRDELETE( zDim , 'Contract Status' );
+ATTRINSERT( zDim , 'Type Contract' , 'Contract Status' , 'S' );
+
+ATTRDELETE( zDim , 'Start Date' );
+ATTRINSERT( zDim , 'Contract Status' , 'Start Date' , 'S' );
+
+ATTRDELETE( zDim , 'End date without option' );
+ATTRINSERT( zDim , 'Start Date' , 'End date without option' , 'S' );
+
+ATTRDELETE( zDim , 'End date with option' );
+ATTRINSERT( zDim , 'End date without option' , 'End date with option' , 'S' );
+
+
+DIMENSIONELEMENTINSERT( zDim , '' , 'VTD_corp' , 'c' );
+
+###### construction of the base of the BM hierarchy############################
+DIMENSIONELEMENTINSERT(zDim,'',V_S_TOT_BM_MO,'N');
+DIMENSIONELEMENTINSERT(zDim,'',V_S_BM01,'N');
+DIMENSIONELEMENTINSERT(zDim,'',V_S_BM02,'N');
+DIMENSIONELEMENTINSERT(zDim,'',V_S_BM03,'N');
+#DIMENSIONELEMENTINSERT(zDim,'',V_S_BM04,'N');
+DIMENSIONELEMENTCOMPONENTADD(zDim,V_S_TOT_BM_MO,V_S_BM01,1);
+DIMENSIONELEMENTCOMPONENTADD(zDim,V_S_TOT_BM_MO,V_S_BM02,1);
+DIMENSIONELEMENTCOMPONENTADD(zDim,V_S_TOT_BM_MO,V_S_BM03,1);
+#DIMENSIONELEMENTCOMPONENTADD(zDim,V_S_TOT_BM_MO,V_S_BM04,1);
+
+#############################################################
+
+
+#endregion
+#region Metadata
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( ELLEV( zDimTech , Elem_Indic ) = 0 );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Indic , 'n' );
+ELSE;
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Indic , 'c' );
+ENDIF;
+
+
+Elem_Parent = ELPAR( zDimTech , Elem_Indic , 1 );
+IF( Elem_Parent @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent , Elem_Indic , Ponderation );
+ENDIF;
+
+Elem_Parent2 = ELPAR( zDimTech , Elem_Indic , 2 );
+IF( Elem_Parent2 @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent2 , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent2, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent2 , Elem_Indic , Ponderation );
+ENDIF;
+
+Elem_Parent3 = ELPAR( zDimTech , Elem_Indic , 3 );
+IF( Elem_Parent3 @<> '' );
+    DIMENSIONELEMENTINSERT( zDim , '' , Elem_Parent3 , 'c' );
+    Ponderation = ELWEIGHT( zDimTech , Elem_Parent3, Elem_Indic );
+    DIMENSIONELEMENTCOMPONENTADD( zDim , Elem_Parent3 , Elem_Indic , Ponderation );
+ENDIF;
+
+
+
+Elem_Parent4= ELPAR( zDimTech , Elem_Indic , 1 );
+IF( Elem_Parent4 @='' );
+
+    DIMENSIONELEMENTCOMPONENTADD( zDim , 'VTD_corp' ,Elem_Indic, 1  );
+ENDIF;
+
+
+IF(ELISPAR(zDim,'VTD_corp', V_S_TOT_BM_MO)=1);
+#DimensionElementComponentDelete(zDim, 'VTD_corp', V_S_TOT_BM_MO);
+    DimensionElementComponentDelete( zDim , 'VTD_corp' ,V_S_TOT_BM_MO);
+ENDIF;
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+IF( ELLEV( zDimTech , Elem_Indic ) = 0 );
+
+    Desc_English = ATTRS( zDimTech , Elem_Indic , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Indic , 'French' );
+    Desc_Deutsch = ATTRS( zDimTech , Elem_Indic , 'German' );
+    Desc_Dutch = ATTRS( zDimTech , Elem_Indic , 'Dutch' );
+    Desc_Portuguese = ATTRS( zDimTech , Elem_Indic , 'Portuguese' );
+    ATTRPUTS( Desc_English , zDim , Elem_Indic , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Indic , 'French' );
+    ATTRPUTS( Desc_Deutsch , zDim , Elem_Indic , 'German' );
+    ATTRPUTS( Desc_Dutch , zDim , Elem_Indic , 'Dutch' );
+    ATTRPUTS( Desc_Portuguese , zDim , Elem_Indic , 'Portuguese' );
+
+   Att_Year=ATTRS( zDimTech , Elem_Indic ,  'End date without option' );
+   Att_Type_Contract=ATTRS( zDimTech , Elem_Indic ,  'Type Contract' );
+   Att_Contract_Status=ATTRS( zDimTech , Elem_Indic ,  'Contract Status' );
+   Att_End_Date=ATTRS( zDimTech , Elem_Indic ,  'End date with option' );
+   Att_Start_Date=ATTRS( zDimTech , Elem_Indic ,  'Start Date' );
+   ATTRPUTS( Att_Year , zDim , Elem_Indic, 'End date without option' );
+   ATTRPUTS( Att_Type_Contract , zDim ,Elem_Indic, 'Type Contract' );
+   ATTRPUTS( Att_Contract_Status, zDim , Elem_Indic , 'Contract Status' );
+   ATTRPUTS( Att_End_Date , zDim , Elem_Indic , 'End date with option' );
+   ATTRPUTS( Att_Start_Date , zDim , Elem_Indic , 'Start Date' );
+
+ENDIF;
+
+
+Elem_Parent = ELPAR( zDimTech , Elem_Indic , 1 );
+IF( Elem_Parent @<> '' );
+
+    Desc_English = ATTRS( zDimTech , Elem_Parent , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent , 'French' );
+    Desc_Deutsch = ATTRS( zDimTech , Elem_Parent , 'German' );
+    Desc_Dutch = ATTRS( zDimTech , Elem_Parent , 'Dutch' );
+    Desc_Portuguese = ATTRS( zDimTech , Elem_Parent , 'Portuguese' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent , 'French' );
+    ATTRPUTS( Desc_Deutsch , zDim , Elem_Parent , 'German' );
+    ATTRPUTS( Desc_Dutch , zDim , Elem_Parent , 'Dutch' );
+    ATTRPUTS( Desc_Portuguese , zDim , Elem_Parent , 'Portuguese' );
+
+ENDIF;
+
+
+Elem_Parent2 = ELPAR( zDimTech , Elem_Indic , 2 );
+IF( Elem_Parent2 @<> '' );
+
+    Desc_English = ATTRS( zDimTech , Elem_Parent2 , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent2 , 'French' );
+    Desc_Deutsch = ATTRS( zDimTech , Elem_Parent2 , 'German' );
+    Desc_Dutch = ATTRS( zDimTech , Elem_Parent2 , 'Dutch' );
+    Desc_Portuguese = ATTRS( zDimTech , Elem_Parent2 , 'Portuguese' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent2 , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent2 , 'French' );
+    ATTRPUTS( Desc_Deutsch , zDim , Elem_Parent2 , 'German' );
+    ATTRPUTS( Desc_Dutch , zDim , Elem_Parent2 , 'Dutch' );
+    ATTRPUTS( Desc_Portuguese , zDim , Elem_Parent2 , 'Portuguese' );
+
+ENDIF;
+
+
+Elem_Parent3 = ELPAR( zDimTech , Elem_Indic , 3 );
+IF( Elem_Parent3 @<> '' );
+
+    Desc_English = ATTRS( zDimTech , Elem_Parent3 , 'English' );
+    Desc_French = ATTRS( zDimTech , Elem_Parent3 , 'French' );
+    Desc_Deutsch = ATTRS( zDimTech , Elem_Parent3 , 'German' );
+    Desc_Dutch = ATTRS( zDimTech , Elem_Parent3 , 'Dutch' );
+    Desc_Portuguese = ATTRS( zDimTech , Elem_Parent3 , 'Portuguese' );
+    ATTRPUTS( Desc_English , zDim , Elem_Parent3 , 'English' );
+    ATTRPUTS( Desc_French , zDim , Elem_Parent3 , 'French' );
+    ATTRPUTS( Desc_Deutsch , zDim , Elem_Parent3 , 'German' );
+    ATTRPUTS( Desc_Dutch , zDim , Elem_Parent3 , 'Dutch' );
+    ATTRPUTS( Desc_Portuguese , zDim , Elem_Parent3 , 'Portuguese' );
+
+ENDIF;
+
+
+
+
+
+
+
+
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+pChore = 'Task5_CM_Import_CM_Data_Export_CO_Data';
+pCountry = CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+pSource = 'CORE_MODEL';
+pPeriod = CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+
+CellPutS( zDateTimeLoadingStart , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry , pSource , 'Start_date' );
+CellPutS( zDateTimeLoadingEnd , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry , pSource , 'End_date' );
+CellPutS( 'OK' , zCube_Process_PP , pChore , zProcess , pPeriod , zDateLoadingStart , pCountry , pSource , 'Status' );
+
+#endregion

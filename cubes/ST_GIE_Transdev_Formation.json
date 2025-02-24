@@ -1,0 +1,29 @@
+{
+	"@type":"Cube",
+	"Name":"ST_GIE_Transdev_Formation",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('GIE_Antennes')"
+		},
+		{
+			"@id":"Dimensions('GIE_Type_Formation')"
+		},
+		{
+			"@id":"Dimensions('GIE_Partenaires')"
+		},
+		{
+			"@id":"Dimensions('Phase')"
+		},
+		{
+			"@id":"Dimensions('Period_YTD')"
+		},
+		{
+			"@id":"Dimensions('GIE_Nat_Analytique')"
+		},
+		{
+			"@id":"Dimensions('GIE_Indicator')"
+		}
+	],
+	"Views@Code.links":[]
+}

@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"zz_Date_Time_loading",
+	"Hierarchies@Code.links":
+	[
+		"zz_Date_Time_loading.hierarchies/zz_Date_Time_loading.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('zz_Date_Time_loading')/Hierarchies('zz_Date_Time_loading')"
+	}
+}

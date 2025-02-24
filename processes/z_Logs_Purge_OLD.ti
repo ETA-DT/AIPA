@@ -1,0 +1,124 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+############################################
+# Project : Tango - Purge Logs
+# Audit Log
+# Error_process_Log
+# Error_Message_Log
+# Created by : MAN
+# Created at : 28/06/2012
+# Modified by : 
+# Modified at : 
+# Modify reason :
+############################################
+
+
+# deleting log files older than < x> days
+
+#-- Définition du nombre de jours souhaités
+
+
+#-- Fichier log
+n = 90;
+
+#-- Fichier erreur des processus
+nbis = 60;
+
+#--Fichier audit
+nAudit= 1000;
+
+
+
+strPath = GetProcessErrorFileDirectory;
+File1 = strPath | 'tm1s201*.log';
+File2 = strPath | 'TM1ProcessError_201*.log';
+File3 = strPath | 'tm1auditstore201*.log';
+
+# initialize
+strFile   = 'dummy';
+strPrevFile = 'dummy2';
+
+strFile2   = 'dummy';
+strPrevFile2 = 'dummy2';
+
+strFile3   = 'dummy';
+strPrevFile3 = 'dummy2';
+
+
+# search/delete
+
+WHILE( strFile @<> '' & strFile @<> strPrevFile);
+
+        strFile = WildcardFileSearch(File1, '');
+
+      date_file = DAYNO(SUBST(strFile, 5,4) | '-' | SUBST(strFile, 9,2) | '-' | SUBST(strFile, 11,2)) ;
+      date_td = DAYNO(TODAY(1));
+
+      IF(date_td - n > date_file);
+            ASCIIDELETE(strPath | strFile);
+      ELSE;
+            strPrevFile = strFile;
+      ENDIF;
+
+END;
+
+
+WHILE( strFile2 @<> '' & strFile2 @<> strPrevFile2);
+
+        strFile2 = WildcardFileSearch(File2, '');
+
+      date_file2 = DAYNO(SUBST(strFile2, 17,4) | '-' | SUBST(strFile2, 21,2) | '-' | SUBST(strFile2, 23,2)) ;
+      date_td2 = DAYNO(TODAY(1));
+
+      IF(date_td2 - nbis > date_file2);
+            ASCIIDELETE(strPath | strFile2);
+      ELSE;
+            strPrevFile2 = strFile2;
+      ENDIF;
+
+END;
+
+
+WHILE( strFile3 @<> '' & strFile3 @<> strPrevFile3);
+
+        strFile3 = WildcardFileSearch(File3, '');
+
+      date_file3 = DAYNO(SUBST(strFile3, 14,4) | '-' | SUBST(strFile3, 18,2) | '-' | SUBST(strFile3, 20,2)) ;
+      date_td3 = DAYNO(TODAY(1));
+
+      IF(date_td3 - nAudit > date_file3);
+            ASCIIDELETE(strPath | strFile3);
+      ELSE;
+            strPrevFile3 = strFile3;
+      ENDIF;
+
+END;
+
+
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#-- Lancement du fichier de commande qui supprime les fichiers log du nème jour précédent
+#ExecuteCommand('cmd /c " Call ' | TMP_DIR | '\Delete_Log.cmd  && exit"',1);
+#endregion

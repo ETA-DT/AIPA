@@ -1,0 +1,337 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango
+# Created by : MBO
+# Created at : 05/12/2011
+# Modified by : MRE
+# Modified at : 12/04/2012
+# Modify reason : Mantis 1299 : add the archive instruction of the csv file
+# Modified by : RSJC
+# Modified at : 16/06/2015
+# Modify reason : add columns concerning integration method and account for MEE in the csv file
+# Modified by : BTA
+# Modified at : 29/09/2016
+# Modify reason : New Extractor Vector : The name of the file changes 
+# Modified by : BTA
+# Modified at : 26/06/2017
+# Modify reason : Déconsigner le cube
+#########################################
+
+zCube='ST_ENTITY_RATES';
+
+# -- BTA 26/06/2017 : Déconsigner le cube 
+# CubeSetLogChanges(zCube, 0);
+
+zCube_Reject='ZZ_PROCESS_REJECT';
+zCube_Process='ZZ_PROCESS_DETAIL';
+zCubeTC='TC_PHASE_VTD_VECTOR';
+
+nb_lign=0;
+nb_reject=0;
+nb_load=0;
+
+zProcess='DL_ST_ENTITY_RATES_Forecast_STEP2';
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+pCountry=CellGetS( 'z_Admin_Param' , 'COUNTRY' , 'STR_VAR1');
+
+
+# -- BTA 29/09/2016 : Modification due to the migration of Vector 
+vBudget = 'Budget' ; 
+vForecast1 = 'Forecast_1' ; 
+vForecast2 = 'Forecast_2' ; 
+
+# -- Check the name of the phase input in parameter 
+IF( pPhase @<> vBudget & pPhase @<> vForecast1 & pPhase @<> vForecast2 ); 
+
+	#-- The Phase specified is not valid
+	ItemReject( 'The value ' | pPhase | ' is invalid for pPhase parameter. Must be ' | vBudget  | ', ' | vForecast1  | ' or ' |  vForecast2 );
+	ProcessQuit;
+
+ENDIF;
+
+# -- BTA 13/12/2016 : Modification du repertoire source : REP_DATA_VECTOR
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_DATA_VECTOR' , 'STR_VAR1') | '\Integration_Rates_F_YEAR_' | pPhase | '_Extract_VTD_Vector.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     CubeSetLogChanges(zCube, 1);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+#################################################################################
+#                                                               Clear CUBE
+#################################################################################
+
+
+P_NAME_RAZ = zCube | '_RAZ';
+ViewDestroy( zCube , P_NAME_RAZ );
+ViewCreate( zCube , P_NAME_RAZ );
+
+#-- Create subset in Phase
+ViewSubsetAssign( zCube , P_NAME_RAZ , 'Phase' , P_NAME_RAZ );
+
+#-- Create subset in Phase
+ViewSubsetAssign( zCube , P_NAME_RAZ , 'Period' , P_NAME_RAZ );
+
+#-- clear cube
+ViewZeroOut( zCube , P_NAME_RAZ );
+
+
+#-- Delete subset
+ViewDestroy( zCube , P_NAME_RAZ );
+SubsetDestroy( 'Phase' , P_NAME_RAZ );
+SubsetDestroy( 'Period' , P_NAME_RAZ );
+#################################################################################
+#                                                               Clear Reject Cube
+#################################################################################
+
+######
+#Call process DB_zz_Date_Time_loading in order to add the new day in the dimension zz_Date_Time_loading
+ExecuteProcess('DB_zz_Date_Time_loading');
+######
+
+P_NAME_RAZ = zCube_Reject | '_RAZ';
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+ViewCreate( zCube_Reject , P_NAME_RAZ );
+
+#-- Create subset in zz_Date_Time_loading and }Processes
+IF( SubsetExists( 'zz_Date_Time_loading' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( 'zz_Date_Time_loading' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( 'zz_Date_Time_loading' , P_NAME_RAZ );
+ENDIF;
+
+IF( SubsetExists( '}Processes' , P_NAME_RAZ ) =1 );
+    SubsetDeleteAllElements( '}Processes' , P_NAME_RAZ);
+ELSE;
+    SubsetCreate( '}Processes' , P_NAME_RAZ );
+ENDIF;
+
+SubsetElementInsert( 'zz_Date_Time_loading' , P_NAME_RAZ ,zDateLoadingStart , 1 );
+SubsetElementInsert( '}Processes' , P_NAME_RAZ , zProcess , 1 );
+
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , 'zz_Date_Time_loading' , P_NAME_RAZ);
+ViewSubsetAssign( zCube_Reject , P_NAME_RAZ , '}Processes', P_NAME_RAZ);
+
+
+#-- clear cube
+ViewZeroOut( zCube_Reject , P_NAME_RAZ );
+
+#-- Delete subset
+ViewDestroy( zCube_Reject , P_NAME_RAZ );
+SubsetDestroy( 'zz_Date_Time_loading' , P_NAME_RAZ );
+SubsetDestroy( '}Processes' , P_NAME_RAZ );
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+nb_lign=nb_lign+1;
+
+# Modif 16/06/2015 Ajout Methode Integration + compte
+#zrecord=vector_entity | ';' |  vector_phase | ';' | vector_exercice | ';' | vector_period | ';' | NumberToString(rates);
+zrecord=vector_entity | ';' |  vector_phase | ';' | vector_exercice | ';' | vector_period | ';' | NumberToString(rates) | ';' | Methode | ';' | Compte_ME | ';' | Methode_Actuelle;
+
+
+
+#################################################################################
+#                                                                             REJECT SECTION
+#################################################################################
+
+#-- if the Entity is empty, this record is reject
+IF( vector_Entity @= '' );
+   zerror_message='The entity is empty in the file at line ' |  numbertostring(nb_lign) ;
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+
+#-- if the Entity is not exists in legal_organization dimension, this record is reject
+IF(Dimix('Legal_Organization', vector_Entity) = 0 );
+#  zError_message='The entity ' | vector_Entity | ' does not exist in dimension Legal_Organization at line ' |  numbertostring(nb_lign) ;
+#  Nb_Reject = Nb_Reject + 1;
+#  CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+#  CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   nb_load=nb_load+1;
+   ItemSkip;
+ENDIF;
+
+#-- if the phase is empty, this record is reject
+IF( vector_Phase @= '' );
+   zerror_message='The phase is empty in the file at line ' |  numbertostring(nb_lign) ;
+   Nb_Reject = Nb_Reject + 1;
+   CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+#-- if the Phase is not exists in phase dimension, this record is reject
+IF(Dimix('z_Phase_VTD_vector', vector_Phase) = 0 );
+   zerror_message='The phase ' | vector_Phase | '  does not exist in dimension Phase at line ' |  numbertostring(nb_lign) ;
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+#-- if the period is empty, this record is reject
+IF( vector_period @= '' );
+   zerror_message='The period is empty in the file at line ' |  numbertostring(nb_lign) ;
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+#-- if the period is not exists in period dimension, this record is reject
+IF(Dimix('period', vector_period) = 0 );
+   zerror_message='The period ' | vector_period | '  does not exist in dimension period at line ' |  numbertostring(nb_lign) ;
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+#-- if the phase is empty, this record is reject
+IF( CellGetS( zCubeTC, vector_phase, vector_exercice , vector_period, 'STR_VAR1' ) @= '' );
+   zerror_message='It does not  exist a tango phase in TC_PHASE_VTD_VECTOR for ' | vector_phase | '-' | 
+   vector_exercice | '-' | vector_period | ' in the file at line ' |  numbertostring(nb_lign) ;
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+#-Add 16/06/2015- if the method is empty, this record is rejected
+IF( methode @= '' );
+   zerror_message='The method is empty for the entity ' | vector_entity | ' in the file at line ' |  numbertostring(nb_lign);
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+
+#-Add 16/06/2015- if the method is ME and account_ME is empty, this record is rejected
+IF( (methode @= 'ME') & (compte_ME @= '' ) );
+   zerror_message='The account_ME is empty for the entity ' | vector_entity | ' in the file at line ' |  numbertostring(nb_lign);
+   nb_reject=nb_reject+1;
+   CellPuts(zrecord,  zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject) , 'Record');
+   CellPutS(zerror_message , zCube_Reject , zProcess , zDateLoadingStart , 'l' | numbertostring(nb_reject), 'Error_Message');
+   ItemSkip;
+ENDIF;
+
+
+#####################################################################################"
+#                                                                             INPUT SECTION
+#################################################################################
+
+Phase = CellGetS( zCubeTC , Vector_Phase , Vector_Exercice , Vector_Period , 'STR_VAR1' );
+Period = CellGetS( zCubeTC , Vector_Phase , Vector_Exercice , Vector_Period , 'STR_VAR2' );
+
+
+#-- Input dans le cube ST_ENTITY_RATES
+CellPutN( Rates , zCube , Vector_Entity , Period , Phase , 'NUM_VAR1' );
+CellPutN( 1, zCube , Vector_Entity , Period , Phase , 'NUM_VAR2' );
+
+# Add 16/06/2015 integration method and account
+CellPutS( Methode, zCube , Vector_Entity, Period , Phase, 'STR_VAR1');
+CellPutS( Compte_ME, zCube , Vector_Entity, Period , Phase, 'STR_VAR2');
+CellPutS( Methode_Actuelle, zCube , Vector_Entity, Period , Phase, 'STR_VAR3');
+
+
+CellPutN( Rates , zCube , Vector_Entity , Period , 'MAN_' | Phase , 'NUM_VAR1' );
+CellPutN( 1, zCube , Vector_Entity , Period , 'MAN_' | Phase , 'NUM_VAR2' );
+CellPutS( Methode, zCube , Vector_Entity, Period , 'MAN_' | Phase, 'STR_VAR1');
+CellPutS( Compte_ME, zCube , Vector_Entity, Period , 'MAN_' | Phase, 'STR_VAR2');
+CellPutS( Methode_Actuelle, zCube , Vector_Entity, Period , 'MAN_' | Phase, 'STR_VAR3');
+
+Nb_Load = Nb_Load + 1;
+
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+# -- BTA 26/06/2017 : Déconsigner le cube 
+# CubeSetLogChanges(zCube, 1);
+CubeSaveData( zCube  ); 
+
+# MRE - 12/04/2012 : Mantis 1299 : add the archive instruction of the csv file
+#-- Copy the file data in historical directory
+ExecuteProcess( 'z_Tools_Data_Transfert' , 'zFile' , 'Integration_Rates_F_YEAR_' | pPhase | '_Extract_VTD_Vector' , 'zAnnee' , SUBST( Period , 1 , 4 ) , 'zMois' , 
+SUBST( Period , 6 , 2 )  );
+
+zDateTimeLoadingEnd = TIMST(now,'\Y-\M-\D \h:\i:\s');
+#################################################################################
+#                                                                             PROCESS with PERIOD and INSTANCE
+#################################################################################
+#IF (pcountry@='CM');
+
+#zCube_Process_PP = 'ZZ_PROCESS_Detail_Instance';
+#pChore='Task3_CM_Export_Vector_Parameter';
+#pSource='VTD_VECTOR';
+#pPeriod=CellGetS( 'z_Admin_Param' , 'MONTH_ACTUAL' , 'STR_VAR1');
+
+#CellPutS(zDateTimeLoadingStart , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'Start_date');
+#CellPutS(zDateTimeLoadingEnd , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'End_date');
+#CellPutS(numbertostring(nb_lign) , zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,'Nb_Input_records');
+#CellPutS(numbertostring(nb_load) ,  zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry ,psource, 'Nb_load_records');
+#IF(nb_lign = nb_load);
+#    CellPutS('OK' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,  'Status');
+#else;
+#    CellPutS('KO' ,zCube_Process_PP, pChore, zProcess ,pPeriod,zDateLoadingStart, pCountry , psource,  'Status');
+#    ItemReject( ' Process exited with errors at ' | TIME |  ' on ' | TODAY | '=> Check cubes : zz_Process_Detail and  zz_Process_Reject' );
+#endif;
+
+
+#ELSE;
+#################################################################################
+#                                                                             DETAIL PROCESS SECTION
+#################################################################################
+
+
+zCube_Process='ZZ_PROCESS_DETAIL';
+CellPutS(zDateTimeLoadingStart , zCube_Process, zProcess ,zDateLoadingStart , 'Start_date');
+CellPutS(zDateTimeLoadingEnd , zCube_Process, zProcess ,zDateLoadingStart  , 'End_date');
+CellPutS(numbertostring(nb_lign) , zCube_Process, zProcess ,zDateLoadingStart  , 'Nb_Input_records');
+CellPutS(numbertostring(nb_reject) , zCube_Process, zProcess ,zDateLoadingStart  , 'Nb_reject_records');
+CellPutS(numbertostring(nb_load) , zCube_Process, zProcess ,zDateLoadingStart , 'Nb_load_records');
+
+IF(nb_lign = nb_load);
+    CellPutS('OK' , zCube_Process, zProcess ,zDateLoadingStart , 'Status');
+else;
+    CellPutS('KO' , zCube_Process, zProcess ,zDateLoadingStart , 'Status');
+    ItemReject( ' Process exited with errors at ' | TIME |  ' on ' | TODAY | '=> Check cubes : zz_Process_Detail and  zz_Process_Reject' );
+endif;
+
+
+#ENDIF;
+#################################################################################
+#                                                                             END PROCESS
+#################################################################################
+#endregion

@@ -1,0 +1,46 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+zDim = 'zz_Date_Time_loading';
+
+zDateLoadingStart = TIMST(now,'\Y-\M-\D');
+zDateTimeLoadingStart = TIMST(now,'\Y-\M-\D \h:\i:\s');
+
+
+# insert the start date in zz_date_time_loading dimension
+IF(Dimix('zz_Date_Time_Loading', zDateLoadingStart) = 0 );
+    DIMENSIONELEMENTINSERT( 'zz_Date_Time_Loading' ,'',zDateLoadingStart,'n');
+ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#DIMENSIONELEMENTINSERT( zDim ,'', Level_0 , 'n' );
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+#ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+#ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+
+#ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'German' );
+#ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'Dutch' );
+#ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'Portuguese' );
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

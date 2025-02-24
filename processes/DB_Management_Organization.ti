@@ -1,0 +1,396 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#########################################
+# Project : Tango - build dimension Management_Organization
+# Created by : FBU & LTH
+# Created at : 11/07/2011
+# Modified by : LTH
+# Modified at : 11/07/2011
+# Modify reason :
+#########################################
+
+zDim = 'Management_Organization';
+
+#Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') | '\INPUT\STRUCTURE\' | zDim | '.csv';
+Source_File = CellGetS( 'z_Admin_Param' , 'REP_ITF' , 'STR_VAR1') |  '\'|  zDim | '.csv';
+DataSourceNameForServer = Source_File;
+
+IF (FileExists (Source_File) =0);
+     ItemReject(  DataSourceNameForServer | ' is not find' );
+     ProcessQuit;
+ENDIF;
+
+#DIMENSIONDELETEALLELEMENTS( zDim );
+DIMENSIONSORTORDER( zDim ,'ByInput','ASCENDING','ByHierarchy','ASCENDING');
+
+#ATTRDELETE( zDim , 'English' );
+#ATTRINSERT( zDim , '' , 'English' , 'A' );
+
+#ATTRDELETE( zDim , 'French' );
+#ATTRINSERT( zDim , '' , 'French' , 'A' );
+
+#ATTRDELETE( zDim , 'German' );
+#ATTRINSERT( zDim , '' , 'German' , 'A' );
+
+#ATTRDELETE( zDim , 'Dutch' );
+#ATTRINSERT( zDim , '' , 'Dutch' , 'A' );
+
+#ATTRDELETE( zDim , 'Portuguese' );
+#ATTRINSERT( zDim , '' , 'Portuguese' , 'A' );
+
+
+#ATTRDELETE( zDim , 'Type Contract' );
+#ATTRINSERT( zDim , '' , 'Type Contract' , 'S' );
+
+#ATTRDELETE( zDim , 'Contract Status' );
+#ATTRINSERT( zDim , 'Type Contract' , 'Contract Status' , 'S' );
+
+#ATTRDELETE( zDim , 'Start Date' );
+#ATTRINSERT( zDim , 'Contract Status' , 'Start Date' , 'S' );
+
+#ATTRDELETE( zDim , 'End date without option' );
+#ATTRINSERT( zDim , 'Start Date' , 'End date without option' , 'S' );
+
+#ATTRDELETE( zDim , 'End date with option' );
+#ATTRINSERT( zDim , 'End date without option' , 'End date with option' , 'S' );
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF( Level_5 @= '' );
+           
+           IF( DIMIX( zDim , Level_6) <> 0 );
+                DIMENSIONELEMENTDELETE( zDim ,Level_6);
+           ENDIF;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_6,'n');
+
+ELSEIF( Level_4 @= '' );
+
+           IF( DIMIX( zDim , Level_5) <> 0 );
+                DIMENSIONELEMENTDELETE( zDim ,Level_5);
+           ENDIF;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_6,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_6,Level_5, 1.000000 );
+
+ELSEIF( Level_3 @= '' );
+
+           IF( DIMIX( zDim , Level_4) <> 0 );
+                DIMENSIONELEMENTDELETE( zDim ,Level_4);
+           ENDIF;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_6,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_6,Level_5, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4,1.000000);
+
+ELSEIF( Level_2 @= '' );
+
+           IF( DIMIX( zDim , Level_3) <> 0 );
+                DIMENSIONELEMENTDELETE( zDim ,Level_3);
+           ENDIF;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_3,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_6,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_6,Level_5, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_4,Level_3,1.000000);
+
+ELSEIF(Level_1 @= '');
+
+           IF( DIMIX( zDim , Level_2) <> 0 );
+                DIMENSIONELEMENTDELETE( zDim ,Level_2);
+           ENDIF;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_2,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_3,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_6,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_6,Level_5, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_4,Level_3,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_3,Level_2,1.000000);
+
+ELSEIF(Level_0 @= '');
+
+           IF( DIMIX( zDim , Level_1) <> 0 );
+                DIMENSIONELEMENTDELETE( zDim ,Level_1);
+           ENDIF;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_1,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_2,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_3,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_6,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_6,Level_5, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_4,Level_3,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_3,Level_2,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_2,Level_1,1.000000);
+
+ELSE;
+
+           IF( DIMIX( zDim , Level_0) <> 0 );
+                DIMENSIONELEMENTDELETE( zDim ,Level_0);
+           ENDIF;
+
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_0,'n');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_1,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_2,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_3,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_4,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_5,'c');
+           DIMENSIONELEMENTINSERT( zDim ,'',Level_6,'c');
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_6,Level_5, 1.000000 );
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_5,Level_4,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_4,Level_3,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_3,Level_2,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_2,Level_1,1.000000);
+           DIMENSIONELEMENTCOMPONENTADD( zDim ,Level_1,Level_0,1.000000);
+
+ENDIF;
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+          IF( Level_5 @= '' );
+                    ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+                    ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+                    ATTRPUTS( Start_Date , zDim , Level_6 , 'Start Date' );
+                    ATTRPUTS( End_Date , zDim , Level_6 , 'End date without option' );
+                    ATTRPUTS( Contract_Status , zDim , Level_6 , 'Contract Status' );
+                    ATTRPUTS( Type_Contract , zDim , Level_6 , 'Type Contract' );
+                    ATTRPUTS( Year_Contract , zDim , Level_6 , 'End date with option' );
+
+                    #Following aliases are load in English the first time
+                    # ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'German' );
+                    # ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Dutch' );
+                    # ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Portuguese' );
+
+          ELSEIF( Level_4 @= '' );
+                    ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+                    ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+                    ATTRPUTS( Start_Date , zDim , Level_5 , 'Start Date' );
+                    ATTRPUTS( End_Date , zDim , Level_5 , 'End date without option' );
+                    ATTRPUTS( Contract_Status , zDim , Level_5 , 'Contract Status' );
+                    ATTRPUTS( Type_Contract , zDim , Level_5 , 'Type Contract' );
+                    ATTRPUTS( Year_Contract , zDim , Level_5 , 'End date with option' );
+
+                    #Following aliases are load in English the first time
+                      # ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'German' );
+                      # ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Portuguese' );
+                    #   ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'German' );
+                    #   ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Dutch' );
+                   #    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Portuguese' );
+
+          ELSEIF( Level_3 @= '' );
+                    ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+                    ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Start_Date , zDim , Level_4 , 'Start Date' );
+                    ATTRPUTS( End_Date , zDim , Level_4 , 'End date without option' );
+                    ATTRPUTS( Contract_Status , zDim , Level_4 , 'Contract Status' );
+                    ATTRPUTS( Type_Contract , zDim , Level_4 , 'Type Contract' );
+                    ATTRPUTS( Year_Contract , zDim , Level_4 , 'End date with option' );
+
+                    #Following aliases are load in English the first time
+                      # ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'German' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'German' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'German' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Portuguese' );
+
+          ELSEIF( Level_2 @= '' );
+                    ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+                    ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+                    ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+                    ATTRPUTS( Start_Date , zDim , Level_3 , 'Start Date' );
+                    ATTRPUTS( End_Date , zDim , Level_3 , 'End date without option' );
+                    ATTRPUTS( Contract_Status , zDim , Level_3 , 'Contract Status' );
+                    ATTRPUTS( Type_Contract , zDim , Level_3 , 'Type Contract' );
+                    ATTRPUTS( Year_Contract , zDim , Level_3 , 'End date with option' );
+
+                    #Following aliases are load in English the first time
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'German' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'German' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'German' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'German' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Portuguese' );
+
+
+          ELSEIF( Level_1 @= '' );
+                    ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+                    ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+                    ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+                    ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+                    ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+                    ATTRPUTS( Start_Date , zDim , Level_2 , 'Start Date' );
+                    ATTRPUTS( End_Date , zDim , Level_2 , 'End date without option' );
+                    ATTRPUTS( Contract_Status , zDim , Level_2 , 'Contract Status' );
+                    ATTRPUTS( Type_Contract , zDim , Level_2 , 'Type Contract' );
+                    ATTRPUTS( Year_Contract , zDim , Level_2 , 'End date with option' );
+
+                    #Following aliases are load in English the first time
+                      # ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'German' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'German' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'German' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'German' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'German' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Portuguese' );
+
+          ELSEIF( Level_0 @= '' );
+                    ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+                    ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+                    ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+                    ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+                    ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+                    ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+                    ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+                    ATTRPUTS( Start_Date , zDim , Level_1 , 'Start Date' );
+                    ATTRPUTS( End_Date , zDim , Level_1 , 'End date without option' );
+                    ATTRPUTS( Contract_Status , zDim , Level_1 , 'Contract Status' );
+                    ATTRPUTS( Type_Contract , zDim , Level_1 , 'Type Contract' );
+                    ATTRPUTS( Year_Contract , zDim , Level_1 , 'End date with option' );
+
+                    #Following aliases are load in English the first time
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'German' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'German' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'German' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'German' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'German' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'German' );
+                       #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'Portuguese' );
+
+ELSE;
+                    ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'English' );
+                    ATTRPUTS( Desc_French_6 , zDim , Level_6 , 'French' );
+                    ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'English' );
+                    ATTRPUTS( Desc_French_5 , zDim , Level_5 , 'French' );
+                    ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'English' );
+                    ATTRPUTS( Desc_French_4 , zDim , Level_4 , 'French' );
+                    ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'English' );
+                    ATTRPUTS( Desc_French_3 , zDim , Level_3 , 'French' );
+                    ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'English' );
+                    ATTRPUTS( Desc_French_2 , zDim , Level_2 , 'French' );
+                    ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'English' );
+                    ATTRPUTS( Desc_French_1 , zDim , Level_1 , 'French' );
+                    ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'English' );
+                    ATTRPUTS( Desc_French_0 , zDim , Level_0 , 'French' );
+                    ATTRPUTS( Start_Date , zDim , Level_0 , 'Start Date' );
+                    ATTRPUTS( End_Date , zDim , Level_0 , 'End date without option' );
+                    ATTRPUTS( Contract_Status , zDim , Level_0 , 'Contract Status' );
+                    ATTRPUTS( Type_Contract , zDim , Level_0 , 'Type Contract' );
+                    ATTRPUTS( Year_Contract , zDim , Level_0 , 'End date with option' );
+
+                    #Following aliases are load in English the first time
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'German' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_6 , zDim , Level_6 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'German' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_5 , zDim , Level_5 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'German' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_4 , zDim , Level_4 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'German' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_3 , zDim , Level_3 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'German' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_2 , zDim , Level_2 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'German' );
+                       #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_1 , zDim , Level_1 , 'Portuguese' );
+                       #ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'German' );
+                       #ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'Dutch' );
+                       #ATTRPUTS( Desc_English_0 , zDim , Level_0 , 'Portuguese' );
+
+
+
+
+ENDIF;
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+#-- Copy the file structure in historical directory
+ExecuteProcess( 'z_Tools_Structure_Transfert' , 'zFile' , zDim );
+
+# Load Security
+ExecuteProcess('Import_CM_Security_Management_Organization');
+
+SecurityRefresh;
+#endregion

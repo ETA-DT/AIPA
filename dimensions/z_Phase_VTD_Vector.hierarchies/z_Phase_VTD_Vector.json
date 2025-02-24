@@ -1,0 +1,24 @@
+{
+	"@type":"Hierarchy",
+	"Name":"z_Phase_VTD_Vector",
+	"Elements":
+	[
+		{
+			"Name":"NA",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"ACTUAL",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"FORECAST",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"MB",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

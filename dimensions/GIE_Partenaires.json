@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"GIE_Partenaires",
+	"Hierarchies@Code.links":
+	[
+		"GIE_Partenaires.hierarchies/GIE_Partenaires.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('GIE_Partenaires')/Hierarchies('GIE_Partenaires')"
+	}
+}

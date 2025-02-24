@@ -1,0 +1,260 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Modified this process so that definitions are exported based on those supplied in the QUBEdocs Definitions cube
+#DATASOURCECOMMENT Not Applicable
+#PROLOGCOMMENT The prolog is used to output QSON / JSON file.  .
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Not Applicable
+#EPILOGCOMMENT Not Applicable
+
+DatasourceASCIIDelimiter=' ';
+DataSourceASCIIQuoteCharacter=''; 
+sFile =  pFile;
+sCube = 'QUBEDocs Definitions';
+sNewLine = Char(13) | Char(10);
+sDelimiter = '$$#@@';
+sModelEl = 'Entire Model';
+
+SetOutputCharacterSet(sFile,'TM1CS_UTF16');
+
+#######################
+#GROUPS DIMS
+#####################
+g = 1;
+sGroupsSiz = DIMSIZ('}Groups');
+sGroupsString ='{' | sDelimiter | 'Objects' | sDelimiter | ': [' | sNewLine;
+sClientsRString =' ' | sDelimiter | 'Relationships' | sDelimiter | ': [' | sNewLine;
+
+#Iterate through groups
+TEXTOUTPUT(sFile,sGroupsString);
+
+###########GROUPS###########
+WHILE(g <= sGroupsSiz);
+
+    sGroupsEl = DIMNM('}Groups',g);
+    sGroupsElAlias = ATTRS('}Groups',sGroupsEl,'}TM1_DefaultDisplayValue');
+    sDesc = CellGetS('QUBEdocs Definitions',sModelEl,'GRP:' | IF(sGroupsElAlias @='',sGroupsEl,sGroupsElAlias),'#Desc'); 
+
+    TEXTOUTPUT(sFile,'{' | sNewLine
+        | sDelimiter | 'Name' | sDelimiter | ': ' | sDelimiter  | sGroupsEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'UniqueName' | sDelimiter | ': ' | sDelimiter  | sGroupsEl | sDelimiter | ',' | sNewLine
+        | If(sDesc@<>'',sDelimiter | 'Description' | sDelimiter | ': ' | sDelimiter | sDesc | sDelimiter | ',' | sNewLine,'')
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.SecurityGroup' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'DisplayName' | sDelimiter | ': ' | sDelimiter  | sGroupsElAlias  | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'QDOperation' | sDelimiter | ': ' | sDelimiter | 'New' | sDelimiter | sNewLine
+        | '},' | sNewLine
+    );
+
+g=g+1;
+END;
+u=1;
+
+###########CLIENTS###########
+sClientsSiz = DIMSIZ('}Clients');
+WHILE(u <= sClientsSiz);
+    sClientsEl = DIMNM('}Clients',u);
+    sClientsElAlias = ATTRS('}Clients',sClientsEl,'}TM1_DefaultDisplayValue');
+    sDesc = CellGetS('QUBEdocs Definitions',sModelEl,'USR:' | IF(sClientsElAlias @='',sClientsEl,sClientsElAlias),'#Desc'); 
+
+
+    sReadOnly = CELLGETN('}ClientProperties',sClientsEl,'ReadOnlyUser');
+    TEXTOUTPUT(sFile,'{' | sNewLine
+        | sDelimiter | 'Name' | sDelimiter | ': ' | sDelimiter  | sClientsEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'UniqueName' | sDelimiter | ': ' | sDelimiter  | sClientsEl | sDelimiter | ',' | sNewLine
+        | If(sDesc@<>'',sDelimiter | 'Description' | sDelimiter | ': ' | sDelimiter | sDesc | sDelimiter | ',' | sNewLine,'')
+        | sDelimiter | 'ReadOnlyUser' | sDelimiter | ': ' | sDelimiter  |  IF(sReadOnly  =1,'Yes','No')  | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.SecurityUser' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'DisplayName' | sDelimiter | ': ' | sDelimiter  | sClientsElAlias | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'QDOperation' | sDelimiter | ': ' | sDelimiter | 'New' | sDelimiter | sNewLine
+        | '},' | sNewLine
+     );
+
+u=u+1;
+END;
+
+###########CUBE SECURITY###########
+c=1;
+sCubesSiz = DIMSIZ('}Cubes');
+WHILE(c <= sCubesSiz);
+    sCubesEl = DIMNM('}Cubes',c);
+
+IF(CUBEEXISTS('}CellSecurity_' | sCubesEl) = 1);
+    TEXTOUTPUT(sFile,'{' | sNewLine
+        | sDelimiter | 'Name' | sDelimiter | ': ' | sDelimiter  | sCubesEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'UniqueName' | sDelimiter | ': ' | sDelimiter  | sCubesEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.Cube' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'HasCellSecurity' | sDelimiter | ': ' | sDelimiter | 'YES' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'QDOperation' | sDelimiter | ': ' | sDelimiter | 'Update' | sDelimiter | sNewLine
+        | '},' | sNewLine
+    );
+ENDIF;
+c=c+1;
+END;
+
+###########DIMENSION SECURITY###########
+d=1;
+sDimensionsSiz = DIMSIZ('}Dimensions');
+WHILE(d <= sDimensionsSiz);
+    sDimEl = DIMNM('}Dimensions',d);
+
+IF(CUBEEXISTS('}ElementSecurity_' | sDimEl) = 1);
+    TEXTOUTPUT(sFile,'{' | sNewLine
+        | sDelimiter | 'Name' | sDelimiter | ': ' | sDelimiter  | sDimEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'UniqueName' | sDelimiter | ': ' | sDelimiter  | sDimEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.Dimension' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'HasElementSecurity' | sDelimiter | ': ' | sDelimiter | 'YES' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'QDOperation' | sDelimiter | ': ' | sDelimiter | 'Update' | sDelimiter | sNewLine
+       | '},' | sNewLine
+   );
+ENDIF;
+d=d+1;
+END;
+
+#######################
+#GROUPS DIMS
+#####################
+g = 1;
+sGroupsSiz = DIMSIZ('}Groups');
+sClientsRString ='],' | sNewLine  | sDelimiter | 'Relationships' | sDelimiter | ': [' | sNewLine;
+
+#Iterate through groups
+TEXTOUTPUT(sFile,sClientsRString);
+
+###########GROUPS###########
+WHILE(g <= sGroupsSiz);
+    sGroupsEl = DIMNM('}Groups',g);
+
+###########CLIENTS###########
+sClientsSiz = DIMSIZ('}Clients'); u=1;
+WHILE(u <= sClientsSiz);
+    sClientsEl = DIMNM('}Clients',u);
+    sClientsElAlias = ATTRS('}Clients',sClientsEl,'}TM1_DefaultDisplayValue');
+sAssignment = CELLGETS('}ClientGroups',sClientsEl,sGroupsEl);
+IF(sAssignment @<>'');
+TEXTOUTPUT(sFile, '{' | sNewLine
+        | sDelimiter | 'SourceName' | sDelimiter | ': ' | sDelimiter  | sGroupsEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetName' | sDelimiter | ': ' | sDelimiter  | sClientsEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'SourceLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.SecurityGroup' | sDelimiter | ',' | sNewLine
+       | sDelimiter | 'TargetLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.SecurityUser' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.UserOfSecurityGroup' | sDelimiter | ',' | sNewLine
+        | '},' | sNewLine
+    );
+ENDIF;
+u=u+1;
+END;
+###########CUBE SECURITY###########
+IF(CUBEEXISTS('}CubeSecurity') = 1);
+
+c=1;
+sCubesSiz = DIMSIZ('}Cubes');
+WHILE(c <= sCubesSiz);
+    sCubesEl = DIMNM('}Cubes',c);
+
+ sPermission = CELLGETS('}CubeSecurity',sCubesEl,sGroupsEl);
+IF(sPermission @<>'');
+TEXTOUTPUT(sFile, '{' | sNewLine
+       | sDelimiter | 'SourceName' | sDelimiter | ': ' | sDelimiter  | sGroupsEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetName' | sDelimiter | ': ' | sDelimiter  | sCubesEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'SourceLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.SecurityGroup' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.Cube' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.CoreObjectSecurity' | sDelimiter | ',' | sNewLine
+       | sDelimiter | 'PermissionLevel' | sDelimiter | ': ' | sDelimiter  | sPermission | sDelimiter | ',' | sNewLine
+        | '},' | sNewLine
+);
+ENDIF;
+c=c+1;
+END;
+ENDIF;
+###########DIMENSION SECURITY###########
+IF(CUBEEXISTS('}DimensionSecurity') = 1);
+d=1;
+sDimensionsSiz = DIMSIZ('}Dimensions');
+WHILE(d <= sDimensionsSiz);
+    sDimEl = DIMNM('}Dimensions',d);
+
+ sPermission = CELLGETS('}DimensionSecurity',sDimEl,sGroupsEl);
+IF(sPermission @<>'');
+   TEXTOUTPUT(sFile, '{' | sNewLine
+        | sDelimiter | 'SourceName' | sDelimiter | ': ' | sDelimiter  | sGroupsEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetName' | sDelimiter | ': ' | sDelimiter  | sDimEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'SourceLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.SecurityGroup' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.Dimension' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.CoreObjectSecurity' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'PermissionLevel' | sDelimiter | ': ' | sDelimiter  | sPermission | sDelimiter | ',' | sNewLine
+        | '},' | sNewLine
+);
+ENDIF;
+d=d+1;
+END;
+ENDIF;
+###########PROCESS SECURITY###########
+IF(CUBEEXISTS('}ProcessSecurity') = 1);
+p=1;
+sProcessesSiz = DIMSIZ('}Processes');
+WHILE(p <= sProcessesSiz);
+    sProcessesEl = DIMNM('}Processes',p);
+
+sPermission = CELLGETS('}ProcessSecurity',sProcessesEl,sGroupsEl);
+IF(sPermission @<>'');
+   TEXTOUTPUT(sFile, '{' | sNewLine
+        | sDelimiter | 'SourceName' | sDelimiter | ': ' | sDelimiter  | sGroupsEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetName' | sDelimiter | ': ' | sDelimiter  | sProcessesEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'SourceLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.SecurityGroup' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.Process' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.CoreObjectSecurity' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'PermissionLevel' | sDelimiter | ': ' | sDelimiter  | sPermission | sDelimiter | ',' | sNewLine
+        | '},' | sNewLine
+);
+ENDIF;
+p=p+1;
+END;
+ENDIF;
+###########CHORE SECURITY###########
+IF(CUBEEXISTS('}ChoreSecurity') = 1);
+h=1;
+sChoresSiz = DIMSIZ('}Chores');
+WHILE(h <= sChoresSiz);
+    sChoresEl = DIMNM('}Chores',h);
+
+sPermission = CELLGETS('}ChoreSecurity',sChoresEl,sGroupsEl);
+IF(sPermission @<>'');
+   TEXTOUTPUT(sFile,'{' | sNewLine
+        | sDelimiter | 'SourceName' | sDelimiter | ': ' | sDelimiter  | sGroupsEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetName' | sDelimiter | ': ' | sDelimiter  | sChoresEl | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'SourceLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.SecurityGroup' | sDelimiter | ',' | sNewLine
+       | sDelimiter | 'TargetLogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.Chore' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ': ' | sDelimiter | 'TM1.CoreObjectSecurity' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'PermissionLevel' | sDelimiter | ': ' | sDelimiter  | sPermission | sDelimiter | ',' | sNewLine
+        | '},' | sNewLine
+);
+ENDIF;
+h=h+1;
+END;
+ENDIF;
+
+
+g=g+1;
+END;
+
+TEXTOUTPUT(sFile, '] }');
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

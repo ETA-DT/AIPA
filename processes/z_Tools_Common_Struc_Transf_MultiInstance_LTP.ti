@@ -1,0 +1,46 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
+
+
+zDimPI = 'zz_Process_Instance' ;
+zDimCD = 'zz_Common_Dimension_LTP' ;
+
+
+i=1;
+WHILE( i < DIMSIZ ( zDimPI )+1 );
+     Country = DIMNM( zDimPI , i );
+     IF ( Country @<> 'CM' ) ;
+          k=1;
+          WHILE( k < DIMSIZ ( zDimCD )+1 );
+               DimCom= DIMNM( zDimCD , k );
+               ExecuteProcess( 'z_Tools_Common_Struc_Transf' , 'zFile' , DimCom , 'pCountry' , Country );
+               k = k + 1;
+          END;
+    ENDIF;
+    i = i + 1;
+END;
+
+
+
+
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

@@ -1,0 +1,21 @@
+{
+	"@type":"Process",
+	"Name":"z_Delete_Temporary_Contracts",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"z_Delete_Temporary_Contracts.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pContractCode",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

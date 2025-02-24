@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"GIE_Antennes",
+	"Hierarchies@Code.links":
+	[
+		"GIE_Antennes.hierarchies/GIE_Antennes.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('GIE_Antennes')/Hierarchies('GIE_Antennes')"
+	}
+}

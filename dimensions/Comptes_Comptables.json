@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Comptes_Comptables",
+	"Hierarchies@Code.links":
+	[
+		"Comptes_Comptables.hierarchies/Comptes_Comptables.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Comptes_Comptables')/Hierarchies('Comptes_Comptables')"
+	}
+}

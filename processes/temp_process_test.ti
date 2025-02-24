@@ -1,0 +1,3 @@
+#region Prolog
+ASCIIOutput( 'outputtest.txt', ELCOMP( 'Phase', 'LTP_2023_VC',0) );
+#endregion

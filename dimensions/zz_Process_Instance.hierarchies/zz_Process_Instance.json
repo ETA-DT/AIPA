@@ -1,0 +1,32 @@
+{
+	"@type":"Hierarchy",
+	"Name":"zz_Process_Instance",
+	"Elements":
+	[
+		{
+			"Name":"FR",
+			"Type":"String"
+		},
+		{
+			"Name":"GE",
+			"Type":"String"
+		},
+		{
+			"Name":"NL",
+			"Type":"String"
+		},
+		{
+			"Name":"US",
+			"Type":"String"
+		},
+		{
+			"Name":"CM",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":
+	[
+		"zz_Process_Instance.subsets/Default.json",
+		"zz_Process_Instance.subsets/L0.json"
+	]
+}

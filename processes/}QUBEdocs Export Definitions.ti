@@ -1,0 +1,226 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#LASTCHANGE Documented this process
+#GENERALCOMMENT This process is used to export info from TM1 for use with QUBEDocs
+#DATASOURCECOMMENT Not Applicable
+#PROLOGCOMMENT The prolog is used to output QSON / JSON file.  .
+#METADATACOMMENT Not Applicable
+#DATACOMMENT Not Applicable
+#EPILOGCOMMENT Not Applicable
+
+DatasourceASCIIDelimiter=' ';
+DataSourceASCIIQuoteCharacter=''; 
+
+sDefinitionsFile = pFile;
+sCubeDimensionsFile = pFile;
+
+sCoreObject = 'CUBE|DIMENSION|PROCESS|CHORE|NATIVEVIEW|SUBSET';
+sCube = 'QUBEDocs Definitions';
+sStatsCube = '}QUBEdocs Stats';
+sDefDim = 'QUBEDocs Definition';
+sParent ='All Definitions';
+sModelEl = 'Entire Model';
+sNewLine = Char(13) | Char(10);
+sDocCalcs = ATTRS('QUBEdocs Setup Item','Dim Calcs and Picklists','Enable');
+sDelimiter = '$$#@@';
+
+SetOutputCharacterSet(sDefinitionsFile,'TM1CS_UTF16');
+
+#######################
+#DEFINITIONS
+#######################
+sDefSubset = '}SYS.QUBEdocsDef4';
+
+IF (SubsetExists(sDefDim, sDefSubset) = 0);
+    SubsetDestroy(sDefDim, sDefSubset);
+    sMDXQuery = '{TM1DRILLDOWNMEMBER( {['| sDefDim |'].[All Definitions]}, ALL, RECURSIVE )}';
+    sMDXQuery = '{FILTER( {FILTER( { {TM1DRILLDOWNMEMBER( {['| sDefDim |'].[All Definitions]}, ALL, RECURSIVE )} }, [QubeDocs Definition].[Type] <> "SecurityUser")}, [QubeDocs Definition].[Type] <> "SecurityGroup")}';
+    SubsetCreatebyMDX(sDefSubset, sMDXQuery);
+ENDIF;
+#processquit;
+TEXTOUTPUT(sDefinitionsFile, '{ ' | sDelimiter | 'Contexts' | sDelimiter | ': [' | sNewLine);
+
+q = 1;
+WHILE(q <= SubsetGetSize(sDefDim,sDefSubset));
+    sDefinition = SubsetGetElementName(sDefDim,sDefSubset,q);
+    sObject = ATTRS(sDefDim,sDefinition,'Object');
+    sType = ATTRS(sDefDim,sDefinition,'Type');
+    sElement = ATTRS(sDefDim,sDefinition,'Element');
+    sElementType = '';
+    sDesc = CellGetS(sCube,sModelEl,sDefinition,'#Desc'); 
+    sLink = CellGetS(sCube,sModelEl,sDefinition,'#DocumentLink'); 
+IF(q=2);  
+	TEXTOUTPUT(sDefinitionsFile, sDelimiter | 'Objects' | sDelimiter | ': [' | sNewLine); 
+	nObjectPlaceholder = 1; 
+ENDIF;
+
+sDimElDesc = 'NONE';
+sShowAllEl ='NO';
+nElementExportFlag =0;
+sCalc='';  sCCalc ='';sPicklist='';
+IF(sType @<>'');
+  IF(sType @='Element');     
+     sElementType = DTYPE(sObject,sElement);
+     sDimElDesc = CellGetS(sCube,sModelEl,sDefinition,'#Desc');    
+     sShowAllEl = UPPER(CellGetS(sCube,sModelEl,'DIM:' | sObject,'#ShowUndocumentedElements'));
+     sCalc = CellGetS(sCube,sModelEl,sDefinition,'#DimCalc');
+     sCCalc = CellGetS(sCube,sModelEl,sDefinition,'#DimCCalc');
+     sPicklist = CellGetS(sCube,sModelEl,sDefinition,'#Picklist');
+     IF(sDimElDesc @<>'' %  sCalc @<> '' % sCCalc @<> '' % sPicklist @<> '' %  sShowAllEl @= 'YES');
+        nElementExportFlag = 1;
+     ENDIF;
+  ELSEIF(sType @= 'Attribute');
+     sElementType = DTYPE('}ElementAttributes_' | sObject,sElement);
+  ENDIF;
+
+
+ IF(sDimElDesc @= 'NONE' % nElementExportFlag =1);
+
+#Work out which stats to include
+sStatType = 'StatsBy' | sType; sStatDim ='}QUBEdocs Stat'; sStatString = '';sQDStatValue =0;
+IF(sType @='Model');
+ sStatType = 'StatsForServer';
+ sDefinition = 'Server';
+ENDIF;
+IF(DIMIX(sStatDim,sStatType) <>0);
+ qs= 1;
+ WHILE(qs <= ELCOMPN(sStatDim,sStatType));
+   sQDStatName ='';
+   sStatName = ELCOMP(sStatDim,sStatType,qs);
+   #IF(DIMIX(sStatDim,sStatName) <> 0);
+     sQDStatName = ATTRS(sStatDim,sStatName,'QUBEdocsName');
+   #ENDIF;
+   IF(sQDStatName @<> '');
+     IF(DIMIX('}QUBEdocs Object',sDefinition) <> 0);
+     sQDStatValue = CELLGETN(sStatsCube,'LATEST','All Time Intervals',sStatName,'All Clients',sDefinition,'MAX');
+     ENDIF;
+     IF(sQDStatValue <> 0);
+      sStatString = sStatString | sDelimiter | '' |  sQDStatName  | sDelimiter | ':' |  sDelimiter | NumberToString(sQDStatValue)  | sDelimiter | ',' | sNewLine;
+     ENDIF;
+    ENDIF;
+ qs=qs+1;
+END;
+ENDIF;
+sDescOnlyFlag = 0;
+sDescOnlyFlag = IF(SCAN(UPPER(sType),'NATIVEVIEW|SUBSET|DOCUMENT') >0,1,0);
+#sTimeStamp = Timst(Now,'\Y-\m-\d \H:\m:\s.000+0:00');
+IF((sDescOnlyFlag = 1 & sDesc @<> '') % (sDescOnlyFlag = 0 & sType @<> 'Folder'));
+    TEXTOUTPUT(sDefinitionsFile, 
+        '{' | sNewLine
+        | sDelimiter | 'Description' | sDelimiter | ':' | sDelimiter | sDesc | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ':' | sDelimiter | 'TM1.' | sType | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'Name' | sDelimiter | ':' | sDelimiter | if(sElement @<> '',sElement, sObject) | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'UniqueName' | sDelimiter | ':' | sDelimiter | if(sElement @<> '',sObject |  '@' | sElement,sObject) | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'URL' | sDelimiter | ':' | sDelimiter | sLink | sDelimiter | ',' | sNewLine
+        #|  if(q = 1, sDelimiter | 'GenerateDate' | sDelimiter | ':' | sDelimiter | sTimeStamp  | sDelimiter | ',' | sNewLine,'')
+        |  if(sDocCalcs @= 'YES' & sCalc @<> '',sDelimiter | 'DimCalc' | sDelimiter | ':' | sDelimiter | sCalc | sDelimiter | ',' | sNewLine,'')
+        |  if(sDocCalcs @= 'YES' & sCCalc @<> '',sDelimiter | 'DimCCalc' | sDelimiter | ':' | sDelimiter | sCCalc | sDelimiter | ',' | sNewLine,'')
+        |  if(sDocCalcs @= 'YES' & sPicklist @<> '',sDelimiter | 'DimPicklist' | sDelimiter | ':' | sDelimiter | sPicklist | sDelimiter | ',' | sNewLine,'')
+        |  if(sElement @<> '',sDelimiter | 'ElementType' | sDelimiter | ':' | sDelimiter | sElementType | sDelimiter | ',' | sNewLine,'')
+        |  if(sStatString @<> '',sStatString,'')
+        | sDelimiter | 'QDOperation' | sDelimiter | ':' | sDelimiter |  if(SCAN(UPPER(sType),sCoreObject) >0 % sType @='Model','Update' | sDelimiter | '','New' | sDelimiter | '') | sNewLine
+        | '}' | if(sType @='Model',sNewLine | '],',',') | sNewLine);
+ENDIF;
+   ENDIF;
+ENDIF;
+    q = q + 1;
+END;
+
+IF(nObjectPlaceholder=1);  TEXTOUTPUT(sDefinitionsFile, '],'); ENDIF;
+
+TEXTOUTPUT(sDefinitionsFile, ' ' | sDelimiter | 'Relationships' | sDelimiter | ': [' | sNewLine);
+
+#######################
+#CUBE DIMS
+#####################
+c = 1;
+WHILE(c <= DIMSIZ('}Cubes'));
+    sCubeEl = DIMNM('}Cubes',c);
+    d = 1;
+
+    WHILE(TABDIM(sCubeEl,d) @<> '');
+         TEXTOUTPUT(sCubeDimensionsFile, 
+        '{' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ':' | sDelimiter | 'TM1.CubeDimension' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'SourceLogicalName' | sDelimiter | ':' | sDelimiter | 'TM1.Cube' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'SourceName' | sDelimiter | ':' | sDelimiter | sCubeEl  | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetLogicalName' | sDelimiter | ':' | sDelimiter | 'TM1.Dimension' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetName' | sDelimiter | ':' | sDelimiter | TABDIM(sCubeEl, d)  | sDelimiter | ',' | sNewLine
+        |  sDelimiter | 'SortOrder' | sDelimiter | ':' | sDelimiter | numberToString(d)  | sDelimiter | '' | sNewLine
+        | '},' | sNewLine);
+         d = d + 1;
+    end;
+    c = c + 1;
+END;
+
+q = 1;
+WHILE(q <= SubsetGetSize(sDefDim,sDefSubset));
+
+    sDefinition = SubsetGetElementName(sDefDim,sDefSubset,q);
+    sObject = ATTRS(sDefDim,sDefinition,'Object');
+    sType = ATTRS(sDefDim,sDefinition,'Type');
+    sElement = ATTRS(sDefDim,sDefinition,'Element');
+    sElementType = '';
+    sDesc = CellGetS(sCube,sModelEl,sDefinition,'#Desc'); 
+    sLink = CellGetS(sCube,sModelEl,sDefinition,'#DocumentLink'); 
+
+sDimElDesc = 'NONE';
+sShowAllEl ='NO';
+nElementExportFlag =0;
+sCalc='';  sCCalc ='';sPicklist='';
+IF(sType @<>'');
+  IF(sType @='Element');     
+     sElementType = DTYPE(sObject,sElement);
+     sDimElDesc = CellGetS(sCube,sModelEl,sDefinition,'#Desc');    
+     sShowAllEl = UPPER(CellGetS(sCube,sModelEl,'DIM:' | sObject,'#ShowUndocumentedElements'));
+     sCalc = CellGetS(sCube,sModelEl,sDefinition,'#DimCalc');
+     sCCalc = CellGetS(sCube,sModelEl,sDefinition,'#DimCCalc');
+     sPicklist = CellGetS(sCube,sModelEl,sDefinition,'#Picklist');
+     IF(sDimElDesc @<>'' %  sCalc @<> '' % sCCalc @<> '' % sPicklist @<> '' %  sShowAllEl @= 'YES');
+        nElementExportFlag = 1;
+     ENDIF;
+  ELSEIF(sType @= 'Attribute');
+     sElementType = DTYPE('}ElementAttributes_' | sObject,sElement);
+  ENDIF;
+
+   IF(sType @='Attribute'  % nElementExportFlag =1);
+    TEXTOUTPUT(sDefinitionsFile, 
+
+        '{' | sNewLine
+        | sDelimiter | 'SourceLogicalName' | sDelimiter | ':' | sDelimiter | 'TM1.Dimension' | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'SourceName' | sDelimiter | ':' | sDelimiter | sObject  | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetLogicalName' | sDelimiter | ':' | sDelimiter | 'TM1.' | sType | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'TargetName' | sDelimiter | ':' | sDelimiter | sObject |  '@' | sElement | sDelimiter | ',' | sNewLine
+        | sDelimiter | 'LogicalName' | sDelimiter | ':' | sDelimiter | 'TM1.Dimension' | sType | sDelimiter | '' | sNewLine
+        | '},' | sNewLine);
+   ENDIF;
+ENDIF;
+    q = q + 1;
+END;
+
+
+TEXTOUTPUT(sDefinitionsFile, ']}');
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF (SubsetExists(sDefDim, sDefSubset) = 0);
+    SubsetDestroy(sDefDim, sDefSubset);
+ENDIF;
+#endregion

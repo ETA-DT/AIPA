@@ -1,0 +1,16 @@
+{
+	"@type":"Hierarchy",
+	"Name":"z_DSO",
+	"Elements":
+	[
+		{
+			"Name":"receivables",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"DSO",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}
