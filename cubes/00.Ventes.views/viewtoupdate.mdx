@@ -1,1 +1,0 @@
-SELECT {DRILLDOWNMEMBER({[Indicateurs_Activité].[Indicateurs_Activité].[Résultats]}, {[Indicateurs_Activité].[Indicateurs_Activité].[Résultats]})} ON 0, {TM1SubsetToSet([Pays].[Pays],"PaysTrouves","public")} ON 1 FROM [00.Ventes] WHERE ([Phase].[Phase].[ACT_BUDG_NB^ACT_TOT], [Period].[Period].[2018])
