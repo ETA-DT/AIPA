@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"All entities except reject input",
-	"Expression":"{ EXCEPT(\r{ EXCEPT( {TM1FILTERBYLEVEL( {TM1SUBSETALL( [Legal_Organization] )}, 0)},\r{TM1FILTERBYPATTERN( {TM1SUBSETALL( [Legal_Organization] )}, \"*input*\")})},\r{TM1FILTERBYPATTERN( {TM1SUBSETALL( [Legal_Organization] )}, \"*reject*\")})}"
-}

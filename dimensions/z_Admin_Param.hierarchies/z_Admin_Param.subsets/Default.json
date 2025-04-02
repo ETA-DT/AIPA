@@ -1,6 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Default",
-	"Alias":"English",
-	"Expression":"{TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [z_Admin_Param] )}, ALL, RECURSIVE )}"
-}

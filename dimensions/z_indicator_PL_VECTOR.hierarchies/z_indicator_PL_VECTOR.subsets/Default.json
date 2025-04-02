@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Default",
-	"Expression":"{TM1SORT( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [z_indicator_PL_VECTOR] )}, ALL, RECURSIVE )}, ASC)}"
-}

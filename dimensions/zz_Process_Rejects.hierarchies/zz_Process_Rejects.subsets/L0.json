@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"L0",
-	"Expression":"{TM1SORT( {TM1SUBSETALL( [zz_Process_Rejects] )}, ASC)}"
-}

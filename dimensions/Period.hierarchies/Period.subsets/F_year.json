@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"F_year",
-	"Expression":"{TM1FILTERBYPATTERN( {TM1SUBSETALL( [Period] )}, \"f_year*\")}"
-}

@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Par défaut",
-	"Expression":"{TM1FILTERBYPATTERN( {TM1SUBSETALL( [Period] )}, \r[z_Admin_Param].( [z_Admin_Param].[YEAR_ACTUAL] , [z_Str_Var].[STR_VAR1] ) + \"*YTD\" )}\r"
-}

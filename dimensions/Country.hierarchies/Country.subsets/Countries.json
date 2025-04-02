@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Countries",
-	"Expression":"TM1FILTERBYLEVEL(DESCENDANTS([Country].[Country].[All Countries] , 99 , LEAVES) , 0)"
-}

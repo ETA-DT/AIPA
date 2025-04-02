@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Cubes",
-	"Expression":"{TM1DRILLDOWNMEMBER( {[}QUBEdocs Object].[All Cubes]}, ALL, RECURSIVE )}"
-}

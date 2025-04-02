@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"L0",
-	"Expression":"{TM1SORT( {TM1FILTERBYLEVEL( {TM1SUBSETALL( [Indicator_Corp] )}, 0)}, ASC)}"
-}

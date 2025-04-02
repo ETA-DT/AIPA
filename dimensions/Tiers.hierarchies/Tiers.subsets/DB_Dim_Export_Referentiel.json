@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"DB_Dim_Export_Referentiel",
-	"Expression":" { HIERARCHIZE( {TM1SUBSETALL( [Tiers] )} ) }"
-}

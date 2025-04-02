@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"LTP_Saisie_Taux_IS",
-	"Expression":"TM1FILTERBYLEVEL(TM1FILTERBYPATTERN( {TM1SUBSETALL( [Phase] )}, \"*LTP*V*\") , 0)"
-}

@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"zTI_xx_rp_pilotage",
-	"Expression":"TM1SubsetAll([T_Periode])"
-}

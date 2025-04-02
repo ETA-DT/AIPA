@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Utilisateurs par Zone Conso",
-	"Expression":"{ DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [z_Stat_Utilisateur] )}, ALL, RECURSIVE )}, \"Utilisateurs par Zone\")}, {[z_Stat_Utilisateur].[Utilisateurs par Zone]} ) }"
-}

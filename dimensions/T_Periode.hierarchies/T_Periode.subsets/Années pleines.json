@@ -1,6 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Années pleines",
-	"Alias":"LIBELLE",
-	"Expression":"{TM1SORT( {TM1FILTERBYPATTERN( {TM1FILTERBYLEVEL( {TM1SUBSETALL( [T_Periode] )}, 0)}, \"Année Pleine*\")}, ASC)}"
-}

@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"}Utilisateurs_Courants",
-	"Expression":"{TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [z_Stat_Utilisateur] )}, \"Utilisateurs_Courants\")}, ALL, RECURSIVE )}"
-}

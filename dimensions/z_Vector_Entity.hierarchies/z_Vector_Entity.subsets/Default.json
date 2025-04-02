@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Default",
-	"Expression":"{TM1SORT( {TM1SUBSETALL( [z_Vector_Entity] )}, ASC)}"
-}

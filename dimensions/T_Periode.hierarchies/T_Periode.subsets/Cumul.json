@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Cumul",
-	"Expression":"{TM1FILTERBYPATTERN( {TM1SUBSETALL( [T_Periode] )}, \"*_cumul*\")}"
-}

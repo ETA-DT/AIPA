@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"L0 par CODE",
-	"Expression":"{TM1SORT( {TM1SORT( {TM1SORT( {TM1SORTBYINDEX( {TM1SORTBYINDEX( {TM1SORT( {TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1SUBSETALL( [Indicator_Corp] )}, ALL, RECURSIVE )}, 0)}, ASC)}, ASC)}, ASC)}, ASC)}, ASC)}, ASC)}"
-}

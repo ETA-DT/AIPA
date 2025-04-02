@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Sorted Attachments",
-	"Expression":"{TM1SORTBYINDEX( {TM1FILTERBYLEVEL( {TM1SUBSETALL( [}Attachments] )}, 0)}, ASC)}"
-}

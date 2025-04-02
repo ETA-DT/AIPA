@@ -1,6 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"RAPPORT_PMM",
-	"Alias":"LIBELLE",
-	"Expression":"{ HIERARCHIZE( {TM1SUBSETALL( [T_Periode] )} ) }"
-}

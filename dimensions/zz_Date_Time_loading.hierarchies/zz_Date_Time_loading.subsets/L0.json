@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"L0",
-	"Expression":"{TM1SORTBYINDEX( {TM1SUBSETALL( [zz_Date_Time_loading] )}, DESC)}"
-}

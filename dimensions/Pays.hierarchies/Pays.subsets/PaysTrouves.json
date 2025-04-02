@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"PaysTrouves",
-	"Expression":"{EXCEPT([Pays].[Pays].LEVELS(0).MEMBERS , {[Pays].[Pays].[Allemagne],[Pays].[Pays].[République tchèque],[Pays].[Pays].[Slovaquie]})}"
-}

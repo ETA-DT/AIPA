@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"PMM_ACTIVITY",
-	"Expression":"{DESCENDANTS([Activity].[ACT_PMM],1)}"
-}

@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Indicateurs Charges",
-	"Expression":"{TM1DRILLDOWNMEMBER( {[Indicator_Corp].[Chges_ope]}, ALL, RECURSIVE )}"
-}

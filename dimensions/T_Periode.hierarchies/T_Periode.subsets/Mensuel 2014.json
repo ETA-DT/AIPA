@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Mensuel 2014",
-	"Expression":"{TM1FILTERBYLEVEL( {TM1DRILLDOWNMEMBER( {TM1FILTERBYPATTERN( {TM1SUBSETALL( [T_Periode] )}, \"2014\")}, ALL, RECURSIVE )}, 0,4)}"
-}

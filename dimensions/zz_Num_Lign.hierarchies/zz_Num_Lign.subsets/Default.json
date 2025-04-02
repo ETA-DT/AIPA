@@ -1,6 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"Default",
-	"Alias":"English",
-	"Expression":"{TM1SORTBYINDEX( {TM1SORT( {TM1SUBSETALL( [zz_Num_Lign] )}, ASC)}, ASC)}"
-}

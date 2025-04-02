@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"2022_mois",
-	"Expression":"{EXCEPT(DISTINCT({[Period].[Period].[2022],DESCENDANTS([Period].[Period].[2022] , 99 , LEAVES)}) , {[Period].[Period].[2022]})}"
-}

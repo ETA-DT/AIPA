@@ -1,5 +1,0 @@
-{
-	"@type":"Subset",
-	"Name":"SYS.Folders",
-	"Expression":"{TM1SUBSETALL( [QUBEdocs Import Folders] )}"
-}
