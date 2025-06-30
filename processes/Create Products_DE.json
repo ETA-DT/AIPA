@@ -1,0 +1,50 @@
+{
+	"@type":"Process",
+	"Name":"Create Products_DE",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"Create Products_DE.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=825\fVarDimension=Products_DE\fVarDimAction=Create\fVarElemType=Numeric\fVarDimElemSortType=ByHierarchy\fVarDimElemSortSense=ASCENDING\f",
+		"VarType=32\fColType=858\fConsolidationDim=Products_DE\fConsolidationChildVar=vProducts\fConsolidationChildWeight=1.000000\fComponentSortType=ByName\fComponentSortSense=ASCENDING\f",
+		"VarType=32\fColType=858\fConsolidationDim=Products_DE\fConsolidationChildVar=vProductType\fConsolidationChildWeight=1.000000\fComponentSortType=ByName\fComponentSortSense=ASCENDING\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":".",
+		"asciiDelimiterChar":",",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":0,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":",",
+		"dataSourceNameForClient":"..\\SourceFiles\\DE\\Products_DE.csv",
+		"dataSourceNameForServer":"..\\SourceFiles\\DE\\Products_DE.csv"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"vProducts",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vProductType",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vTotalProduct",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

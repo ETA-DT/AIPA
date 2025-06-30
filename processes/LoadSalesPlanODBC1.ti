@@ -1,0 +1,53 @@
+#region Prolog
+
+OldCubeLogChanges = CUBEGETLOGCHANGES('Sales_Plan');
+CUBESETLOGCHANGES('Sales_Plan', 0);
+
+#endregion
+#region Data
+
+vMonth=NUMBERTOSTRING(MONTH(vDate));
+
+#CellPutN(vQuantity,'Sales_Plan',vSubsidiaries,vChannel,vProducts, vMonth,vVersion,'Quantity');
+#CellPutN(vCashDiscount,'Sales_Plan',vSubsidiaries,vChannel,vProducts, vMonth,vVersion,'Cash Discount');
+#CellPutN(vVolumeDiscount,'Sales_Plan',vSubsidiaries,vChannel,vProducts, vMonth,vVersion,'Volume Discount');
+#CellPutN(vFreight,'Sales_Plan',vSubsidiaries,vChannel,vProducts,vMonth, vVersion,'Freight');
+#CellPutN(vReturnsAndAllowances,'Sales_Plan',vSubsidiaries,vChannel, vProducts,vMonth,vVersion,'Returns and Allowances');
+
+
+CellPutN(
+                CellGetN('Sales_Plan',vSubsidiaries,vChannel,vProducts,vMonth, vVersion,'Quantity'
+                                )
+                                + vQuantity,'Sales_Plan',vSubsidiaries,vChannel, vProducts,vMonth,vVersion,'Quantity'
+                );
+
+CellPutN(
+                CellGetN('Sales_Plan',vSubsidiaries,vChannel,vProducts,vMonth, vVersion,'Cash Discount'
+                                )
+                                + vCashDiscount,'Sales_Plan',vSubsidiaries, vChannel,vProducts,vMonth,vVersion,'Cash Discount'
+                );
+
+CellPutN(
+                CellGetN('Sales_Plan',vSubsidiaries,vChannel,vProducts,vMonth,vVersion,'Volume Discount'
+                                )
+                                + vVolumeDiscount,'Sales_Plan',vSubsidiaries, vChannel,vProducts,vMonth,vVersion,'Volume Discount'
+                );
+
+CellPutN(
+                CellGetN('Sales_Plan',vSubsidiaries,vChannel,vProducts,vMonth, vVersion,'Freight'
+                                ) 
+                                + vFreight,'Sales_Plan',vSubsidiaries,vChannel,vProducts,vMonth,vVersion,'Freight'
+                );
+
+
+CellPutN(
+                CellGetN('Sales_Plan',vSubsidiaries,vChannel,vProducts,vMonth, vVersion,'Returns and Allowances'
+                                )
+                                + vReturnsAndAllowances,'Sales_Plan', vSubsidiaries,vChannel,vProducts,vMonth,vVersion,'Returns and Allowances'
+                );
+
+#endregion
+#region Epilog
+
+CUBESETLOGCHANGES('Sales_Plan', OldCubeLogChanges);
+#endregion

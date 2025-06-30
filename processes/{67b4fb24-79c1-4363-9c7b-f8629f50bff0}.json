@@ -1,0 +1,36 @@
+{
+	"@type":"Process",
+	"Name":"{67b4fb24-79c1-4363-9c7b-f8629f50bff0}",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"{67b4fb24-79c1-4363-9c7b-f8629f50bff0}.ti",
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":".",
+		"asciiDelimiterChar":",",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":0,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":",",
+		"dataSourceNameForClient":"",
+		"dataSourceNameForServer":"model_upload\\products.csv"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"vLevel0",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vLevel1",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

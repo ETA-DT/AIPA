@@ -1,0 +1,29 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+OldCubeLogChanges = CUBEGETLOGCHANGES('Income Statment');
+CUBESETLOGCHANGES('Income Statment', 0);
+#****End: Generated Statements****
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+vMeasure='Dollars';
+vAccount=CAPIT(vAcct);
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+vMeasure='Dollars';
+vAccount=CAPIT(vAcct);
+if (VALUE_IS_STRING=1, CellPutS(SVALUE,'Income Statment',Versions,Months,Subsidiaries,vAccount,vMeasure), CellPutN(NVALUE, 'Income Statment', Versions
+,Months,Subsidiaries,vAccount,vMeasure));
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+CUBESETLOGCHANGES('Income Statment', OldCubeLogChanges);
+#****End: Generated Statements****
+#endregion

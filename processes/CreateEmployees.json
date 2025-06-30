@@ -1,0 +1,27 @@
+{
+	"@type":"Process",
+	"Name":"CreateEmployees",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"CreateEmployees.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"IgnoredInputVarName=vEmployeeName\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=vRegion\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=vTotal\fVarType=32\fColType=1165\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":".",
+		"asciiDelimiterChar":",",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":0,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":",",
+		"dataSourceNameForClient":"..\\SourceFiles\\Employees.csv",
+		"dataSourceNameForServer":"..\\SourceFiles\\Employees.csv"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

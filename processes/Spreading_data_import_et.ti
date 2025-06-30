@@ -1,0 +1,46 @@
+#region Prolog
+MinorErrorLogMax = -1;
+OnMinorErrorDoItemSkip = 1;
+DimensionCreate('Product_et');
+DimensionCreate('Time_et');
+DimensionCreate('Region_et');
+CubeCreate('Spreading_et','Product_et','Time_et','Region_et');
+NumMetaRowsRead = 0;
+NumMetaRowsProcessed = 0;
+CurrentLogSetting = CubeGetLogChanges('Spreading_et');
+CubeSetLogChanges('Spreading_et', 0);
+NumRowsRead = 0;
+NumRowsProcessed = 0;
+SetInputCharacterSet('TM1CS_ISO_8859_1');
+#endregion
+#region Metadata
+NumMetaRowsRead = NumMetaRowsRead + 1;
+If(vDim1_1 @<> '');
+DimensionElementInsert('Product_et','',vDim1_1,'N');
+EndIf;
+If(vDim2_1 @<> '');
+DimensionElementInsert('Time_et','',vDim2_1,'N');
+EndIf;
+If(vDim3_1 @<> '');
+DimensionElementInsert('Region_et','',vDim3_1,'N');
+If(vDim3_2 @<> '');
+DimensionElementInsert('Region_et','',vDim3_2,'C');
+DimensionElementComponentAdd('Region_et',vDim3_2,vDim3_1,1.0);
+EndIf;
+EndIf;
+NumMetaRowsProcessed = NumMetaRowsProcessed + 1;
+#endregion
+#region Data
+NumRowsRead = NumRowsRead + 1;
+If (vDim1_1 @<> '' & vDim2_1 @<> '' & vDim3_1 @<> '' & vValue1 @<> '');
+CellPutN(StringToNumberEx(vValue1,'.',','),'Spreading_et',vDim1_1,vDim2_1,vDim3_1);
+NumRowsProcessed = NumRowsProcessed + 1;
+EndIf;
+#endregion
+#region Epilog
+If (pResult @<> '');
+TextOutput(pResult, NumberToString(NumRowsRead), NumberToString(NumRowsProcessed), NumberToString(NumMetaRowsRead), NumberToString(NumMetaRowsProcessed));
+EndIf;
+CubeSaveData('Spreading_et');
+CubeSetLogChanges('Spreading_et', CurrentLogSetting);
+#endregion

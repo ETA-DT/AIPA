@@ -1,0 +1,83 @@
+#region Prolog
+vViewWithLeaves = 'ztrf_MonthVersion';
+ViewExtractSkipZeroesSet( 'Sales_Plan',vViewWithLeaves, 1 );
+ViewExtractSkipCalcsSet('Sales_Plan', vViewWithLeaves, 1 );
+ViewExtractSkipRuleValuesSet( 'Sales_Plan', vViewWithLeaves, 0 );
+
+# This TI process copies Sales_Plan Cube data from a source Month & Version to a target Month & Version.
+#****DECLARE VARIABLES****
+Cube = 'Sales_Plan';
+Object = '$Transfer'|Cube;
+
+
+#****TURN CUBE LOGGING ON****
+#LogFlag = CUBEGETLOGCHANGES(Cube);
+#CUBESETLOGCHANGES(Cube, 0);
+
+#****DELETE OLD VIEW (IF ANY)****
+VIEWDESTROY(Cube, Object);
+
+#****DELETE OLD SETS (IF ANY)****
+SUBSETDESTROY('Months', Object);
+SUBSETDESTROY('Versions', Object);
+
+#****CREATE NEW SETS****
+SUBSETCREATE('Months', Object);
+SUBSETELEMENTINSERT('Months', Object, pTargetMonth, 1);
+SUBSETCREATE('Versions', Object);
+SUBSETELEMENTINSERT('Versions', Object, pVersionTarget, 1);
+
+
+#****CREATE VIEW****
+VIEWCREATE(Cube, Object);
+VIEWSUBSETASSIGN(Cube, Object, 'Months', Object);
+VIEWSUBSETASSIGN(Cube, Object, 'Versions', Object);
+
+#****CLEAR VIEW****
+VIEWZEROOUT(Cube, Object);
+#****DELETE THE CLEARED VIEW****
+VIEWDESTROY(Cube, Object);
+#****DELETE ASSOCIATED SETS****
+SUBSETDESTROY('Months', Object);
+SUBSETDESTROY('Versions', Object);
+
+
+#****CREATE NEW VIEWS TO USE AS DATA SOURCES FOR NEXT STEP****
+#****CREATE SOURCE SETS****
+SUBSETCREATE('Months', Object);
+SUBSETELEMENTINSERT('Months', Object, pTargetMonth, 1);
+SUBSETCREATE('Versions', Object);
+SUBSETELEMENTINSERT('Versions', Object, pVersionSource, 1);
+
+#****CREATE SOURCE VIEWS****
+VIEWCREATE(Cube, Object);
+VIEWSUBSETASSIGN(Cube, Object, 'Months', Object);
+VIEWSUBSETASSIGN(Cube, Object, 'Versions', Object);
+#****REESTABLISH THE NEW VIEW AS THE DATA SOURCE****
+DATASOURCECUBEVIEW = Object;
+
+#endregion
+#region Data
+# Check if the Value is a String or Number
+IF (Value_Is_String <> 0);
+#---------String
+CELLPUTS(SValue, Cube, Subsidiaries, Channels, Products,pTargetMonth, pVersionTarget, Sales_Plan_Measures);
+ELSE;
+#----------Number
+# Ignore values where the cell cannot be updated
+IF (CELLISUPDATEABLE(Cube, Subsidiaries, Channels, Products,pTargetMonth, pVersionTarget, Sales_Plan_Measures)=0);
+ITEMSKIP;
+ELSE;
+CELLPUTN(Value, Cube, Subsidiaries, Channels, Products,
+pTargetMonth, pVersionTarget, Sales_Plan_Measures);
+ENDIF;
+ENDIF;
+#endregion
+#region Epilog
+
+#****DELETE OLD VIEW (IF ANY)****
+VIEWDESTROY(Cube, Object);
+#****DELETE OLD SETS (IF ANY)****
+SUBSETDESTROY('Months', Object);
+SUBSETDESTROY('Versions', Object);
+#endregion

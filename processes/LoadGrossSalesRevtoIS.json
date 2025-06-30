@@ -1,0 +1,65 @@
+{
+	"@type":"Process",
+	"Name":"LoadGrossSalesRevtoIS",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"LoadGrossSalesRevtoIS.ti",
+	"UIData":"CubeAction=1500\tDataAction=1503\tCubeName=Income Statment\tCubeLogChanges=0\t",
+	"VariablesUIData":
+	[
+		"VarType=32\tColType=825\tVarDimension=Subsidiaries\tVarDimAction=AsIs\tVarElemType=Numeric\tVarDimElemSortType=ByInput\tVarDimElemSortSense=ASCENDING\t",
+		"IgnoredInputVarName=Channels\tVarType=32\tColType=1165\t",
+		"IgnoredInputVarName=Products\tVarType=32\tColType=1165\t",
+		"VarType=32\tColType=825\tVarDimension=Months\tVarDimAction=AsIs\tVarElemType=Numeric\tVarDimElemSortType=ByInput\tVarDimElemSortSense=ASCENDING\t",
+		"VarType=32\tColType=825\tVarDimension=Versions\tVarDimAction=AsIs\tVarElemType=Numeric\tVarDimElemSortType=ByInput\tVarDimElemSortSense=ASCENDING\t",
+		"VarType=32\tColType=827\t",
+		"VarType=33\tColType=826\t",
+		"VarName=vMeasure\tVarType=32\tColType=825\tVarFormula=vMeasure='Dollars';:\tVarFormulaDestination=BOTH\tVarDimension=Income Statement Measures\tVarDimAction=AsIs\tVarElemType=Numeric\tVarDimElemSortType=ByInput\tVarDimElemSortSense=ASCENDING\t",
+		"VarName=vAccount\tVarType=32\tColType=825\tVarFormula=vAccount=CAPIT(vAcct);:\tVarFormulaDestination=BOTH\tVarDimension=Income Statment Accounts\tVarDimAction=AsIs\tVarElemType=Numeric\tVarDimElemSortType=ByInput\tVarDimElemSortSense=ASCENDING\t"
+	],
+	"DataSource":
+	{
+		"Type":"TM1CubeView",
+		"dataSourceNameForClient":"Sales Plan",
+		"dataSourceNameForServer":"Sales Plan",
+		"view":"DatatoIS"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"Subsidiaries",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Months",
+			"Type":"String",
+			"Position":4,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Versions",
+			"Type":"String",
+			"Position":5,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vAcct",
+			"Type":"String",
+			"Position":6,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Value",
+			"Type":"Numeric",
+			"Position":7,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

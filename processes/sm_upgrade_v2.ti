@@ -1,0 +1,448 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+##
+# Add new configuration parameters
+##
+vProcess = '}sm_wfx_system_attribute';
+vDim = '}sm_client_properties';
+
+vParam = 'Open Workbooks Readonly';
+IF (DIMIX(vDim, vParam) = 0);
+EXECUTEPROCESS(vProcess,
+'pAttribute', vParam,
+'pDefaultValue', 'true',
+'pAdmin', 'Y',
+'pClient', 'N');
+ENDIF;
+
+vParam = 'Open Workbooks In Place';
+IF (DIMIX(vDim, vParam) = 0);
+EXECUTEPROCESS(vProcess,
+'pAttribute', vParam,
+'pDefaultValue', 'true',
+'pAdmin', 'Y',
+'pClient', 'N');
+ENDIF;
+
+vParam = 'Open Workbooks With Unique Name';
+IF (DIMIX(vDim, vParam) = 0);
+EXECUTEPROCESS(vProcess,
+'pAttribute', vParam,
+'pDefaultValue', 'false',
+'pAdmin', 'Y',
+'pClient', 'N');
+ENDIF;
+
+vParam = 'Support Task Attachments';
+IF (DIMIX(vDim, vParam) = 0);
+EXECUTEPROCESS(vProcess,
+'pAttribute', vParam,
+'pDefaultValue', 'Y',
+'pAdmin', 'Y',
+'pClient', 'Y');
+ENDIF;
+
+vParam = 'Maximum Task Attachments';
+IF (DIMIX(vDim, vParam) = 0);
+EXECUTEPROCESS(vProcess,
+'pAttribute', vParam,
+'pDefaultValue', '10',
+'pAdmin', 'Y',
+'pClient', 'N');
+ENDIF;
+
+vParam = 'Maximum Blob Size';
+IF (DIMIX(vDim, vParam) = 0);
+EXECUTEPROCESS(vProcess,
+'pAttribute', vParam,
+'pDefaultValue', '10000',
+'pAdmin', 'Y',
+'pClient', 'N');
+ENDIF;
+
+vProcess1 = '}sm_wfx_workflow_attribute';
+vProcess2 = '}sm_wfx_apply_task_attribute';
+vAttr = 'url';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = 'url_name';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = 'web_type';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = 'cubename';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = 'viewname';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+
+vAttr = 'apporg_type';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = 'apporg_path';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = 'apporg_name';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = 'apporg_worksheet';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vAttr,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+
+vAttr = 'additional_emails';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', 'Additional Emails',
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '',
+'pWorkflowType', 'TASK',
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vLinkTo = 'Subject';
+vWFType = 'ACTION';
+vAttr = 'TO';
+vDisplayName = 'To';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vDisplayName,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', 'mailmltextbox',
+'pListDimAlias', '',
+'pWorkflowType', vWFType,
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pReadOnly', 'N',
+'pLinkedAttribute', vLinkTo,
+'pTaskAttrSubset', 'Template');
+
+vAttr = 'CC';
+vDisplayName = 'CC';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vDisplayName,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', 'mailmltextbox',
+'pListDimAlias', '',
+'pWorkflowType', vWFType,
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pReadOnly', 'N',
+'pLinkedAttribute', vLinkTo,
+'pTaskAttrSubset', 'Template');
+
+vAttr = 'BCC';
+vDisplayName = 'BCC';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vDisplayName,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', 'mailmltextbox',
+'pListDimAlias', '',
+'pWorkflowType', vWFType,
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pReadOnly', 'N',
+'pLinkedAttribute', vLinkTo,
+'pTaskAttrSubset', 'Template');
+
+vActionDim = '}sm_task_action';
+vActions = DIMSIZ(vActionDim);
+vActionIndex = 1;
+vWFType = 'TASK';
+
+WHILE (vActionIndex <= vActions);
+vAction = DIMNM(vActionDim, vActionIndex);
+
+vLinkTo = vAction | ' ' | 'Subject';
+vAttr = vAction | ' ' | 'TO';
+vDisplayName = 'TO';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vDisplayName,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', 'mailmltextbox',
+'pListDimAlias', '',
+'pWorkflowType', vWFType,
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pReadOnly', 'N',
+'pLinkedAttribute', vLinkTo,
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = vAction | ' ' | 'CC';
+vDisplayName = 'CC';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vDisplayName,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', 'mailmltextbox',
+'pListDimAlias', '',
+'pWorkflowType', vWFType,
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pReadOnly', 'N',
+'pLinkedAttribute', vLinkTo,
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+vAttr = vAction | ' ' | 'BCC';
+vDisplayName = 'BCC';
+EXECUTEPROCESS(vProcess1,
+'pAttrName', vAttr,
+'pDisplayName', vDisplayName,
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', 'mailmltextbox',
+'pListDimAlias', '',
+'pWorkflowType', vWFType,
+'pAttributeType', '',
+'pTaskLogAttr', '',
+'pReadOnly', 'N',
+'pLinkedAttribute', vLinkTo,
+'pTaskAttrSubset', 'Template');
+
+EXECUTEPROCESS(vProcess2,
+'pAttribute', vAttr,
+'pAttributeType', 'S',
+'pDefaultValue', '',
+'pPlan', '<ALL>',
+'pVersion', '<ALL>');
+
+
+#fix attributes "Revoke By" and "Revoke Datetime"
+if (vAction @='Revoke');
+EXECUTEPROCESS('}sm_wfx_fix_pm_attributes');
+endif;
+
+vActionIndex = vActionIndex + 1;
+END;
+
+EXECUTEPROCESS('}sm_wfx_fix_runtime_attributes');
+EXECUTEPROCESS('}sm_update_date_format');
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vApproveAction = 'Approve';
+IF (DIMIX(vActionDim , vApproveAction) > 0);
+vToAttr = ATTRS(vActionDim, vApproveAction, 'To');
+IF (vToAttr @= '');
+ATTRPUTS('%owner%', vActionDim, vApproveAction, 'To');
+ENDIF;
+ENDIF;
+#endregion

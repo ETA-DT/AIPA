@@ -1,0 +1,228 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+EXECUTEPROCESS('sm_upgrade_v1_2');
+
+vAttribute = 'Include Excel Object Names';
+vValue = pIncludeNamesInExcel;
+EXECUTEPROCESS('sm_wfx_system_attribute', 
+'pAttribute', vAttribute, 
+'pDefaultValue', vValue, 
+'pAdmin', 'Y', 
+'pClient', 'N');
+
+vAttribute = 'Version Select Macro';
+vValue = pInvokeVersionSelectMacro;
+EXECUTEPROCESS('sm_wfx_system_attribute', 
+'pAttribute', vAttribute, 
+'pDefaultValue', vValue, 
+'pAdmin', 'Y', 
+'pClient', 'N');
+
+vAttribute = 'Task Select Macro';
+vValue = pInvokeTaskSelectMacro;
+EXECUTEPROCESS('sm_wfx_system_attribute', 
+'pAttribute', vAttribute, 
+'pDefaultValue', vValue, 
+'pAdmin', 'Y', 
+'pClient', 'N');
+
+IF (pInvokeTaskActionMacro @= 'Y');
+EXECUTEPROCESS('sm_wfx_validation_list', 
+'action', 'I', 
+'Parent', 'Excel Macro Types', 
+'Subset', 'Excel Macro Types', 
+'pListItem1', 'W', 
+'pListItem2', 'S', 
+'pListItem3', 'N');
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'PreActionMacro',
+'pDisplayName', 'Pre Action Macro',
+'pListType', 'dim',
+'pListDim', '}sm_control_list_values',
+'pListSubset', 'Excel Macro Types',
+'pControlType', 'dropdown',
+'pListDimAlias', 'List Value', 
+'pWorkflowType', 'ACTION',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'PostActionMacro',
+'pDisplayName', 'Post Action Macro',
+'pListType', 'dim',
+'pListDim', '}sm_control_list_values',
+'pListSubset', 'Excel Macro Types',
+'pControlType', 'dropdown',
+'pListDimAlias', 'List Value', 
+'pWorkflowType', 'ACTION',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+ENDIF;
+
+IF (pSetupTaskLocking @= 'Y' % pSetupTaskWaiting @= 'Y' % pSetupTaskSequencing @= 'Y');
+vAttribute = 'post_ti';
+vValue = 'sm_workflow_extender';
+EXECUTEPROCESS('sm_wfx_system_attribute', 
+'pAttribute', vAttribute, 
+'pDefaultValue', vValue, 
+'pAdmin', 'Y', 
+'pClient', 'N');
+ENDIF;
+
+IF (pSetupTaskLocking @= 'Y');
+vAttribute = 'Task Locked Flag';
+IF (pTaskLockedString @= '');
+pTaskLockedString = 'Locked';
+ENDIF;
+vValue = pTaskLockedString;
+EXECUTEPROCESS('sm_wfx_system_attribute', 
+'pAttribute', vAttribute, 
+'pDefaultValue', vValue, 
+'pAdmin', 'Y', 
+'pClient', 'N');
+
+EXECUTEPROCESS('sm_wfx_validation_list', 
+'action', 'I', 
+'Parent', 'Task_Locking', 
+'Subset', 'Task_Locking', 
+'pListItem1', 'Lock', 
+'pListItem2', 'UnLock', 
+'pListItem3', 'NONE');
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'Locking',
+'pDisplayName', 'Locks Descendent Tasks',
+'pListType', 'dim',
+'pListDim', '}sm_control_list_values',
+'pListSubset', 'Task_Locking',
+'pControlType', 'dropdown',
+'pListDimAlias', 'List Value', 
+'pWorkflowType', 'STATUS',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'Lockable',
+'pDisplayName', 'Unlocks Descendent Tasks',
+'pListType', 'dim',
+'pListDim', '}sm_control_list_values',
+'pListSubset', 'yes_no',
+'pControlType', 'dropdown',
+'pListDimAlias', 'List Value', 
+'pWorkflowType', 'STATUS',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+
+ENDIF;
+
+IF (pSetupTaskWaiting @= 'Y' );
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'Waits for Subtasks',
+'pDisplayName', 'Waits for Subtasks',
+'pListType', 'dim',
+'pListDim', '}sm_task_status',
+'pListSubset', '',
+'pControlType', 'dropdown',
+'pListDimAlias', 'Status', 
+'pWorkflowType', 'STATUS',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'Completes Waiting',
+'pDisplayName', 'Completes Waiting', 
+'pListType', 'dim',
+'pListDim', '}sm_control_list_values',
+'pListSubset', 'yes_no',
+'pControlType', 'dropdown',
+'pListDimAlias', 'List Value', 
+'pWorkflowType', 'STATUS',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+
+ENDIF;
+
+IF (pSetupTaskSequencing @= 'Y' );
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'Waits for Predecessor Task',
+'pDisplayName', 'Waits for Predecessor Task',
+'pListType', 'dim',
+'pListDim', '}sm_task_status',
+'pListSubset', '',
+'pControlType', 'dropdown',
+'pListDimAlias', 'Status', 
+'pWorkflowType', 'STATUS',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'Triggers Dependent Tasks',
+'pDisplayName', 'Triggers Dependent Tasks',
+'pListType', 'dim',
+'pListDim', '}sm_control_list_values',
+'pListSubset', 'yes_no',
+'pControlType', 'dropdown',
+'pListDimAlias', 'List Value', 
+'pWorkflowType', 'STATUS',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+
+EXECUTEPROCESS('sm_wfx_workflow_attribute',
+'pAttrName', 'Predecessor Task',
+'pDisplayName', 'Predecessor Task', 
+'pListType', '',
+'pListDim', '',
+'pListSubset', '',
+'pControlType', '',
+'pListDimAlias', '', 
+'pWorkflowType', 'TASK',
+'pAttributeType', '', 
+'pTaskLogAttr', '');
+
+EXECUTEPROCESS('sm_wfx_apply_task_attribute',
+'pAttribute', 'Predecessor Task',
+'pAttributeType', 'S',
+'pDefaultValue', '', 
+'pPlan', '<ALL>', 
+'pVersion', '<ALL>');
+ENDIF;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF (pSetupTaskLocking @= 'Y' &  pApplyTaskLockingDefaults @= 'Y');
+vStatusIndex = 1;
+vStatusDim = '}sm_task_status';
+vStatusCount = DIMSIZ(vStatusDim);
+WHILE (vStatusIndex <= vStatusCount);
+vStatus = DIMNM(vStatusDim, vStatusIndex);
+IF (vStatus @= 'Approved' % vStatus @= 'Completed' % vStatus @= 'Not Delegated' % vStatus @= 'Pending' % vStatus @= 'Submitted');
+ATTRPUTS('Lock', vStatusDim, vStatus, 'Locking');
+ENDIF;
+
+ATTRPUTS('Y', vStatusDim, vStatus, 'Lockable');
+
+vStatusIndex = vStatusIndex + 1;
+END;
+
+EXECUTEPROCESS( 'sm_wfx_locking_setup');
+ENDIF;
+#endregion

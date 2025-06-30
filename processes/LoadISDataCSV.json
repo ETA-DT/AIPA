@@ -1,0 +1,68 @@
+{
+	"@type":"Process",
+	"Name":"LoadISDataCSV",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"LoadISDataCSV.ti",
+	"UIData":"CubeAction=1500\fDataAction=1503\fCubeName=Income Statement\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=825\fVarDimension=Subsidiaries\fVarDimAction=AsIs\fVarElemType=Numeric\fVarDimElemSortType=ByInput\fVarDimElemSortSense=ASCENDING\f",
+		"VarType=32\fColType=825\fVarDimension=Income Statement Accounts\fVarDimAction=AsIs\fVarElemType=Numeric\fVarDimElemSortType=ByInput\fVarDimElemSortSense=ASCENDING\f",
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=825\fVarDimension=Versions\fVarDimAction=AsIs\fVarElemType=Numeric\fVarDimElemSortType=ByInput\fVarDimElemSortSense=ASCENDING\f",
+		"VarType=33\fColType=826\f",
+		"VarName=vMonth\fVarType=32\fColType=825\fVarFormula=vMonth=SUBST(vTime, 3, 3);:\fVarFormulaDestination=BOTH\fVarDimension=Months\fVarDimAction=AsIs\fVarElemType=Numeric\fVarDimElemSortType=ByInput\fVarDimElemSortSense=ASCENDING\f",
+		"VarName=vMeasure\fVarType=32\fColType=825\fVarFormula=vMeasure='Dollars';:\fVarFormulaDestination=BOTH\fVarDimension=Income Statement Measures\fVarDimAction=AsIs\fVarElemType=Numeric\fVarDimElemSortType=ByInput\fVarDimElemSortSense=ASCENDING\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":".",
+		"asciiDelimiterChar":",",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":1,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":",",
+		"dataSourceNameForClient":"..\\SourceFiles\\Inc_statement.csv",
+		"dataSourceNameForServer":"..\\SourceFiles\\Inc_statement.csv"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"Subsidiaries",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Expense",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vTime",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"Version",
+			"Type":"String",
+			"Position":4,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vData",
+			"Type":"Numeric",
+			"Position":5,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

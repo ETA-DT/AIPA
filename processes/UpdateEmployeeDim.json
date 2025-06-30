@@ -1,0 +1,33 @@
+{
+	"@type":"Process",
+	"Name":"UpdateEmployeeDim",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"UpdateEmployeeDim.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"IgnoredInputVarName=Versions\tVarType=32\tColType=1165\t\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=Employees\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=Subsidiary\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=Grade\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=V5\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=V6\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=V7\tVarType=33\tColType=1165\t\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=Band\fVarType=33\fColType=1165\f",
+		"VarName=vBand\tVarType=32\tColType=841\tVarFormula=vBand=NumberToString(Band);:\tVarFormulaDestination=BOTH\tAttributeDim=Employees\tAttributeElemVar=Employees\tAttributeAction=Create\tAttributeName=Band\tAttributeType=Text\t\fVarType=32\fColType=1165\fVarFormulaDestination=BOTH\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":".",
+		"asciiDelimiterChar":",",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":1,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":",",
+		"dataSourceNameForClient":"C:\\Program Files\\Cognos\\TM1\\Custom\\TM1Data\\GreatOutdoors\\SourceFiles\\Salary_plan.csv",
+		"dataSourceNameForServer":"C:\\Program Files\\Cognos\\TM1\\Custom\\TM1Data\\GreatOutdoors\\SourceFiles\\Salary_plan.csv"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

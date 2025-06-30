@@ -1,0 +1,16 @@
+#region Prolog
+
+cScriptsPath = 'D:\Applications\Tm1\SampleOutdoors ETA\DataFiles\Python Scripts\';
+
+vTempFileName='D:\Applications\Tm1\SampleOutdoors ETA\DataFiles\Python Scripts\temp.bat';
+DatasourceASCIIQuoteCharacter='';
+
+ASCIIOUTPUT(vTempFileName,'@echo off');
+ASCIIOUTPUT(vTempFileName,
+            '"D:\Applications\Tm1\SampleOutdoors ETA\DataFiles\Python Scripts\virtualenv\Scripts\python.exe" "D:\Applications\Tm1\SampleOutdoors ETA\DataFiles\Python Scripts\QuestionLLM.py" ' | pCubeName | ' ' | pViewName
+);
+#endregion
+#region Epilog
+ExecuteCommand(vTempFileName,1); 
+ASCIIDELETE(vTempFileName);
+#endregion

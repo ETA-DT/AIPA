@@ -1,0 +1,16 @@
+{
+	"@type":"Process",
+	"Name":"SalesPlanDeleteData",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"SalesPlanDeleteData.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"TM1CubeView",
+		"dataSourceNameForClient":"Sales_Plan",
+		"dataSourceNameForServer":"Sales_Plan",
+		"view":"zDeleteAll"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

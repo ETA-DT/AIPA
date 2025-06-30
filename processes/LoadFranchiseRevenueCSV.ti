@@ -1,0 +1,13 @@
+#region Prolog
+
+OldCubeLogChanges = CubeGetLogChanges( 'Franchise_Revenue' );
+CubeSetLogChanges( 'Franchise_Revenue', 0 );
+#endregion
+#region Data
+vDate=SUBST( vMonth, 4, 3 );
+CellPutN(vBudget1,'Franchise_Revenue', vSubsidiaries, vDate, 'Budget Version 1' );
+CellPutN(vBudget2,'Franchise_Revenue', vSubsidiaries, vDate, 'Budget Version 2' );
+#endregion
+#region Epilog
+CubeSetLogChanges('Franchise_Revenue',OldCubeLogChanges );
+#endregion

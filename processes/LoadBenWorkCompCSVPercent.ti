@@ -1,0 +1,22 @@
+#region Prolog
+OldCubeLogChanges = CUBEGETLOGCHANGES('Expenses');
+CUBESETLOGCHANGES('Expenses', 0);
+#endregion
+#region Metadata
+vMeasures='Percent';
+vPension%=vPension/10;
+vSocSec%=vSocSec/10;
+vHealth%=vHealth/10;
+#endregion
+#region Data
+vMeasures='Percent';
+vPension%=vPension/10;
+vSocSec%=vSocSec/10;
+vHealth%=vHealth/10;
+CellPutN(vPension%,'Expenses',vVersions,vMonth,vSubsidiaries,'PENSION PLAN',vMeasures);
+CellPutN(vSocSec%,'Expenses',vVersions,vMonth,vSubsidiaries,'Social Security',vMeasures);
+CellPutN(vHealth%,'Expenses',vVersions,vMonth,vSubsidiaries,'HEALTH INSURANCE',vMeasures);
+#endregion
+#region Epilog
+CUBESETLOGCHANGES('Expenses', OldCubeLogChanges);
+#endregion

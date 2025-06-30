@@ -1,0 +1,60 @@
+{
+	"@type":"Process",
+	"Name":"LoadFranchiseRev",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"LoadFranchiseRev.ti",
+	"UIData":"CubeAction=1500\fDataAction=1503\fCubeName=Franchise Revenue\fCubeLogChanges=0\fMeasuresDim=Versions\fMeasuresDimAction=Update\fMeasuresDimElemSortType=ByInput\fMeasuresDimElemSortSense=DESCENDING\f",
+	"VariablesUIData":
+	[
+		"VarType=32\fColType=825\fVarDimension=Subsidiaries\fVarDimAction=AsIs\fVarElemType=Numeric\fVarDimElemSortType=ByInput\fVarDimElemSortSense=ASCENDING\f",
+		"VarType=32\fColType=827\f",
+		"VarType=33\fColType=826\fMeasuresElemVar=Budget Version 1\fMeasuresElemVarType=Numeric\f",
+		"VarType=33\fColType=826\fMeasuresElemVar=Budget Version 2\fMeasuresElemVarType=Numeric\f",
+		"VarName=vMonth\fVarType=32\fColType=825\fVarFormula=vMonth=trim(subst(vMonths, 4, 3));:\fVarFormulaDestination=BOTH\fVarDimension=Months\fVarDimAction=AsIs\fVarElemType=Numeric\fVarDimElemSortType=ByInput\fVarDimElemSortSense=ASCENDING\f",
+		"VarName=vMeasures\fVarType=32\fColType=825\fVarFormula=vMeasures='Dollars';:\fVarFormulaDestination=BOTH\fVarDimension=Franchise Revenue Measures\fVarDimAction=AsIs\fVarElemType=Numeric\fVarDimElemSortType=ByInput\fVarDimElemSortSense=ASCENDING\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":".",
+		"asciiDelimiterChar":",",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":1,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":",",
+		"dataSourceNameForClient":"..\\SourceFiles\\Franchise_rev.csv",
+		"dataSourceNameForServer":"..\\SourceFiles\\Franchise_rev.csv"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"Subsidiaries",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vMonths",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vVersion1",
+			"Type":"Numeric",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vVersion2",
+			"Type":"Numeric",
+			"Position":4,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

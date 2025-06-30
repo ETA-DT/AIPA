@@ -1,0 +1,20 @@
+#region Prolog
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+sText = 'IBM Cognos TM1';
+sText2 = 'IBM ';
+ExecuteCommand( 'C:\Users\ErwanTang\OneDrive - datatilt.fr\Documents\Python Scripts\test.bat', 0);
+#endregion
+#region Metadata
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+#endregion
+#region Epilog
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion

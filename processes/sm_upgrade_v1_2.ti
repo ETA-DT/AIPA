@@ -1,0 +1,53 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vDim = '}sm_control_attributes';
+vAttrDim = '}ElementAttributes_' | vDim;
+vAddAttributes = 0;
+
+IF (DIMENSIONEXISTS(vAttrDim) = 1);
+vAddAttributes = DIMIX(vAttrDim, 'Attribute');
+ENDIF;
+
+IF (vAddAttributes = 0);
+ATTRINSERT(vDim, '', 'Attribute', 'A');
+ATTRINSERT(vDim, 'Attribute', 'Attribute_French', 'A');
+ATTRINSERT(vDim, 'Attribute', 'Attribute_German', 'A');
+ATTRINSERT(vDim, 'Attribute', 'Attribute_English', 'A');
+endif;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+IF (vAddAttributes = 0);
+vSubset = 'sm_task_attributes';
+vCube = '}sm_control_attribute_settings';
+vIndex = 1;
+vCount = SUBSETGETSIZE(vDim, vSubset);
+WHILE (vIndex <= vCount);
+vAttr = SUBSETGETELEMENTNAME(vDim, vSubset, vIndex);
+
+ATTRPUTS(CELLGETS(vCube, vAttr, 'Task Attributes', 'display_name'),vDim, vAttr, 'Attribute');
+ATTRPUTS(CELLGETS(vCube, vAttr, 'Task Attributes', 'display_name_French'),vDim, vAttr, 'Attribute_French');
+ATTRPUTS(CELLGETS(vCube, vAttr, 'Task Attributes', 'display_name_German'),vDim, vAttr, 'Attribute_German');
+ATTRPUTS(CELLGETS(vCube, vAttr, 'Task Attributes', 'display_name_English'),vDim, vAttr, 'Attribute_English');
+
+vIndex = vIndex + 1;
+END;
+
+endif;
+#endregion

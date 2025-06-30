@@ -1,0 +1,26 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+OldCubeLogChanges = CUBEGETLOGCHANGES('Base Salaries');
+CUBESETLOGCHANGES('Base Salaries', 0);
+#****End: Generated Statements****
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+vSalary='Base Salary';
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+vSalary='Base Salary';
+CellPutN(vData,'Base Salaries',Version,Subsidiary,Grade,Band,vSalary);
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+CUBESETLOGCHANGES('Base Salaries', OldCubeLogChanges);
+#****End: Generated Statements****
+#endregion

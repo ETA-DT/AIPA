@@ -1,0 +1,4 @@
+#region Prolog
+
+VIEWZEROOUT('Sales_Plan','zDeleteAll1');
+#endregion

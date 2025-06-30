@@ -1,8 +1,8 @@
 {
 	"@type":"Process",
-	"Name":"GenAIAnalysis",
+	"Name":"ExecuteCommand",
 	"HasSecurityAccess":false,
-	"Code@Code.link":"GenAIAnalysis.ti",
+	"Code@Code.link":"ExecuteCommand.ti",
 	"UIData":"_ParameterConstraints=e30=\f",
 	"DataSource":
 	{
@@ -12,13 +12,13 @@
 	[
 		{
 			"Name":"pCubeName",
-			"Prompt":"Nom de cube",
+			"Prompt":"Nom du cube",
 			"Value":"",
 			"Type":"String"
 		},
 		{
 			"Name":"pViewName",
-			"Prompt":"Nom de vue",
+			"Prompt":"Nom de la vue",
 			"Value":"",
 			"Type":"String"
 		}

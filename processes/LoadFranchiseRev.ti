@@ -1,0 +1,35 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+DIMENSIONSORTORDER('Versions','','','ByInput','DESCENDING');
+OldCubeLogChanges = CUBEGETLOGCHANGES('Franchise Revenue');
+CUBESETLOGCHANGES('Franchise Revenue', 0);
+#****End: Generated Statements****
+
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+vMonth=trim(subst(vMonths, 4, 3));
+vMeasures='Dollars';
+DIMENSIONELEMENTINSERT('Versions','','Budget Version 1','n');
+DIMENSIONELEMENTINSERT('Versions','','Budget Version 2','n');
+#****End: Generated Statements****
+
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+vMonth=trim(subst(vMonths, 4, 3));
+vMeasures='Dollars';
+CellPutN(vVersion1,'Franchise Revenue',Subsidiaries,vMonth,'Budget Version 1',vMeasures);
+CellPutN(vVersion2,'Franchise Revenue',Subsidiaries,vMonth,'Budget Version 2',vMeasures);
+#****End: Generated Statements****
+
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+CUBESETLOGCHANGES('Franchise Revenue', OldCubeLogChanges);
+#****End: Generated Statements****
+#endregion

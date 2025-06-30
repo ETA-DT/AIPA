@@ -1,0 +1,23 @@
+#region Prolog
+DIMENSIONDESTROY('SL_Time');
+DIMENSIONCREATE('SL_Time');
+DIMENSIONSORTORDER('SL_Time','BYINPUT','ASCENDING','BYHIERARCHY','ASCENDING');
+ATTRDELETE('SL_Time','MonthYear');
+ATTRINSERT('SL_Time','','MonthYear','A');
+ATTRDELETE('SL_Time','M00');
+ATTRINSERT('SL_Time','','M00','S');
+ATTRDELETE('SL_Time','Full Name');
+ATTRINSERT('SL_Time','','Full Name','S');
+#endregion
+#region Metadata
+DIMENSIONELEMENTINSERT('SL_Time','',Mo,'n');
+DIMENSIONELEMENTINSERT('SL_Time','',Quarter,'c');
+DIMENSIONELEMENTINSERT('SL_Time','',Yr,'c');
+DIMENSIONELEMENTCOMPONENTADD('SL_Time',Quarter,Mo,1.000000);
+DIMENSIONELEMENTCOMPONENTADD('SL_Time',Yr,Quarter,1.000000);
+#endregion
+#region Data
+ATTRPUTS(MoYear,'SL_Time',Mo,'MonthYear');
+ATTRPUTS(Mo01,'SL_Time',Mo,'M00');
+ATTRPUTS(MonthLongName,'SL_Time',Mo,'Full Name');
+#endregion

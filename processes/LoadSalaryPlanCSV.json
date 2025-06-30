@@ -1,0 +1,35 @@
+{
+	"@type":"Process",
+	"Name":"LoadSalaryPlanCSV",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"LoadSalaryPlanCSV.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"IgnoredInputVarName=Versions\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=Employees\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=Subsidiary\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=Grade\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=vStartDate\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=vRaiseMonth\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=vRaise%\fVarType=33\fColType=1165\f",
+		"IgnoredInputVarName=Band\fVarType=33\fColType=1165\f",
+		"VarName=vGrade_m\tVarType=32\tColType=827\tVarFormula=vGrade_m=Grade;:\tVarFormulaDestination=BOTH\t\fVarType=32\fColType=1165\fVarFormulaDestination=BOTH\f",
+		"VarName=vBand\tVarType=32\tColType=825\tVarFormula=vBand=NumberToString(Band);:\tVarFormulaDestination=BOTH\tVarDimension=Bands\tVarDimAction=AsIs\tVarElemType=Numeric\tVarDimElemSortType=ByInput\tVarDimElemSortSense=ASCENDING\t\fVarType=32\fColType=1165\fVarFormulaDestination=BOTH\f",
+		"VarName=vBand_m\tVarType=32\tColType=827\tVarFormula=vBand_m='Band '|vBand;:\tVarFormulaDestination=BOTH\t\fVarType=32\fColType=1165\fVarFormulaDestination=BOTH\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":".",
+		"asciiDelimiterChar":",",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":1,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":",",
+		"dataSourceNameForClient":"..\\SourceFiles\\Salary_plan.csv",
+		"dataSourceNameForServer":"..\\SourceFiles\\Salary_plan.csv"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

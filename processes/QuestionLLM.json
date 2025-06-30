@@ -8,6 +8,20 @@
 	{
 		"Type":"None"
 	},
-	"Parameters":[],
+	"Parameters":
+	[
+		{
+			"Name":"pCubeName",
+			"Prompt":"Nom de cube",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pViewName",
+			"Prompt":"Nom de vue",
+			"Value":"",
+			"Type":"String"
+		}
+	],
 	"Variables":[]
 }

@@ -1,0 +1,191 @@
+#region Prolog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vAllTaskDim = 'pm_all_task';
+vCountDim = 'pm_all_task_measures';
+vStatsDim = 'pm_task_statistics';
+vStatsMeasuresDim = 'pm_task_statistics_measures';
+vStatusDim = '}sm_task_status';
+vPlanDim = '}sm_plans';
+
+vCountCube = 'pm_all_task';
+vStatsCube = 'pm_task_statistics';
+
+vAllPlans = 'All Plans';
+vAllStatus = 'All Task Status';
+vAllPlanTasks = 'All Plan Tasks';
+vAvgDaysToComplete = 'Average days to Complete';
+vOverdueTasks = 'Number of Overdue Tasks';
+vAvgDaysOverdue = 'Average days Overdue';
+vCount = 'Count';
+vPct = 'Percent';
+
+vDim = vAllTaskDim;
+IF (DIMENSIONEXISTS(vDim) = 0);
+DIMENSIONCREATE(vDim);
+ENDIF;
+ATTRINSERT( vAllTaskDim , '', 'Task', 'S');
+ATTRINSERT( vAllTaskDim , '', 'Name', 'A');
+ATTRINSERT( vAllTaskDim, '', 'Plan', 'S');
+ATTRINSERT( vAllTaskDim, '', 'Version', 'S');
+ATTRINSERT( vAllTaskDim, '', 'Version Task Dimension', 'S');
+
+IF (DIMIX(vAllTaskDim, vAllPlans) = 0);
+DIMENSIONELEMENTINSERT(vAllTaskDim, '', vAllPlans, 'C');
+ENDIF;
+IF (DIMIX(vAllTaskDim, vAllPlanTasks ) = 0);
+DIMENSIONELEMENTINSERT(vAllTaskDim, '', vAllPlanTasks , 'C');
+ENDIF;
+
+vDim = vCountDim ;
+IF (DIMENSIONEXISTS(vDim) = 0);
+DIMENSIONCREATE(vDim);
+ENDIF;
+IF (DIMIX( vCountDim , vCount ) = 0);
+DIMENSIONELEMENTINSERT( vCountDim , '', vCount , 'N');
+ENDIF;
+IF (DIMIX( vCountDim , vPct ) = 0);
+DIMENSIONELEMENTINSERT( vCountDim , '', vPct , 'N');
+ENDIF;
+
+vDim = vStatsDim ;
+IF (DIMENSIONEXISTS(vDim) = 0);
+DIMENSIONCREATE(vDim);
+ENDIF;
+IF (DIMIX( vStatsDim , vAvgDaysToComplete ) = 0);
+DIMENSIONELEMENTINSERT( vStatsDim , '', vAvgDaysToComplete , 'N');
+ENDIF;
+IF (DIMIX(vStatsDim , vOverdueTasks ) = 0);
+DIMENSIONELEMENTINSERT( vStatsDim , '', vOverdueTasks , 'N');
+ENDIF;
+IF (DIMIX(vStatsDim , vOverdueTasks ) = 0);
+DIMENSIONELEMENTINSERT( vStatsDim , '', vOverdueTasks , 'N');
+ENDIF;
+
+vDim = vStatsMeasuresDim ;
+IF (DIMENSIONEXISTS(vDim) = 0);
+DIMENSIONCREATE(vDim);
+ENDIF;
+
+IF (DIMIX(vStatusDim , vAllStatus  ) = 0);
+DIMENSIONELEMENTINSERT(vStatusDim , '', vAllStatus  , 'C');
+ENDIF;
+vStatusCtr = DIMSIZ(vStatusDim);
+vStatusIndex = 1;
+WHILE (vStatusIndex <= vStatusCtr);
+vStatus = DIMNM(vStatusDim, vStatusIndex);
+IF (ELLEV(vStatusDim, vStatus) = 0);
+DIMENSIONELEMENTCOMPONENTADD(vStatusDim, vAllStatus, vStatus, 1);
+ENDIF;
+vStatusIndex = vStatusIndex + 1;
+END;
+
+
+IF (CUBEEXISTS(vCountCube) = 0);
+CUBECREATE(vCountCube,
+vAllTaskDim,
+vStatusDim,
+vCountDim);
+ENDIF;
+
+vPlanIndex = 1;
+vPlanCtr = DIMSIZ(vPlanDim);
+WHILE (vPlanIndex <= vPlanCtr);
+vPlan = DIMNM(vPlanDim, vPlanIndex);
+
+DIMENSIONELEMENTCOMPONENTADD( vAllTaskDim, vAllPlans, vPlan, 1);
+
+vThisPlanDim = '}sm_versions@' | vPlan;
+IF (DIMENSIONEXISTS( vThisPlanDim ) <> 0);
+vVersionCtr = DIMSIZ( vThisPlanDim );
+vVersionIndex = 1;
+WHILE (vVersionIndex <= vVersionCtr);
+vVersion = DIMNM( vThisPlanDim , vVersionIndex);
+
+DIMENSIONELEMENTCOMPONENTADD( vAllTaskDim, vPlan, vPlan | ' - ' | vVersion, 1);
+
+vVersionDim = '}sm_versiontasks@' | vPlan | '@' | vVersion;
+IF (DIMENSIONEXISTS( vVersionDim ) <> 0);
+vTaskCtr = DIMSIZ( vVersionDim );
+vTaskIndex = 1;
+WHILE (vTaskIndex <= vTaskCtr);
+vTask = DIMNM( vVersionDim, vTaskIndex);
+vTaskElement = vPlan | ' - ' | vVersion | ' - ' | vTask;
+DIMENSIONELEMENTCOMPONENTADD( vAllTaskDim, vPlan | ' - ' | vVersion, vTaskElement, 1);
+vTaskName = ATTRS( vVersionDim, vTask, 'Name');
+DIMENSIONELEMENTCOMPONENTADD( vAllTaskDim, vAllPlanTasks, vTaskName, 1);
+DIMENSIONELEMENTCOMPONENTADD( vAllTaskDim, vTaskName, vTaskElement, 1);
+
+vTaskIndex = vTaskIndex + 1;
+END;
+ENDIF;
+vVersionIndex = vVersionIndex + 1;
+END;
+ENDIF;
+
+vPlanIndex = vPlanIndex + 1;
+END;
+#endregion
+#region Metadata
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Data
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+#endregion
+#region Epilog
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+vPlanIndex = 1;
+vPlanCtr = DIMSIZ(vPlanDim);
+WHILE (vPlanIndex <= vPlanCtr);
+vPlan = DIMNM(vPlanDim, vPlanIndex);
+
+vAlias = ATTRS( vPlanDim, vPlan, 'Plan');
+ATTRPUTS(vAlias, vAllTaskDim, vPlan, 'Name');
+ATTRPUTS( vPlan, vAllTaskDim, vPlan  , 'Plan');
+
+vThisPlanDim = '}sm_versions@' | vPlan;
+IF (DIMENSIONEXISTS( vThisPlanDim ) <> 0);
+vVersionCtr = DIMSIZ( vThisPlanDim );
+vVersionIndex = 1;
+WHILE (vVersionIndex <= vVersionCtr);
+vVersion = DIMNM( vThisPlanDim , vVersionIndex);
+vVersionElement =   vPlan | ' - ' | vVersion;
+vVersionDim = '}sm_versiontasks@' | vPlan | '@' | vVersion;
+vAlias = ATTRS( vThisPlanDim, vVersion, 'Version');
+ATTRPUTS( vPlan, vAllTaskDim, vVersionElement , 'Plan');
+ATTRPUTS( vVersion, vAllTaskDim, vVersionElement , 'Version');
+ATTRPUTS( vVersionDim , vAllTaskDim, vVersionElement , 'Version Task Dimension');
+
+
+IF (DIMENSIONEXISTS( vVersionDim ) <> 0);
+vTaskCtr = DIMSIZ( vVersionDim );
+vTaskIndex = 1;
+WHILE (vTaskIndex <= vTaskCtr);
+vTask = DIMNM( vVersionDim, vTaskIndex);
+vTaskElement = vVersionElement | ' - ' | vTask;
+
+ATTRPUTS( vTask, vAllTaskDim, vTaskElement, 'Task');
+ATTRPUTS( vPlan, vAllTaskDim, vTaskElement, 'Plan');
+ATTRPUTS( vVersion, vAllTaskDim, vTaskElement, 'Version');
+ATTRPUTS( vVersionDim , vAllTaskDim, vTaskElement, 'Version Task Dimension');
+ATTRPUTS( ATTRS(vVersionDim, vTask, 'Name') | ' (' | vVersion | '-' | vPlan | ')', vAllTaskDim, vTaskElement, 'Name');
+
+vTaskIndex = vTaskIndex + 1;
+END;
+ENDIF;
+vVersionIndex = vVersionIndex + 1;
+END;
+ENDIF;
+
+vPlanIndex = vPlanIndex + 1;
+END;
+#endregion

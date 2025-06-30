@@ -1,0 +1,47 @@
+#region Prolog
+# Iterate over the dimensions in a cube
+# Create a view for export leaf level values only
+# This snippet is typically done in the prolog section
+vCubeToFindLeaves = 'Sales_Plan';
+vViewWithLeaves = 'zExport view4';
+# Set vIsTempFlag to 0 for permanent views and subset, 1 for temporary views and subsets
+vIsTempFlag = 0;
+IF (ViewExists(vCubeToFindLeaves, vViewWithLeaves) = 1);
+ViewDestroy(vCubeToFindLeaves, vViewWithLeaves);
+ENDIF;
+ViewCreate(vCubeToFindLeaves, vViewWithLeaves, vIsTempFlag);
+indexIter = 1;
+vCurrentDimension = TABDIM(vCubeToFindLeaves, indexIter);
+WHILE (vCurrentDimension @<> '');
+# ViewColumnDimensionSet(vCubeToFindLeaves, vViewWithLeaves, vCurrentDimension, indexIter);
+vSubsetLeaves = vViewWithLeaves;
+IF (SubsetExists(vCurrentDimension, vSubsetLeaves) = 1);
+SubsetDestroy(vCurrentDimension, vSubsetLeaves);
+ENDIF;
+
+IF(TABDIM(vCubeToFindLeaves, indexIter) @= 'Versions');
+ViewSubsetAssign(vCubeToFindLeaves, vViewWithLeaves, vCurrentDimension, 'Budget Version 1');
+ELSE;
+vMDX = '{TM1FILTERBYLEVEL( {TM1SUBSETALL( [' | vCurrentDimension | '].[' | vCurrentDimension | '] )}, 0)}';
+SubsetCreatebyMDX(vSubsetLeaves, vMDX, vIsTempFlag);
+ViewSubsetAssign(vCubeToFindLeaves, vViewWithLeaves, vCurrentDimension, vSubsetLeaves);
+ENDIF;
+indexIter = indexIter + 1;
+vCurrentDimension = TABDIM(vCubeToFindLeaves, indexIter);
+END;
+DataSourceType          = 'VIEW';
+DatasourceNameForServer = vCubeToFindLeaves;
+DatasourceCubeview      = vViewWithLeaves;
+
+ViewExtractSkipZeroesSet( 'Sales_Plan',vViewWithLeaves, 1 );
+ViewExtractSkipCalcsSet('Sales_Plan', vViewWithLeaves, 1 );
+ViewExtractSkipRuleValuesSet( 'Sales_Plan', vViewWithLeaves, 0 );
+#endregion
+#region Metadata
+TextOutput('TextOutput.csv', Subsidiaries, Channels, Products, Months, Versions, Sales_Plan_Measures, NumberToString(Value));
+# vValue = CellGetN( 'Sales_Plan','Cooking Gear','Jan','Budget Version 1','Unit Sale Price','Golf Shop','GO Americas' );
+
+# TextOutput( 'TestOut.csv', NumberToString( vValue ) );
+
+
+#endregion

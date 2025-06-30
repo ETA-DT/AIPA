@@ -1,8 +1,8 @@
 {
 	"@type":"Process",
-	"Name":"pm_task_statistics_cube",
+	"Name":"sm_upgrade_v1_2",
 	"HasSecurityAccess":false,
-	"Code@Code.link":"pm_task_statistics_cube.ti",
+	"Code@Code.link":"sm_upgrade_v1_2.ti",
 	"UIData":"CubeAction=1511\tDataAction=1503\tCubeLogChanges=0\t",
 	"DataSource":
 	{

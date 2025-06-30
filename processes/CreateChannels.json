@@ -1,0 +1,26 @@
+{
+	"@type":"Process",
+	"Name":"CreateChannels",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"CreateChannels.ti",
+	"UIData":"CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+	"VariablesUIData":
+	[
+		"IgnoredInputVarName=vChannels\fVarType=32\fColType=1165\f",
+		"IgnoredInputVarName=vTotalChannels\fVarType=32\fColType=1165\f"
+	],
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"asciiDecimalSeparator":".",
+		"asciiDelimiterChar":",",
+		"asciiDelimiterType":"Character",
+		"asciiHeaderRecords":0,
+		"asciiQuoteCharacter":"\"",
+		"asciiThousandSeparator":",",
+		"dataSourceNameForClient":"..\\SourceFiles\\Channels.csv",
+		"dataSourceNameForServer":"..\\SourceFiles\\Channels.csv"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

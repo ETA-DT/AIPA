@@ -1,0 +1,13 @@
+#region Prolog
+DimensionDestroy( 'Expenses' );
+DimensionCreate('Expenses');
+DimensionSortOrder( 'Expenses', 'BYINPUT', 'ASCENDING', 'BYHIERARCHY', 'ASCENDING' );
+#endregion
+#region Metadata
+
+DimensionElementInsert( 'Expenses', '', vExpenses, 'n' );
+DimensionElementInsert( 'Expenses', '', vExpenseCategory, 'n' );
+DimensionElementInsert( 'Expenses', '', vTotalExpenses, 'n' );
+DimensionElementComponentAdd( 'Expenses', vExpenseCategory, vExpenses, 1.000000 );
+DimensionElementComponentAdd( 'Expenses', vTotalExpenses, vExpenseCategory, 1.000000 );
+#endregion

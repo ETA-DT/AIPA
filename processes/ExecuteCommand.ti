@@ -1,0 +1,27 @@
+#region Prolog
+
+cScriptsPath = 'D:\Applications\Tm1\SampleOutdoors ETA\DataFiles\Python Scripts\';
+
+cSourceFile = 'D:\Applications\Tm1\SampleOutdoors ETA\myfile.txt';
+
+cDestFile = 'D:\Applications\Tm1\SampleOutdoors ETA\myfile2.txt';
+
+# 0. preliminary
+vTempFileName='D:\Applications\Tm1\SampleOutdoors ETA\DataFiles\Python Scripts\temp.bat';
+DatasourceASCIIQuoteCharacter='';
+
+# 1. create the temporary bat file
+ASCIIOUTPUT(vTempFileName,'@echo off');
+ASCIIOUTPUT(vTempFileName,
+            '"D:\Applications\Tm1\Tango_Core_Model\Data\Python_Scripts\virtualenv\Scripts\python.exe" D:\Applications\Tm1\Tango_Core_Model\Data\Python_Scripts\testcmd.py ' | pCubeName | ' ' | pViewName
+);
+
+vQuote = CHAR(34);
+
+vCopyLine ='cmd /c copy /Y ' |vQuote | cSourceFile |vQuote|' '|vQuote |cDestFile |vQuote;
+
+vCommandLine = cScriptsPath | 'testcmd.bat';
+#endregion
+#region Epilog
+#ExecuteCommand(vCommandLine,0); 
+#endregion

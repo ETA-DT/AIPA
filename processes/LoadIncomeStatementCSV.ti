@@ -1,0 +1,16 @@
+#region Prolog
+OldCubeLogChanges = CUBEGETLOGCHANGES('Income_Statement');
+CUBESETLOGCHANGES('Income_Statement', 0);
+#endregion
+#region Metadata
+vMonth=SUBST(vDate, 3, 3);
+vMeasures='Amount';
+#endregion
+#region Data
+vMonth=SUBST(vDate, 3, 3);
+vMeasures='Amount';
+CellPutN(vData,'Income_Statement',vVersion,vMonth,vSubsidiaries,vExpense,vMeasures);
+#endregion
+#region Epilog
+CUBESETLOGCHANGES('Income_Statement', OldCubeLogChanges);
+#endregion
